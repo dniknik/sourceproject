@@ -6,214 +6,58 @@
 
 <div id="body" style="display: flex; padding: 6px">
 
-    <div style="align-self: flex-start; width: 320px">
-
-        <?php
-        $sorted = lmbTreeHelper :: sort($this->records, array('id' => 'ASC'));
-        $tree_tst = new lmbTreeNestedCollection($sorted);
-        $tree_tst->setChildrenField('preloaded_children');
-        $tree_tst->rewind();
-        ?>
+    <div style="align-self: flex-start; width: 320px;">
 
         <hr>
-        <h4>wood</h4>
-        {{tree using="{$#wood}" as="$item" kids_prop="preloaded_children" counter="$counter" prefix=""}}
-        <ul>
-            {{tree:node}}
-            <li>
-                {$counter})
-                <a href="/branch/{$item.id}">:{$item.path}</a>&nbsp;|&nbsp;
-                <a href="/branch/{$item.identifier}">{$item.identifier}</a>
-                {{tree:nextlevel/}}
-            </li>
-            {{/tree:node}}
-            {{tree:empty}}
-            tree_array is empty
-            {{/tree:empty}}
-        </ul>
-        {{/tree}}
-
-        <hr>
-        <h4>tree_tst</h4>
-        {{tree using="{$tree_tst}" as="$item" kids_prop="preloaded_children" counter="$counter" prefix=""}}
-        <ul>
-            {{tree:node}}
-            <li>
-                {$counter})
-                <a href="/branch/{$item.id}">:{$item.path}</a>&nbsp;|&nbsp;
-                <a href="/branch/{$item.identifier}">{$item.identifier}</a>
-                {{tree:nextlevel/}}
-            </li>
-            {{/tree:node}}
-            {{tree:empty}}
-            tree_array is empty
-            {{/tree:empty}}
-        </ul>
-        {{/tree}}
-
-        <hr>
-        <h4>records</h4>
+        <h4>"Узлы" дерева</h4>
         {{list using='{$#records}' parity='{$parity}'
          as="$item" counter="$counter" prefix=""}}
         <ul>
             {{list:item}}
+            {{if var="{$item->getTitle()}"}}
             <li>
-                {$counter})
-                <a href="/branch/{$item.id}">:{$item.path}</a>&nbsp;|&nbsp;
-                <a href="/branch/{$item.identifier}">{$item.identifier}</a>
+                <a href="/pageitem/{$item.identifier}">{$item->getTitle()}</a>
             </li>
+            {{/if}}
             {{/list:item}}
-            {{list:empty}}
-            list is empty
-            {{/list:empty}}
         </ul>
         {{/list}}
-
     </div>
-
 
     <div class="list" style="lign-self: flex-end; margin: 5px 5px;">
         <!-- -->
-
         {{list using='{$#records}' parity='{$parity}'}}
         {{include file="_admin_object/actions.phtml"/}}
         <div class="list">
 
             <table>
                 <tr>
-                    <th>--</th>
-                    <th>#ID</th>
-                    <th>node_id</th>
                     <th>Характеристика</th>
                     <th>Значение_Свойства</th>
-
-
                 </tr>
                 {{list:item}}
-
+                {{if var="{$item->getTitle()}"}}
                 <tr class="odd">
-                    <td>--</td>
-                    <td>#{$item.id}</td>
-                    <td>#{$item.node_id}#</td>
-                    <td>
-                        #{$item->getTitle()}#
-                        <?php
-                        //class='{$parity}'
-                        //lmb_var_debug( $item->gettreeitem());  echo '<br>';
-                        //lmb_var_debug( $item->gettreeitem()->getArray());  echo '<br>';
-                        //lmb_var_debug( sizeof($item->gettreeitem()->getArray()));
-                        //echo '<br>:'. $item->gettreeitem()[0]->getInheritanceField();
-                        //echo '<br>:'. $item->getInheritanceField();
-                        //$item->setInheritanceField('node_id');
-                        //echo '<br>::'. $item->gettreeitem()[0]->getPrimaryKeyName();
-                        //echo '<br>::'. $item->getPrimaryKeyName();
-                        //echo '<br>:'. $item->getTitle();
-                        //echo $item->getTitle();
-                        ?>
-                    </td>
-                    <td>
-                        is_branch:{$item.is_branch}&nbsp;|&nbsp;
-                        path:{$item.path}
-                        <!-- par:{$item.parent_id}&nbsp;|&nbsp; -->
-                    </td>
+                    <td colspan="2" style="text-align: center;">{$item->getTitle()}</td>
+                    <!-- <td></td> -->
                 </tr>
-
-
+                {{/if}}
                 {{list using='{$item->gettreeitem()}' parity='{$parity}' as='$it'}}
                         {{list:item}}
+                        {{if var="{$it->gettreeattribute()->getIsPublished()}"}}
                         <tr>
-                            <td></td>
-                            <td>#{$it.id}</td>
-                            <td>{$it.is_branch}#{$it.node_id}#</td>
                             <td>{$it->gettreeattribute()->getTitle()}</td>
-                            <td>{$it.attr_id}/{$it.attr_value}</td>
+                            <td>{$it.attr_value}</td>
                         </tr>
+                        {{/if}}
                         {{/list:item}}
                 {{/list}}
-
                 {{/list:item}}
-                {{list:empty}}
-                <div class="empty_list">Empty childrens</div>
-                {{/list:empty}}
             </table>
         </div>
         {{/list}}
-
         <!-- -->
-        <table border="2">
-            <tr>
-                <td>
-                    <table>
-                        <tr>
-                            <th>#</th>
-                            <th>id</th>
-                            <th>id_sys_tree</th>
-                            <th>id_pr</th>
-                            <th>value_pr</th>
-                            <th>is_branch</th>
-                        </tr>
-
-                        {{tree using="{$tree_tst}"
-                        as="$item"
-                        kids_prop="preloaded_children"
-                        counter="$counter"
-                        prefix="1"}}
-
-                        {{tree:node}}
-                        <tr>
-                            <td colspan="6">
-                                <h<?php echo $item['level'] + 1; ?>>
-                                    {$prefix}.({$counter}) :<?php echo $item['level'] + 1; ?>
-                                    : <?php echo TreeItem :: getTitleByNodeId($item['node_id']); ?>
-                                </h<?php echo $item['level'] + 1; ?>>
-                                {$item.node_id}&nbsp;|&nbsp;{$item.path}&nbsp;|&nbsp;{$item.identifier}&nbsp;|&nbsp;{$item.level}
-                                &nbsp;|&nbsp;
-                                <?php
-                                echo (TreeItem :: getIsBranchByNodeId($item['node_id']) == 0) ?
-                                    '<a href="/tree_cart/add/' . $item['node_id'] . '">В Корзину</a>' : 'ВЕТКА';
-                                ?>
-                                {{tree:nextlevel prefix="$new_prefix"}}
-                                <?php $new_prefix = $prefix . "." . $counter;
-                                $this->ind = $this->i + 1; ?>
-                                {{/tree:nextlevel}}
-                            </td>
-                        </tr>
-                        {{/tree:node}}
-                        {{/tree}}
-                    </table>
-                </td>
-                <td>
-                    <table border="1">
-                        <tr>
-                            <th>#</th>
-                            <th>id</th>
-                            <th>id_sys_tree</th>
-                            <th>id_pr</th>
-                            <th>value_pr</th>
-                            <th>is_branch</th>
-                        </tr>
-
-                        <tr>
-                            <th colspan="6">my_children</th>
-                        </tr>
-                        {{list using='$this->childrens' as='$item' counter='$my_counter' }}
-                        {{list:item}}
-                        <tr>
-                            <td>{$my_counter}</td>
-                            <td>{$item.id}</td>
-                            <td>{$item.parent_id}</td>
-                            <td>{$item.level} lvl</td>
-                            <td>{$item.identifier}</td>
-                            <td>{$item.path}</td>
-                        </tr>
-                        {{/list:item}}
-                        {{/list}}
-                    </table>
-                </td>
-            </tr>
-        </table>
     </div>
-
 </div>
 
 <?php

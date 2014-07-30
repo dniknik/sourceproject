@@ -21,7 +21,6 @@ class TreeFull extends lmbActiveRecord
         $criteria =  new lmbSQLFieldCriteria('id', $id);
         $attr = TreeFull::findFirst('TreeFull', $criteria);
         return (isset($attr['identifier'])?$attr['identifier']:'(identifier:emptyORnull)');
-        //return lmbActiveRecord :: findOne($class_name, lmbSQLCriteria::equal('parent_id', 0));
     }
 
     function getUriByNodeId($node_id= null) {
@@ -31,7 +30,6 @@ class TreeFull extends lmbActiveRecord
         $criteria =  new lmbSQLFieldCriteria('node_id', $node_id);
         $attr = TreeFull::findFirst('TreeFull', $criteria);
         return (isset($attr['identifier'])?$attr['identifier']:'(identifier:emptyORnull)');
-        //return lmbActiveRecord :: findOne($class_name, lmbSQLCriteria::equal('parent_id', 0));
     }
 
     function getTitle($node_id= null) {
@@ -41,9 +39,7 @@ class TreeFull extends lmbActiveRecord
         $criteria =  new lmbSQLFieldCriteria('node_id', $node_id);
         $criteria->addAnd(new lmbSQLFieldCriteria('attr_id', $this->ID_ATTR_TITLE));
         $attr = TreeItem::findFirst('TreeItem', $criteria);
-        return (isset($attr['attr_value'])?$attr['attr_value']:'(emptyORnull)');
-//        return (isset($item['title'])?$item['title']:'(empty)');
-//return lmbActiveRecord :: findOne($class_name, lmbSQLCriteria::equal('parent_id', 0));
+        return (isset($attr['attr_value'])?$attr['attr_value']:'');
     }
 
 }

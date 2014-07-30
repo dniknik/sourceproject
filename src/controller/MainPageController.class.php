@@ -65,6 +65,7 @@ class MainPageController extends lmbController
             }
             $criteria = lmbSQLCriteria :: like('path', $cur_node_path . '%');
             $this->records = lmbActiveRecord :: find('TreeFull', $criteria);
+
             $this->childrens = lmbCollection::toFlatArray(lmbActiveRecord :: find('TreeFull', $criteria));
             $records = lmbCollection::toFlatArray(lmbActiveRecord :: find('TreeFull', $criteria));
             //$ids_childrens = array_column($records, 'id');
