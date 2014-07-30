@@ -1,0 +1,62 @@
+<? $this->title = ($this->title) ? $this->title : 'Main page '; ?>
+
+{{wrap with="front_page_layout.phtml" into="content_zone"}}
+<!-- content_begin -->
+{{include file="_admin_object/actions.phtml"/}}
+
+<div id="body" style="display: flex; padding: 6px">
+
+
+    <div style="align-self: flex-start; width: 320px;">
+        <div>
+            <hr>
+            Количество значений характеристик: <?php  echo sizeof($this->items); ?>
+        </div>
+    </div>
+
+    <div class="list" style="align-self: flex-end; margin: 5px 5px;">
+        <!-- -->
+        {{list using='{$#items}' parity='{$parity}'}}
+        {{include file="_admin_object/actions.phtml"/}}
+        <div class="list">
+
+            <table>
+                <tr>
+                    <th>"Узел" дерева</th>
+                    <th>Характеристика</th>
+                    <th>Значение</th>
+
+                </tr>
+                {{list:item}}
+
+                <tr class="{$parity}">
+
+                    <td style="text-align: center;">
+                        <?php
+                        $isProduct = (TreeItem :: getIsBranchByNodeId($item['node_id'])==0);
+                        $uri = TreeItem::getUriByNodeId($item['node_id']);
+                        echo ($isProduct)?'<a href="/tree_cart/add/'. $item['node_id']. '"><img src="/shared/images/icons/cart_add.png" alt="2cart" /></a>': '';
+                        ?>
+
+                        <a href="/pageitem/{$uri}"> <?php echo TreeItem::getTitleByNodeId($item['node_id']); ?> </a>
+                    </td>
+                    <td><!-- {$item.attr_id} / --> {$item.title}</td>
+                    <td>{$item.attr_value}</td>
+                    
+                </tr>
+
+                {{/list:item}}
+            </table>
+        </div>
+        {{/list}}
+        <!-- -->
+    </div>
+</div>
+
+<?php
+//echo '<img src="/shared/images/icons/application_view_detail.png" alt="detail" /></a>';
+//echo '<img src="/shared/images/icons/cart_add.png" alt="2cart" /></a>';
+?>
+
+<!-- content_end -->
+{{/wrap}}

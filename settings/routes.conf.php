@@ -41,7 +41,15 @@ $conf = array(
         'defaults' => array('controller' => 'main_page',
                             'action' => 'display')),
 
+    'search' => array(
+        'path' => '/search/',
+        'defaults' => array('controller' => 'main_page',
+            'action' => 'search')),
+
+
 );
+
+
 
 //$conf['ControllerActionIdentifier'] = array(
 //    'path' => '/:controller/:action/:identifier',

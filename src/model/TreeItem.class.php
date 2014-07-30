@@ -36,6 +36,17 @@ class TreeItem extends lmbActiveRecord
         return (isset($attr['is_branch'])?$attr['is_branch']:'');
     }
 
+    static function getAttrTitleByAttrId($attr_id = null) {
+        if(is_null($attr_id)) {
+            return null;
+        }
+        $criteria = new lmbSQLFieldCriteria('id', $attr_id);
+        //$criteria->addAnd(new lmbSQLFieldCriteria('is_published', 1));
+            //is_published
+        $attr = TreeAttribute::findFirst('TreeAttribute', $criteria);
+        return (isset($attr['title'])?$attr['title']:'');
+    }
+
     static function getAttrValueByNodeId($node_id = null, $attr_id = null) {
         if(is_null($node_id)) {
             return null;
@@ -108,9 +119,9 @@ class TreeItem extends lmbActiveRecord
 //        return $line;
 //    }
 
-    static function findForFront($params = array())
+    static function findForFront($params = array(), $sql_in_branch='0')
     {
-        $criteria =  new lmbSQLCriteria('is_branch = 0');
+        $criteria =  new lmbSQLCriteria('is_branch in ('. $sql_in_branch. ')');
         $str_like= '';
         if (isset($params['search']))
         {
@@ -122,5 +133,32 @@ class TreeItem extends lmbActiveRecord
             $criteria->addAnd(lmbSQLCriteria :: like('attr_value', $str_like. $params['title'].'%'));
         }
         return TreeItem :: find($criteria);
+    }
+
+    static function findFromFrame($params = array(), $sql_in_branch='0')
+    {
+        lmb_require('limb/dbal/src/criteria/lmbSQLRawCriteria.class.php');
+
+        $query = new lmbSelectQuery('tree_item');
+        $query->addTable('tree_full');
+        $query->addTable('tree_attribute');
+        $query->addCriteria(new lmbSQLRawCriteria('tree_item.node_id = tree_full.node_id'));
+        $query->addCriteria(new lmbSQLRawCriteria('tree_item.attr_id = tree_attribute.id'));
+
+        $criteria = new lmbSQLFieldCriteria('tree_attribute.is_published', 1);
+        $str_like= '';
+        if (isset($params['search']))
+        {
+            echo '<b>with_search</b>';
+            $str_like= '%';
+        }
+        if (isset($params['title']))
+        {
+            $criteria->addAnd(lmbSQLCriteria :: like('attr_value', $str_like. $params['title'].'%'));
+        }
+
+        $query->addCriteria($criteria);
+
+        return $query->fetch();
     }
 }

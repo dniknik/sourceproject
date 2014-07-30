@@ -39,6 +39,14 @@ class MainPageController extends lmbController
         return $params;
     }
 
+    function doSearch() {
+        $this->helper = new AlphabetHelper();
+        $this->useForm('search_form');
+        $this->setFormDatasource($this->request);
+
+        $this->items = TreeItem :: findFromFrame($this->request, '0,1');
+    }
+
     function  doPageitem() {
         //echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction() . '/ ';
 
@@ -357,6 +365,7 @@ class MainPageController extends lmbController
         else
             echo ' par_is_NOT_int';
 */
+
         $criteria = lmbSQLCriteria :: equal($req_filed, $req_val);
         $current = lmbCollection::toFlatArray(lmbActiveRecord :: find('TreeFull', $criteria));
 
