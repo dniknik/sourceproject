@@ -38,8 +38,15 @@
                 {{list:item}}
                 {{if var="{$item->getTitle()}"}}
                 <tr class="odd">
-                    <td colspan="2" style="text-align: center;">{$item->getTitle()}</td>
-                    <!-- <td></td> -->
+                    <td colspan="2" style="text-align: center;">
+                        <?php
+                        $isProduct = (TreeItem :: getIsBranchByNodeId($item['node_id'])==0);
+                        $uri = TreeItem::getUriByNodeId($item['node_id']);
+                        echo ($isProduct)?'<a href="/tree_cart/add/'. $item['node_id']. '"><img src="/shared/images/icons/cart_add.png" alt="2cart" /></a>': '';
+                        ?>
+                        {$item->getTitle()}
+                    </td>
+                    <!-- <td> </td> -->
                 </tr>
                 {{/if}}
                 {{list using='{$item->gettreeitem()}' parity='{$parity}' as='$it'}}

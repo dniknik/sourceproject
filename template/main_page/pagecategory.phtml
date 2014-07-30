@@ -168,7 +168,8 @@
 
                     <?php
                     $isProduct = (TreeItem :: getIsBranchByNodeId($item['node_id'])==0);
-                    echo ($isProduct)?'<a href="/tree_cart/add/'. $item['node_id']. '">В Корзину</a>': '';
+                    $uri = TreeItem::getUriByNodeId($item['node_id']);
+                    echo ($isProduct)?'<a href="/tree_cart/add/'. $item['node_id']. '"><img src="/shared/images/icons/cart_add.png" alt="2cart" /></a>': '';
                     ?>
 
                     <h<?php echo $item['level']+1; ?>>
