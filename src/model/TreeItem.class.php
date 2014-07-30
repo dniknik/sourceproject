@@ -32,9 +32,8 @@ class TreeItem extends lmbActiveRecord
             $node_id = 0;
         }
         $criteria =  new lmbSQLFieldCriteria('node_id', $node_id);
-        //$criteria->addAnd(new lmbSQLFieldCriteria('attr_id', self :: ID_TITLE));
         $attr = TreeItem::findFirst('TreeItem', $criteria);
-        return (isset($attr['is_branch'])?$attr['is_branch']:'(emptyORnull)');
+        return (isset($attr['is_branch'])?$attr['is_branch']:'');
     }
 
     static function getAttrValueByNodeId($node_id = null, $attr_id = null) {
@@ -46,7 +45,7 @@ class TreeItem extends lmbActiveRecord
             $criteria->addAnd(new lmbSQLFieldCriteria('attr_id', $attr_id));
         }
         $attr = TreeItem::findFirst('TreeItem', $criteria);
-        return (isset($attr['attr_value'])?$attr['attr_value']:'(emptyORnull)');
+        return (isset($attr['attr_value'])?$attr['attr_value']:'');
     }
 
     static function getPriceByNodeId($node_id= '') {
@@ -56,7 +55,7 @@ class TreeItem extends lmbActiveRecord
         $criteria =  new lmbSQLFieldCriteria('node_id', $node_id);
         $criteria->addAnd(new lmbSQLFieldCriteria('attr_id', self :: ID_PRICE));
         $attr = TreeItem::findFirst('TreeItem', $criteria);
-        return (isset($attr['attr_value'])?$attr['attr_value']:'(emptyORnull)');
+        return (isset($attr['attr_value'])?$attr['attr_value']:'');
     }
 
     static function getUriByNodeId($node_id= '') {
@@ -66,7 +65,7 @@ class TreeItem extends lmbActiveRecord
         $criteria =  new lmbSQLFieldCriteria('node_id', $node_id);
         $criteria->addAnd(new lmbSQLFieldCriteria('attr_id', self :: ID_URI));
         $attr = TreeItem::findFirst('TreeItem', $criteria);
-        return (isset($attr['attr_value'])?$attr['attr_value']:'(emptyORnull)');
+        return (isset($attr['attr_value'])?$attr['attr_value']:'');
     }
 
     static function getDescriptionByNodeId($node_id= '') {
@@ -76,7 +75,7 @@ class TreeItem extends lmbActiveRecord
         $criteria =  new lmbSQLFieldCriteria('node_id', $node_id);
         $criteria->addAnd(new lmbSQLFieldCriteria('attr_id', self :: ID_DESCR));
         $attr = TreeItem::findFirst('TreeItem', $criteria);
-        return (isset($attr['attr_value'])?$attr['attr_value']:'(emptyORnull)');
+        return (isset($attr['attr_value'])?$attr['attr_value']:'');
     }
 
     static function getTitleByNodeId($node_id= '') {
@@ -86,7 +85,7 @@ class TreeItem extends lmbActiveRecord
         $criteria =  new lmbSQLFieldCriteria('node_id', $node_id);
         $criteria->addAnd(new lmbSQLFieldCriteria('attr_id', self :: ID_TITLE));
         $attr = TreeItem::findFirst('TreeItem', $criteria);
-        return (isset($attr['attr_value'])?$attr['attr_value']:'(emptyORnull)');
+        return (isset($attr['attr_value'])?$attr['attr_value']:'');
     }
 
 
@@ -94,21 +93,10 @@ class TreeItem extends lmbActiveRecord
         if ($node_id=='') {
             $node_id = $this->get('node_id');
         }
-        //echo 'function getTitle($node_id=';
-        //return '-';
         $criteria =  new lmbSQLFieldCriteria('node_id', $node_id);
         $criteria->addAnd(new lmbSQLFieldCriteria('attr_id', $this->ID_ATTR_TITLE));
         $attr = TreeItem::findFirst('TreeItem', $criteria);
-//echo $this->current(). ' :: ';
-        //$it = $this->exportRaw();
-      //$this->mapFieldToProperty()
-        //$it = $this->gettreeattribute();
-        //$it = $attr;
-        //lmb_var_debug($it);
-        //lmb_var_debug( $item->gettreeattribute()->getTitle() );
-//return 'empty';
-        return (isset($attr['attr_value'])?$attr['attr_value']:'(emptyORnull)');
-//        return (isset($item['title'])?$item['title']:'(empty)');
+        return (isset($attr['attr_value'])?$attr['attr_value']:'');
     }
 //    static function createForPreference(Preference $specification)
 //    {
@@ -122,7 +110,6 @@ class TreeItem extends lmbActiveRecord
 
     static function findForFront($params = array())
     {
-        //lmbSQLFieldCriteria('is_branch', 1);
         $criteria =  new lmbSQLCriteria('is_branch = 0');
         $str_like= '';
         if (isset($params['search']))
@@ -133,8 +120,6 @@ class TreeItem extends lmbActiveRecord
         if (isset($params['title']))
         {
             $criteria->addAnd(lmbSQLCriteria :: like('attr_value', $str_like. $params['title'].'%'));
-            //echo '<br>params_title: ';
-            //lmb_var_debug($params['title']);
         }
         return TreeItem :: find($criteria);
     }
