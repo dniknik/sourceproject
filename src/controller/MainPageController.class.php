@@ -289,15 +289,7 @@ class MainPageController extends lmbController
         $this->useForm('search_form');
         $this->setFormDatasource($this->request);
 
-        //echo '_getSearchParams():'; var_dump( $this->_getSearchParams() );
-        //echo '<br>this->request<br>'.$this->request->toString().'<br>';
-
-        ////$this->items = TreeItem :: findForFront($this->request);
-        //$this->items = Uitree :: findForFront($this->_getSearchParams());
-
         $this->id = $this->getIdFromRequest($this->request, 'TreeFull');
-
-        //echo ' #this_id:' . $this->id. ' '; // .' #id:'.$id. '<br>';
 
         if ($this->id == 0) {
             $this->flash('Проверьте корректность адресной строки!');
@@ -315,46 +307,24 @@ class MainPageController extends lmbController
             $criteria = lmbSQLCriteria :: like('path', $cur_node_path . '%');
             $records = lmbCollection::toFlatArray(lmbActiveRecord :: find('TreeFull', $criteria));
             $this->childrens = $records;
-            //$ids_childrens = array_column($records, 'id');
+            // ------------------
+            $criteria = new lmbSQLCriteria('parent_id = '. $id);
+            $this->items_child_nodes = lmbActiveRecord::find('TreeFull', array('criteria'=>$criteria));
+            // -----------------------------------------------
+            $sql ='select ';
+            $sql =$sql. 'it.attr_value as udate, it.node_id, it.is_branch, ';
+            $sql =$sql. 'tr.path, tr.id, tr.parent_id as par_id, tr.identifier as uri, tr.level ';
+            $sql =$sql. 'from tree_item it, tree_attribute pr, tree_full tr ';
+            $sql =$sql. 'where it.attr_id=pr.id and it.node_id=tr.node_id ';
+            $sql =$sql. 'and pr.id in (5) '; //@fixme not use digital!
+            $sql =$sql. 'and it.is_branch in (0,1) '; //category(1) && tovars(0)
+            $sql =$sql. 'order by it.attr_value DESC;';
+
+            $main_last = lmbDBAL :: fetch($this->_getMainSelect(0));
+            $this->main_last = lmbTreeHelper :: sort($main_last, array('udate' => 'DESC'));
         } catch (lmbARException $e) {
             $this->flashError('Wrong ...!');
         }
-
-//        $this->itemsall = TreeItem :: findForFront($this->request);
-//        $arr = lmbCollection::toFlatArray($this->itemsall);
-//        $tmp = array();
-//        foreach($arr as $key => $val) {
-//            $tmp[ $val['node_id']][] = array(
-//                'id' => $val['id'],
-//                'node_id' => $val['node_id'],
-//                'attr_id' => $val['attr_id'],
-//                'attr_value' => $val['attr_value'],
-//                'is_branch' => $val['is_branch']) ;
-//        }
-//        $this->arr_tovar = $tmp;
-//        $this->arr_tovar = array();
-// ------------------
-        $criteria = new lmbSQLCriteria('parent_id = '. $id);
-        $this->items_child_nodes = lmbActiveRecord::find('TreeFull', array('criteria'=>$criteria));
-// -----------------------------------------------
-        $sql ='select ';
-        $sql =$sql. 'it.attr_value as udate, it.node_id, it.is_branch, ';
-        $sql =$sql. 'tr.path, tr.id, tr.parent_id as par_id, tr.identifier as uri, tr.level ';
-        $sql =$sql. 'from tree_item it, tree_attribute pr, tree_full tr ';
-        $sql =$sql. 'where it.attr_id=pr.id and it.node_id=tr.node_id ';
-        $sql =$sql. 'and pr.id in (5) '; //@fixme not use digital!
-        $sql =$sql. 'and it.is_branch in (0,1) '; //category(1) && tovars(0)
-        $sql =$sql. 'order by it.attr_value DESC;';
-
-        //$this->nodes_tree = lmbDBAL :: fetch($sql);
-
-        $this->main_all = lmbDBAL :: fetch($this->_getMainSelect());
-        $main_category = lmbDBAL :: fetch($this->_getMainSelect(1));
-        $this->main_category = lmbTreeHelper :: sort($main_category,
-            array('path' => 'ASC'));
-
-        $main_last = lmbDBAL :: fetch($this->_getMainSelect(0));
-        $this->main_last = lmbTreeHelper :: sort($main_last, array('udate' => 'DESC'));
     }
 
 
