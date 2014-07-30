@@ -1,5 +1,7 @@
 <?php
 
+lmb_require('src/helper/AlphabetHelper.class.php');
+
 class TreeCartController extends lmbController
 {
   protected function _checkoutCart($cart)
@@ -42,6 +44,7 @@ class TreeCartController extends lmbController
 
   function doDisplay()
   {
+    $this->helper = new AlphabetHelper();
     $this->cart = $this->_getCart();
   }
 
