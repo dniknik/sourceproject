@@ -16,7 +16,6 @@ require_once('limb/tree/common.inc.php');
 if(file_exists(dirname(__FILE__) . '/setup.override.php'))
   require_once(dirname(__FILE__) . '/setup.override.php');
 
-
 lmb_package_require('cms');
 
 lmb_env_setor('LIMB_VAR_DIR', dirname(__FILE__) . '/var/');
@@ -32,4 +31,4 @@ lmb_require('src/model/*.class.php');
 lmb_require('src/toolkit/ShopTools.class.php');
 lmbToolkit :: merge(new ShopTools());
 
-//echo('&nbsp;<b>|</b>&nbsp;LIMB_APP_MODE<b>:</b> '.lmb_env_get('LIMB_APP_MODE').'&nbsp;<b>|</b>&nbsp;');
+// echo('&nbsp;<b>|</b>&nbsp;LIMB_APP_MODE<b>:</b> '.lmb_env_get('LIMB_APP_MODE').'&nbsp;<b>|</b>&nbsp;');
