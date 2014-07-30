@@ -40,7 +40,7 @@ class MainPageController extends lmbController
     }
 
     function  doPageitem() {
-        echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction() . '/ ';
+        //echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction() . '/ ';
 
         $this->helper = new AlphabetHelper();
         $this->useForm('search_form');
@@ -48,7 +48,7 @@ class MainPageController extends lmbController
 
         $this->id = $this->getIdFromRequest($this->request, 'TreeFull');
 
-        echo ' #this_id:' . $this->id; // .' #id:'.$id. '<br>';
+        //echo ' #this_id:' . $this->id; // .' #id:'.$id. '<br>';
 
         if ($this->id == 0) {
             $this->flash('Проверьте корректность адресной строки!');
@@ -282,7 +282,7 @@ class MainPageController extends lmbController
 
     function  doDisplay()
     {
-        echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction() . '/ ';
+        //echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction() . '/ ';
         $this->title = 'Welcome!';
 
         $this->helper = new AlphabetHelper();
@@ -297,7 +297,7 @@ class MainPageController extends lmbController
 
         $this->id = $this->getIdFromRequest($this->request, 'TreeFull');
 
-        echo ' #this_id:' . $this->id. ' '; // .' #id:'.$id. '<br>';
+        //echo ' #this_id:' . $this->id. ' '; // .' #id:'.$id. '<br>';
 
         if ($this->id == 0) {
             $this->flash('Проверьте корректность адресной строки!');
@@ -386,12 +386,12 @@ class MainPageController extends lmbController
             } else {
                 $req_filed = 'parent_id';
             }
-
+/*
         if (is_numeric($req_val) && intval($req_val) - $req_val == 0)
             echo ' par_is_int';
         else
             echo ' par_is_NOT_int';
-
+*/
         $criteria = lmbSQLCriteria :: equal($req_filed, $req_val);
         $current = lmbCollection::toFlatArray(lmbActiveRecord :: find('TreeFull', $criteria));
 

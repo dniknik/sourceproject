@@ -1,10 +1,10 @@
 <?php /* This file is generated from /home/dnn/web/webshop/template/not_found.phtml*/?><?php
-if(!class_exists('MacroTemplateExecutor10c2a68216d4f7a098809fe7cacf8d1f', false)){
+if(!class_exists('MacroTemplateExecutorb8e334eba0e015417ff026d6a6c95f02', false)){
 require_once('limb/macro/src/compiler/lmbMacroTemplateExecutor.class.php');
 require_once('limb/macro/src/filters/lmbMacroDefaultFilter.inc.php');
 require_once('limb/macro/src/tags/form/lmbMacroFormWidget.class.php');
 require_once('limb/macro/src/tags/form/lmbMacroInputWidget.class.php');
-class MacroTemplateExecutor10c2a68216d4f7a098809fe7cacf8d1f extends lmbMacroTemplateExecutor {
+class MacroTemplateExecutorb8e334eba0e015417ff026d6a6c95f02 extends lmbMacroTemplateExecutor {
 
 function _init() {
 $this->form_search_form = new lmbMacroFormWidget('search_form');
@@ -99,7 +99,7 @@ $this->__staticInclude3('user/include/profile_box.phtml', $U); ?>
         <div id="container">
             <?php $this->__staticInclude4('flash_box.phtml'); ?>
 
-            <?php if(isset($this->__slot_handlers_content_zone)) {foreach($this->__slot_handlers_content_zone as $__slot_handler_content_zone) {call_user_func_array($__slot_handler_content_zone, array(array()));}}$this->__slotHandlere0e25594021ede2c6f295f0524b6034c(array()); ?>
+            <?php if(isset($this->__slot_handlers_content_zone)) {foreach($this->__slot_handlers_content_zone as $__slot_handler_content_zone) {call_user_func_array($__slot_handler_content_zone, array(array()));}}$this->__slotHandler71fa7d8ffb1de140856389ce60fe95cf(array()); ?>
 
         </div>
     </div>
@@ -218,7 +218,7 @@ echo htmlspecialchars($BL,3); ?></b></div><?php  } ?>
 <?php }
 }
 
-function __slotHandlere0e25594021ede2c6f295f0524b6034c($BN= array()) {
+function __slotHandler71fa7d8ffb1de140856389ce60fe95cf($BN= array()) {
 if($BN) extract($BN); ?>
 
 <b>Error 404.</b>
@@ -228,4 +228,4 @@ if($BN) extract($BN); ?>
 
 }
 }
-$macro_executor_class='MacroTemplateExecutor10c2a68216d4f7a098809fe7cacf8d1f';
+$macro_executor_class='MacroTemplateExecutorb8e334eba0e015417ff026d6a6c95f02';

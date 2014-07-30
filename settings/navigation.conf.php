@@ -77,13 +77,6 @@ $conf[lmbCmsUserRoles :: ADMIN][0]['children'][] =
         "icon" => "/shared/images/icons/application_side_tree.png",
     );
 
-//$conf[lmbCmsUserRoles :: ADMIN][0]['children'][] =
-//    array(
-//        "title" => "UI::Tree",
-//        "url" => "/uitree/",
-//        "icon" => "/shared/images/icons/application_side_tree.png",
-//    );
-
 $conf[lmbCmsUserRoles :: ADMIN][0]['children'][] =
     array(
         "title" => "Admin_UI::Category",

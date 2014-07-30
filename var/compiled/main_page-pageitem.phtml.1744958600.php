@@ -1,10 +1,10 @@
 <?php /* This file is generated from /home/dnn/web/webshop/template/main_page/pageitem.phtml*/?><?php
-if(!class_exists('MacroTemplateExecutor6502942a4a872003ce61951127edd39a', false)){
+if(!class_exists('MacroTemplateExecutor72d4bad4fbc7881a7843d1c33771c5ec', false)){
 require_once('limb/macro/src/compiler/lmbMacroTemplateExecutor.class.php');
 require_once('limb/macro/src/filters/lmbMacroDefaultFilter.inc.php');
 require_once('limb/macro/src/tags/form/lmbMacroFormWidget.class.php');
 require_once('limb/macro/src/tags/form/lmbMacroInputWidget.class.php');
-class MacroTemplateExecutor6502942a4a872003ce61951127edd39a extends lmbMacroTemplateExecutor {
+class MacroTemplateExecutor72d4bad4fbc7881a7843d1c33771c5ec extends lmbMacroTemplateExecutor {
 
 function _init() {
 $this->form_search_form = new lmbMacroFormWidget('search_form');
@@ -100,7 +100,7 @@ $this->__staticInclude3('user/include/profile_box.phtml', $U); ?>
         <div id="container">
             <?php $this->__staticInclude4('flash_box.phtml'); ?>
 
-            <?php if(isset($this->__slot_handlers_content_zone)) {foreach($this->__slot_handlers_content_zone as $__slot_handler_content_zone) {call_user_func_array($__slot_handler_content_zone, array(array()));}}$this->__slotHandler16d4867ad208307cd332047ae831f666(array()); ?>
+            <?php if(isset($this->__slot_handlers_content_zone)) {foreach($this->__slot_handlers_content_zone as $__slot_handler_content_zone) {call_user_func_array($__slot_handler_content_zone, array(array()));}}$this->__slotHandler96ec7222ac41de0afb4e75fb20f5438b(array()); ?>
 
         </div>
     </div>
@@ -219,7 +219,7 @@ echo htmlspecialchars($BL,3); ?></b></div><?php  } ?>
 <?php }
 }
 
-function __slotHandler16d4867ad208307cd332047ae831f666($BN= array()) {
+function __slotHandler96ec7222ac41de0afb4e75fb20f5438b($BN= array()) {
 if($BN) extract($BN); ?>
 
 <!-- content_begin -->
@@ -239,13 +239,13 @@ if($BN) extract($BN); ?>
 
         <hr>
         <h4>wood</h4>
-        <?php $this->_render_tree316a9dfdc4ff58b5b201bdc355fb5ac0($this->wood, 0,array('kids_prop' => 'preloaded_children','prefix' => '',));
+        <?php $this->_render_treec60f129b021d7308e1a5a646d064bc11($this->wood, 0,array('kids_prop' => 'preloaded_children','prefix' => '',));
  ?>
 
 
         <hr>
         <h4>tree_tst</h4>
-        <?php $this->_render_tree330ac19bba0d800f98230f6910e4be08($tree_tst, 0,array('kids_prop' => 'preloaded_children','prefix' => '',));
+        <?php $this->_render_treeead22bcfaa7f276fc6f46da43f107647($tree_tst, 0,array('kids_prop' => 'preloaded_children','prefix' => '',));
  ?>
 
 
@@ -447,7 +447,7 @@ echo htmlspecialchars($FK,3); ?></td>
                             <th>is_branch</th>
                         </tr>
 
-                        <?php $this->_render_tree9915b139144e7949364a6dec1363e68c($tree_tst, 0,array('kids_prop' => 'preloaded_children','prefix' => '1',));
+                        <?php $this->_render_treecc764210e6ad6bf3bbb5d1ff3c72919c($tree_tst, 0,array('kids_prop' => 'preloaded_children','prefix' => '1',));
  ?>
 
                     </table>
@@ -537,7 +537,7 @@ function __staticInclude5($file) {
 <?php 
 }
 
-function _render_tree316a9dfdc4ff58b5b201bdc355fb5ac0($BU,$level,$BW= array()) {
+function _render_treec60f129b021d7308e1a5a646d064bc11($BU,$level,$BW= array()) {
 if($BW) extract($BW);$BV=0;
 foreach($BU as $item) {
 $counter = $BV+1;
@@ -568,7 +568,7 @@ $CG = $item;
 if((is_array($CG) || ($CG instanceof ArrayAccess)) && isset($CG['identifier'])) { $CF = $CG['identifier'];
 }else{ $CF = '';}
 echo htmlspecialchars($CF,3); ?></a>
-                <?php if(isset($item["preloaded_children"])) {$this->_render_tree316a9dfdc4ff58b5b201bdc355fb5ac0($item["preloaded_children"], $level + 1, array());
+                <?php if(isset($item["preloaded_children"])) {$this->_render_treec60f129b021d7308e1a5a646d064bc11($item["preloaded_children"], $level + 1, array());
 } ?>
 
             </li>
@@ -586,7 +586,7 @@ if(count($BU) == 0) { ?>
 
 }
 
-function _render_tree330ac19bba0d800f98230f6910e4be08($CN,$level,$CP= array()) {
+function _render_treeead22bcfaa7f276fc6f46da43f107647($CN,$level,$CP= array()) {
 if($CP) extract($CP);$CO=0;
 foreach($CN as $item) {
 $counter = $CO+1;
@@ -617,7 +617,7 @@ $CZ = $item;
 if((is_array($CZ) || ($CZ instanceof ArrayAccess)) && isset($CZ['identifier'])) { $CY = $CZ['identifier'];
 }else{ $CY = '';}
 echo htmlspecialchars($CY,3); ?></a>
-                <?php if(isset($item["preloaded_children"])) {$this->_render_tree330ac19bba0d800f98230f6910e4be08($item["preloaded_children"], $level + 1, array());
+                <?php if(isset($item["preloaded_children"])) {$this->_render_treeead22bcfaa7f276fc6f46da43f107647($item["preloaded_children"], $level + 1, array());
 } ?>
 
             </li>
@@ -648,7 +648,7 @@ function __staticInclude6($file) {
 <?php 
 }
 
-function _render_tree9915b139144e7949364a6dec1363e68c($FS,$level,$FU= array()) {
+function _render_treecc764210e6ad6bf3bbb5d1ff3c72919c($FS,$level,$FU= array()) {
 if($FU) extract($FU);$FT=0;
 foreach($FS as $item) {
 $counter = $FT+1;
@@ -691,7 +691,7 @@ echo htmlspecialchars($GF,3); ?>
                                 
                                 <?php $new_prefix = $prefix . "." . $counter;
                                 $this->ind = $this->i + 1; ?>
-                                <?php if(isset($item["preloaded_children"])) {$this->_render_tree9915b139144e7949364a6dec1363e68c($item["preloaded_children"], $level + 1, array('prefix' => $new_prefix,));
+                                <?php if(isset($item["preloaded_children"])) {$this->_render_treecc764210e6ad6bf3bbb5d1ff3c72919c($item["preloaded_children"], $level + 1, array('prefix' => $new_prefix,));
 } ?>
 
                             </td>
@@ -707,4 +707,4 @@ if($FT) {
 
 }
 }
-$macro_executor_class='MacroTemplateExecutor6502942a4a872003ce61951127edd39a';
+$macro_executor_class='MacroTemplateExecutor72d4bad4fbc7881a7843d1c33771c5ec';

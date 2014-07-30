@@ -1,11 +1,11 @@
 <?php /* This file is generated from /home/dnn/web/webshop/template/main_page/display.phtml*/?><?php
-if(!class_exists('MacroTemplateExecutorba939a66b6f043491990406213d09053', false)){
+if(!class_exists('MacroTemplateExecutor8efc007209c02be8d5fa56ce05a9539a', false)){
 require_once('limb/macro/src/compiler/lmbMacroTemplateExecutor.class.php');
 require_once('limb/macro/src/filters/lmbMacroDefaultFilter.inc.php');
 require_once('limb/macro/src/tags/form/lmbMacroFormWidget.class.php');
 require_once('limb/macro/src/tags/form/lmbMacroInputWidget.class.php');
 require_once('limb/macro/src/tags/list/lmbMacroListGlueHelper.class.php');
-class MacroTemplateExecutorba939a66b6f043491990406213d09053 extends lmbMacroTemplateExecutor {
+class MacroTemplateExecutor8efc007209c02be8d5fa56ce05a9539a extends lmbMacroTemplateExecutor {
 
 function _init() {
 $this->form_search_form = new lmbMacroFormWidget('search_form');
@@ -67,7 +67,7 @@ $this->__staticInclude3('user/include/profile_box.phtml', $U); ?>
             </tr>
         </table>
 
-        <div id="limb_links">
+        <div id="limb_links" style="display: none;">
             <a href="http://limb-project.com">limb-project.com</a>&nbsp;|&nbsp;
             <a href="http://bits.limb-project.com">bits.limb-project.com</a>
         </div>
@@ -101,7 +101,7 @@ $this->__staticInclude3('user/include/profile_box.phtml', $U); ?>
         <div id="container">
             <?php $this->__staticInclude4('flash_box.phtml'); ?>
 
-            <?php if(isset($this->__slot_handlers_content_zone)) {foreach($this->__slot_handlers_content_zone as $__slot_handler_content_zone) {call_user_func_array($__slot_handler_content_zone, array(array()));}}$this->__slotHandler102d275b8cedca823f735cd971513aae(array()); ?>
+            <?php if(isset($this->__slot_handlers_content_zone)) {foreach($this->__slot_handlers_content_zone as $__slot_handler_content_zone) {call_user_func_array($__slot_handler_content_zone, array(array()));}}$this->__slotHandler1e39c4c82928f4d44826d0cad143beae(array()); ?>
 
         </div>
     </div>
@@ -220,7 +220,7 @@ echo htmlspecialchars($BL,3); ?></b></div><?php  } ?>
 <?php }
 }
 
-function __slotHandler102d275b8cedca823f735cd971513aae($BN= array()) {
+function __slotHandler1e39c4c82928f4d44826d0cad143beae($BN= array()) {
 if($BN) extract($BN); ?>
 
 <!-- content_begin -->
@@ -232,10 +232,9 @@ if($BN) extract($BN); ?>
 
 
     <div style="align-self: flex-start; width: 320px">
-
         <hr>
         <h4 style="background-color: #add8e6;">Список категорий</h4>
-        <p style="background-color: lightgray;">items_child_nodes</p>
+        <p style="background-color: lightgray; display: none;">items_child_nodes</p>
         <?php $BU = 0;$BW = $this->items_child_nodes;
 
 if(!is_array($BW) && !($BW instanceof Iterator) && !($BW instanceof IteratorAggregate)) {
@@ -245,104 +244,70 @@ foreach($BV as $item) {$my_counter = $BU+1;if($BU == 0) { ?>
 
         <?php } ?>
 
-<!--        <h5> <a href="/pagecategory/<?php $BY='';
+
+        <h5> <a href="/pagecategory/<?php $BY='';
 $BZ = $item;
 if((is_array($BZ) || ($BZ instanceof ArrayAccess)) && isset($BZ['identifier'])) { $BY = $BZ['identifier'];
 }else{ $BY = '';}
-echo htmlspecialchars($BY,3); ?>"><?php $CA='';
+echo htmlspecialchars($BY,3); ?>"> <?php $CA='';
 $CB = $item;
-if((is_array($CB) || ($CB instanceof ArrayAccess)) && isset($CB['path'])) { $CA = $CB['path'];
-}else{ $CA = '';}
-echo htmlspecialchars($CA,3); ?> / --><?php //echo TreeItem :: getTitleByNodeId($item['node_id']); ?><!-- </a> </h5>-->
-        <h5> <a href="/pagecategory/<?php $CC='';
-$CD = $item;
-if((is_array($CD) || ($CD instanceof ArrayAccess)) && isset($CD['identifier'])) { $CC = $CD['identifier'];
-}else{ $CC = '';}
-echo htmlspecialchars($CC,3); ?>"><?php $CE='';
-$CF = $item;
-if((is_array($CF) || ($CF instanceof ArrayAccess)) && isset($CF['path'])) { $CE = $CF['path'];
-}else{ $CE = '';}
-echo htmlspecialchars($CE,3); ?> / <?php $CG='';
-$CH = $item;
-$CG = $CH->getTitle();
-echo htmlspecialchars($CG,3); ?> </a> </h5>
+$CA = $CB->getTitle();
+echo htmlspecialchars($CA,3); ?> </a> </h5>
         <?php $BU++;}if($BU > 0) { ?>
 
         <?php } ?>
 
-
         <hr>
-        <div style="">
-        <?php
-            $sorted = lmbTreeHelper :: sort($this->childrens, array('id' => 'ASC'));
-            $tree_tst = new lmbTreeNestedCollection($sorted);
-            $tree_tst->setChildrenField('preloaded_children');
-            $tree_tst->rewind();
-        ?>
-        <h4>tree_tst by #childrens</h4>
-
-        <?php $this->_render_treeb73199e4e82f0336de1fdc83697aed69($tree_tst, 0,array('kids_prop' => 'preloaded_children','prefix' => '',));
- ?>
-
-        </div>
     </div>
 
     
 
     <div class="list" style="lign-self: flex-end; margin: 5px 6px;">
 
-        <?php $DD = 0;$DF = $this->main_last;
+        <?php $CE = 0;$CG = $this->main_last;
 
-if(!is_array($DF) && !($DF instanceof Iterator) && !($DF instanceof IteratorAggregate)) {
-$DF = array();}
-$DE = array();
-foreach($DF as $DH => $DG) {
-$DE[$DH] = $DG;
+if(!is_array($CG) && !($CG instanceof Iterator) && !($CG instanceof IteratorAggregate)) {
+$CG = array();}
+$CF = array();
+foreach($CG as $CI => $CH) {
+$CF[$CI] = $CH;
 }
-if(!isset($DJ)){
-$DJ = new lmbMacroListGlueHelper();
+if(!isset($CK)){
+$CK = new lmbMacroListGlueHelper();
 }
-$DI = 3;
-$DJ->setStep($DI);
-$DJ->setTotalItems(count($DE));
-foreach($DE as $item) {if($DD == 0) { ?>
+$CJ = 3;
+$CK->setStep($CJ);
+$CK->setTotalItems(count($CF));
+foreach($CF as $item) {if($CE == 0) { ?>
 
         <table border="1">
             <tr>
                 <?php } ?>
 
                 <td>
-                    <?php $DK='';
-$DL = $item;
-if((is_array($DL) || ($DL instanceof ArrayAccess)) && isset($DL['path'])) { $DK = $DL['path'];
-}else{ $DK = '';}
-echo htmlspecialchars($DK,3); ?> | node:<?php $DM='';
-$DN = $item;
-if((is_array($DN) || ($DN instanceof ArrayAccess)) && isset($DN['node_id'])) { $DM = $DN['node_id'];
-}else{ $DM = '';}
-echo htmlspecialchars($DM,3); ?> | <b>[<?php $DO='';
-$DP = $item;
-if((is_array($DP) || ($DP instanceof ArrayAccess)) && isset($DP['udate'])) { $DO = $DP['udate'];
-}else{ $DO = '';}
-echo htmlspecialchars($DO,3); ?>]</b>
-                    <?php $this->_template1042393dc6a19fb297017f73f692341e(array('template' => 'info_tpl','item' => $item,)); ?>
+                    <b>[Сортировка по дате: <?php $CL='';
+$CM = $item;
+if((is_array($CM) || ($CM instanceof ArrayAccess)) && isset($CM['udate'])) { $CL = $CM['udate'];
+}else{ $CL = '';}
+echo htmlspecialchars($CL,3); ?>]</b>
+                    <?php $this->_template8c1140be411090da349ca8ec7997ec3d(array('template' => 'info_tpl','item' => $item,)); ?>
 
                 </td>
-                <?php $DJ->next();
-if ( $DJ->shouldDisplay()){
-$DJ->reset();
+                <?php $CK->next();
+if ( $CK->shouldDisplay()){
+$CK->reset();
  ?></tr><tr><?php }
  ?>
 
-                <?php $DD++;}if($DD > 0) { ?>
+                <?php $CE++;}if($CE > 0) { ?>
 
-                <?php $EL = 3;
-$EM = count($DE);if ((0 || ($EM/$EL > 1)) && $EM) 
-$EN = ceil($EM/$EL)*$EL - $EM; 
+                <?php $CU = 3;
+$CV = count($CF);if ((0 || ($CV/$CU > 1)) && $CV) 
+$CW = ceil($CV/$CU)*$CU - $CV; 
 else 
-$EN = 0;
-if ($EN){
-$items_left = $EN; ?>
+$CW = 0;
+if ($CW){
+$items_left = $CW; ?>
 
                 <td colspan='<?php echo htmlspecialchars($items_left,3); ?>'>&nbsp;</td>
                 <?php }
@@ -351,76 +316,6 @@ $items_left = $EN; ?>
             </tr>
         </table>
         <?php } ?>
-
-
-        <!-- for debug -->
-        <div class="list">
-        <?php $EW = 0;$EY = $this->arr_tovar;
-
-if(!is_array($EY) && !($EY instanceof Iterator) && !($EY instanceof IteratorAggregate)) {
-$EY = array();}
-$EX = $EY;
-foreach($EX as $key => $item) {$parity = (( ($EW + 1) % 2) ? "odd" : "even");if($EW == 0) { ?>
-
-            <table>
-                <tr>
-                    <th>#ID</th>
-                    <th>Заголовок</th>
-                    <th>Описание</th>
-                    <th>Идентификатор</th>
-
-                    <th>Дата добавления</th>
-                    <th>Дата обновления</th>
-
-                    <th>Цена</th>
-                </tr>
-                <?php } ?>
-
-                <tr class='<?php echo htmlspecialchars($parity,3); ?>'>
-                    <td>
-                        #(:<?php echo htmlspecialchars($key,3); ?>:)
-                        <a href="/tree_cart/add/<?php echo htmlspecialchars($key,3); ?>">+++</a>
-                    </td>
-
-                    <?php
-
-                    //@todo this fragment to ShopTools
-                    $arr_tovar_attr = array_reverse($item);
-                    ?>
-
-                    <?php $FK = 0;$FM = $arr_tovar_attr;
-
-if(!is_array($FM) && !($FM instanceof Iterator) && !($FM instanceof IteratorAggregate)) {
-$FM = array();}
-$FL = $FM;
-foreach($FL as $tovar) {if($FK == 0) { ?>
-
-                    <?php } ?>
-
-                    <td>
-                        <?php $FO='';
-$FP = $tovar;
-if((is_array($FP) || ($FP instanceof ArrayAccess)) && isset($FP['attr_value'])) { $FO = $FP['attr_value'];
-}else{ $FO = '';}
-echo htmlspecialchars($FO,3); ?>
-
-                    </td>
-                    <?php $FK++;}if($FK > 0) { ?>
-
-                    <?php } ?>
-
-
-                </tr>
-                <?php $EW++;}if($EW > 0) { ?>
-
-                
-            </table>
-        <?php }if($EW == 0) { ?>
-
-                <div class="empty_list">Empty arr_tovar</div>
-                <?php } ?>
-
-        </div>
 
     </div>
 </div>
@@ -441,102 +336,22 @@ function __staticInclude5($file) {
 <?php 
 }
 
-function _render_treeb73199e4e82f0336de1fdc83697aed69($CO,$level,$CQ= array()) {
-if($CQ) extract($CQ);$CP=0;
-foreach($CO as $item) {
-$counter = $CP+1;
-if(!$CP) {
- ?>
-
-        <ul>
-            <?php }
- ?>
-
-            <li>
-                <?php echo htmlspecialchars($counter,3); ?>)
-                <a href="/branch/<?php $CT='';
-$CU = $item;
-if((is_array($CU) || ($CU instanceof ArrayAccess)) && isset($CU['id'])) { $CT = $CU['id'];
-}else{ $CT = '';}
-echo htmlspecialchars($CT,3); ?>">:<?php $CV='';
-$CW = $item;
-if((is_array($CW) || ($CW instanceof ArrayAccess)) && isset($CW['path'])) { $CV = $CW['path'];
-}else{ $CV = '';}
-echo htmlspecialchars($CV,3); ?></a>&nbsp;|&nbsp;
-                <a href="/branch/<?php $CX='';
-$CY = $item;
-if((is_array($CY) || ($CY instanceof ArrayAccess)) && isset($CY['identifier'])) { $CX = $CY['identifier'];
-}else{ $CX = '';}
-echo htmlspecialchars($CX,3); ?>"><?php $CZ='';
-$DA = $item;
-if((is_array($DA) || ($DA instanceof ArrayAccess)) && isset($DA['identifier'])) { $CZ = $DA['identifier'];
-}else{ $CZ = '';}
-echo htmlspecialchars($CZ,3); ?></a>
-                <?php if(isset($item["preloaded_children"])) {$this->_render_treeb73199e4e82f0336de1fdc83697aed69($item["preloaded_children"], $level + 1, array());
-} ?>
-
-            </li>
-            <?php $CP++;
-}
-if(count($CO) == 0) { ?>
-
-            tree_array is empty
-            <?php }if($CP) {
- ?>
-
-            
-        </ul>
-        <?php }
-
-}
-
-function _template1042393dc6a19fb297017f73f692341e($DS= array()) {
-if($DS) extract($DS); ?>
+function _template8c1140be411090da349ca8ec7997ec3d($CP= array()) {
+if($CP) extract($CP); ?>
 
     <div style="margin: 2px; padding: 8px;">
         <h2>
             <?php
-            echo TreeItem :: getTitleByNodeId($item['node_id']);
+            $item_title = TreeItem :: getTitleByNodeId($item['node_id']);
             $item_uri = TreeItem :: getUriByNodeId($item['node_id']);
+            echo '<a href="/pageitem/'.$item_uri.'">'.$item_title.'</a>';
+            echo ' ';
+            echo ($item->get('is_branch') == 0) ?
+                '<a href="/tree_cart/add/'.$item->get('node_id').'">В корзину</a>':'';
             ?>
-            <a href="/pageitem/<?php $DT='';
-$DU = $item;
-if((is_array($DU) || ($DU instanceof ArrayAccess)) && isset($DU['id'])) { $DT = $DU['id'];
-}else{ $DT = '';}
-echo htmlspecialchars($DT,3); ?>"> #<?php $DV='';
-$DW = $item;
-if((is_array($DW) || ($DW instanceof ArrayAccess)) && isset($DW['id'])) { $DV = $DW['id'];
-}else{ $DV = '';}
-echo htmlspecialchars($DV,3); ?></a>
-            ::#::
-            <a href="/pageitem/<?php echo htmlspecialchars($item_uri,3); ?>"> #byURI</a>
         </h2>
-        <?php
-        echo ($item->get('is_branch') == 0) ?
-            '<a href="/tree_cart/add/'.$item->get('node_id').'">++ В корзину</a>':'';
-        ?>
 
         <ul>
-            <li>id: <?php $DZ='';
-$EA = $item;
-if((is_array($EA) || ($EA instanceof ArrayAccess)) && isset($EA['id'])) { $DZ = $EA['id'];
-}else{ $DZ = '';}
-echo htmlspecialchars($DZ,3); ?></li>
-            <li>path: <?php $EB='';
-$EC = $item;
-if((is_array($EC) || ($EC instanceof ArrayAccess)) && isset($EC['path'])) { $EB = $EC['path'];
-}else{ $EB = '';}
-echo htmlspecialchars($EB,3); ?></li>
-            <li>node: <?php $ED='';
-$EE = $item;
-if((is_array($EE) || ($EE instanceof ArrayAccess)) && isset($EE['node_id'])) { $ED = $EE['node_id'];
-}else{ $ED = '';}
-echo htmlspecialchars($ED,3); ?></li>
-            <li>parent: <?php $EF='';
-$EG = $item;
-if((is_array($EG) || ($EG instanceof ArrayAccess)) && isset($EG['par_id'])) { $EF = $EG['par_id'];
-}else{ $EF = '';}
-echo htmlspecialchars($EF,3); ?> </li>
             <li>
             <?php
                 $descr = TreeItem :: getAttrValueByNodeId($item['node_id'],TreeItem::ID_DESCR);
@@ -551,4 +366,4 @@ echo htmlspecialchars($EF,3); ?> </li>
 
 }
 }
-$macro_executor_class='MacroTemplateExecutorba939a66b6f043491990406213d09053';
+$macro_executor_class='MacroTemplateExecutor8efc007209c02be8d5fa56ce05a9539a';
