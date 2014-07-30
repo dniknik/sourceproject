@@ -1,0 +1,61 @@
+{{wrap with="admin_page_layout.phtml"}}
+
+  {{include file="_admin/selectors.phtml"/}}
+  {{include file="_admin_object/actions.phtml"/}}
+
+  {{into slot="content_zone"}}
+    <div id="header">
+      <h1>Products</h1>
+
+      <div class="header_actions">
+        <a href='{{route_url params="action:create"/}}' title="Create product" class='thickbox'><img src='/shared/images/icons/page_white_add.png'/> Create product</a>
+      </div>
+    </div>
+
+    <div id="body">
+      {{list using='{$#items}' parity='{$parity}'}}
+      {{include file="_admin_object/actions.phtml"/}}
+      <div class="list">
+        <div class='list_actions'>
+          {{apply template="selectors_button" action="set_available" title="Set available" /}}
+          {{apply template="selectors_button" action="set_unavailable" title="Set unavailable" /}}
+        </div>
+        <table>
+          <tr>
+            <th>{{apply template="selectors_toggler"/}}</th>
+            <th>#ID</th>
+            <th width='20%'>Title</th>
+            <th width='10%'>Price</th>
+            <th width='10%'>Image</th>
+            <th width="10%">Availability</th>
+            <th width='40%'>Decsription</th>
+            <th>Actions</th>
+          </tr>
+          {{list:item}}
+            <tr class='{$parity}'>
+              <td>{{apply template="selector" value="{$item.id}"/}}</td>
+              <td>#{$item.id}</td>
+              <td>{$item.title}</td>
+              <td>{$item.price}</td>
+              <td><img src="{$item.image_path}"/></td>
+              <td><img src="/shared/images/icons/<?= ($item->getIsAvailable()) ? 'lightbulb.png' : 'lightbulb_off.png'; ?>"/></td>
+              <td>{$item.description|raw|nl2br}</td>
+              <td class='actions'>
+                {{apply template="object_action_edit"  item="{$item}" icon="page_white_edit" /}}
+                {{apply template="object_action_delete" item="{$item}" icon="page_white_delete" /}}
+              </td>
+            </tr>
+          {{/list:item}}
+          {{list:empty}}
+            <div class="empty_list">Empty</div>
+          {{/list:empty}}
+        </table>
+        <div class='list_actions'>
+          {{apply template="selectors_button" action="set_available" title="Set available" /}}
+          {{apply template="selectors_button" action="set_unavailable" title="Set unavailable" /}}
+        </div>
+      </div>
+      {{/list}}
+    </div>
+  {{/into}}
+{{/wrap}}

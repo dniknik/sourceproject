@@ -1,0 +1,27 @@
+<? if($user->is_logged_in) { ?>
+<dd>
+  User: {$user.name} (Login: {$user.login})<br/>
+  Email: {$user.email}<br/>
+  <a href="/user/edit/">edit</a>
+  <a href="/user/logout/">logout</a>
+</dd>
+<? } else {?>
+<div style="padding: 0 2 0 0; margin: 1px;">
+  <form method="POST" id='login_form' action='/user/login/'>
+<table>
+    <tr>
+        <td><label for='login'>Log:</label></td>
+        <td><input type="text" name="login" id="login" title="Login" class='input' size='8' /></td>
+        <td><label for='passwd'>Pass:</label></td>
+        <td><input type="text" name="password" id="password" type="password" title="Password" class='input' size='8' /></td>
+    </tr>
+    <tr>
+        <td colspan="2"><input type='submit' name='submitted' value="Submit"/></td>
+        <td colspan="2"><a href="/user/register/">Register</a></td>
+    </tr>
+</table>
+  </form>
+</div>
+
+
+<? } ?>

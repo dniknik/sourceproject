@@ -1,0 +1,23 @@
+<div id="found" style="padding: 6px;">
+
+    <a href="{$base_path|default:''}">[ALL]</a>&nbsp;
+    {{list using="$#helper->getAlphabet()"}}
+    {{list:item}}
+        <? if ($this->helper->getCurrentLetter() == $item) { ?>
+            <b>{$item|uppercase}</b>
+        <? } else { ?>
+            <?php $letter_param = AlphabetHelper :: REQUEST_PARAM_NAME; ?>
+            <a href='/?{$letter_param}={$item}'>{$item|uppercase}</a>
+        <? } ?>
+    {{/list:item}}
+    {{/list}}
+
+    <p><strong>Search the products:</strong></p>
+
+    {{form method="GET" id='search_form' name='search_form' action=''}}
+        <label for='title'>{$title}</label>
+        {{input type="text" name="title" id="product" size='10'/}}
+        <input type='submit' name='search' value="Search!" class='button'/><br/>
+    {{/form}}
+
+</div>

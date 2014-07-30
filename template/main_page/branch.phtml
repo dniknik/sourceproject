@@ -1,0 +1,277 @@
+<? $this->title = ($this->title)?$this->title:'Main page ';
+//lmb_var_debug($this->arr_tovar);
+?>
+
+{{wrap with="front_page_layout.phtml" into="content_zone"}}
+<!-- content_begin -->
+
+{{list using='{$#arr_tovar}' parity='{$parity}' key='{$key}' }}
+{{include file="_admin_object/actions.phtml"/}}
+<div class="list">
+
+    <table>
+        <tr>
+            <th>#ID</th>
+            <th>Заголовок</th>
+            <th>Описание</th>
+            <th>Идентификатор</th>
+
+            <th>Дата добавления</th>
+            <th>Дата обновления</th>
+
+            <th>Цена</th>
+        </tr>
+        {{list:item}}
+        <tr class='{$parity}'>
+            <td>
+                #{$item.id}({$key})
+                <a href="/tree_cart/add/{$key}">+++</a>
+            </td>
+
+            <?php
+            echo "<br>$key:";
+
+            echo "<br>title:";
+            lmb_var_debug($this->itemsall[$key]->getTitle());
+            //lmb_var_debug($this->itemsall[$key]->getTitle());
+            //lmb_var_debug(($this->arr_tovar[$key])->getTitle());
+
+            //@todo this fragment to ShopTools
+            $arr_tovar_attr = array_reverse($item);
+            ?>
+
+            {{list using='{$arr_tovar_attr}' as='$tovar'}}
+            {{list:item}}
+            <td>
+                {$tovar.attr_value}
+            </td>
+            {{/list:item}}
+            {{/list}}
+
+        </tr>
+        {{/list:item}}
+        {{list:empty}}
+        <div class="empty_list">Empty items</div>
+        {{/list:empty}}
+    </table>
+</div>
+{{/list}}
+
+<div id="body" style="display: flex; padding: 6px">
+
+
+
+<div style="align-self: flex-start; width: 320px">
+
+    <?php
+
+    $sorted = lmbTreeHelper :: sort($this->childrens, array('id' => 'ASC'));
+    $tree_tst = new lmbTreeNestedCollection($sorted);
+    $tree_tst->setChildrenField('preloaded_children');
+    $tree_tst->rewind();
+
+    $bl_mayBe = $this->isMayBe;
+    $bl_access = ($this->isBranch)&&($this->isTailBranch)&&(!$this->isTail)&&($bl_mayBe);
+
+    if($bl_access)
+    {
+        ?>
+        <a href='{{route_url params="action:create"/}}?ofnode={$this->id}'
+           title="Create product" class='thickbox'>
+            <img src='/shared/images/icons/page_white_add.png'/> Добавить товар
+        </a>
+    <?php
+    }
+    ?>
+
+    {{tree using="{$tree_tst}" as="$item" kids_prop="preloaded_children" counter="$counter" prefix=""}}
+    <ul >
+        {{tree:node}}
+        <li>
+            {$counter}) <a href="branch/{$item.id}">{$item.id}</a>&nbsp;|&nbsp;
+            <a href="{{route_url params="action:branch"/}}/{$item.identifier}">{$item.identifier}</a>
+            {{tree:nextlevel/}}
+        </li>
+        {{/tree:node}}
+        {{tree:empty}}
+        tree_array is empty
+        {{/tree:empty}}
+    </ul>
+    {{/tree}}
+
+    <p>May be append product this Node_tree: {$this->isTail}</p>
+    <?php
+    echo ($bl_mayBe)? 'yes_isMayBe':'no_isMayBe';
+    echo '<br>';
+    echo ($bl_access)? 'yes_access':'not_access';
+
+    ?>
+
+</div>
+
+
+<div class="list" style="lign-self: flex-end; margin: 5px 5px;">
+
+    <table border="1">
+        <tr>
+            <th>#</th>
+            <th>id</th>
+            <th>id_sys_tree</th>
+            <th>id_pr</th>
+            <th>value_pr</th>
+            <th>is_branch</th>
+        </tr>
+
+        <tr>
+            <th colspan="6">my_children_by_found:<? echo sizeof($this->items); ?></th>
+        </tr>
+        {{list using='$this->items' as='$item' counter='$my_counter' }}
+        {{list:item}}
+        <tr>
+            <td>{$my_counter}</td>
+            <td>({$item.id})</td>
+            <td>({$item.node_id})</td>
+            <td>({$item.attr_id})</td>
+            <td>({$item.attr_value})</td>
+            <td>({$item.is_branch})</td>
+        </tr>
+        {{/list:item}}
+        {{/list}}
+
+        <tr>
+            <th colspan="6">my_children</th>
+        </tr>
+        {{list using='$this->childrens' as='$item' counter='$my_counter' }}
+        {{list:item}}
+        <tr>
+            <td>{$my_counter}</td>
+            <td>{$item.id}</td>
+            <td>{$item.parent_id}</td>
+            <td>{$item.level} lvl </td>
+            <td>{$item.identifier}</td>
+            <td>{$item.path}</td>
+        </tr>
+        {{/list:item}}
+        {{list:empty}}
+        <tr>
+            <td colspan="6">...</td>
+        </tr>
+        {{/list:empty}}
+        {{/list}}
+
+        <tr>
+            <th colspan="6">my_specifications</th>
+        </tr>
+        {{list using='$this->specifications' as='$item' counter='$my_counter' }}
+        {{list:item}}
+        <tr>
+            <td>{$my_counter}</td>
+            <td>({$item.id})</td>
+            <td>({$item.node_id})</td>
+            <td>({$item.attr_id})</td>
+            <td>({$item.attr_value})</td>
+            <td>({$item.is_branch})</td>
+        </tr>
+        {{/list:item}}
+        {{list:empty}}
+        <tr>
+            <td colspan="6">пусто :-(</td>
+        </tr>
+        {{/list:empty}}
+        {{/list}}
+
+        <tr>
+            <th colspan="6">childrens_specifications</th>
+        </tr>
+        {{list using='$this->child_specs' as='$item' counter='$my_counter' }}
+        {{list:item}}
+        <tr>
+            <td>{$my_counter}</td>
+            <td>({$item.id})</td>
+            <td>
+                <?php
+                if($item['is_branch']==0)
+                {
+                    echo '<a href="../item/'.$item['node_id'].'">';
+                    echo '<img src="/shared/images/icons/application_view_detail.png" alt="detail" /></a>';
+                }
+                else
+                    echo '&nbsp;';
+                ?>
+
+                ({$item.id_sys_tree})
+                <?php
+                if($item['is_branch']==0)
+                {
+                    echo '<a href="/toCart/'.$item['node_id'].'">';
+                    echo '<img src="/shared/images/icons/cart_add.png" alt="2cart" /></a>';
+                }
+                ?>
+            </td>
+            <td>({$item.attr_id})</td>
+            <td>({$item.attr_value})</td>
+            <td>({$item.is_branch}): {$this->pref[$item['attr_id']]}</td>
+        </tr>
+        {{/list:item}}
+        {{list:empty}}
+        <tr>
+            <td colspan="6">пусто :-(</td>
+        </tr>
+        {{/list:empty}}
+        {{/list}}
+
+        <tr>
+            <th colspan="6">legacy_specifications</th>
+        </tr>
+        {{list using='$this->legacy_specs' as='$item' counter='$my_counter' }}
+        {{list:item}}
+        <tr>
+            <td>{$my_counter}</td>
+            <td>({$item.id})</td>
+            <td>({$item.node_id})</td>
+            <td>({$item.attr_id})</td>
+            <td>({$item.attr_value})</td>
+            <td>
+                <p <?php if (in_array($item['id'], $this->arr_notAdded)) echo 'style="text-transform:uppercase;"'; ?> >
+                    ({$item.is_branch}): {$this->pref[$item['attr_id']]}
+                    <?php if (in_array($item['id'], $this->arr_notAdded)) echo '***"'; ?>
+                </p>
+            </td>
+        </tr>
+        {{/list:item}}
+        {{list:empty}}
+        <tr>
+            <td colspan="6">пусто :-(</td>
+        </tr>
+        {{/list:empty}}
+        {{/list}}
+
+        <tr>
+            <th colspan="6">preference(specifications)</th>
+        </tr>
+        {{list using='$this->specs' as='$item' counter='$my_counter' }}
+        {{list:item}}
+        <tr>
+            <td>{$my_counter}</td>
+            <td>({$item.id})</td>
+            <td>()</td>
+            <td>()</td>
+            <td>({$item.title})</td>
+            <td>(importance): {$this->pref[$item['id']]}
+                <?php /* echo $this->pref[$item['id']];*/ ?>
+            </td>
+        </tr>
+        {{/list:item}}
+        {{list:empty}}
+        <tr>
+            <td colspan="6">пусто :-(</td>
+        </tr>
+        {{/list:empty}}
+        {{/list}}
+
+    </table>
+</div>
+
+</div>
+<!-- content_end -->
+{{/wrap}}

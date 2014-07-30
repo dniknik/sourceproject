@@ -1,0 +1,29 @@
+{{include file='_admin/form_errors.phtml'/}}
+
+<dl class="required field">
+  <dt><label for="id_sys_tree">id_sys_tree:</label></dt>
+  <dd>{{input name='id_sys_tree' type='text' title='id_sys_tree'/}}</dd>
+</dl>
+
+<dl class="required field">
+  <dt><label for="id_pr">id_pr:</label></dt>
+  <dd>{{input name='id_pr' type='text' title='id_pr'/}}</dd>
+</dl>
+
+<dl class="required field">
+  <dt><label for="value_pr">value_pr:</label></dt>
+  <dd>{{input name='value_pr' type='text' title='value_pr'/}}</dd>
+</dl>
+
+<dl class="required field">
+    <dt><label for="is_branch">is_branch:</label>
+    <dd>
+        {{js_checkbox
+            name='is_branch'
+            id='is_branch'
+        /}}
+    </dd>
+</dl>
+
+
+{{include file='_admin/form_buttons.phtml'/}}

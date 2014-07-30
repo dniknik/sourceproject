@@ -1,0 +1,240 @@
+<? $this->title = ($this->title)?$this->title:'Main page '; ?>
+
+{{wrap with="front_page_layout.phtml" into="content_zone"}}
+<!-- content_begin -->
+{{include file="_admin_object/actions.phtml"/}}
+
+<div id="body" style="display: flex; padding: 6px">
+
+
+<div style="align-self: flex-start; width: 320px">
+
+    <?php
+
+    $sorted = lmbTreeHelper :: sort($this->childrens, array('id' => 'ASC'));
+    //lmb_var_debug($sorted);
+    $tree_tst = new lmbTreeNestedCollection($sorted);
+    $tree_tst->setChildrenField('preloaded_children');
+    $tree_tst->rewind();
+
+    $bl_mayBe = $this->isMayBe;
+    $bl_access = ($this->isBranch)&&($this->isTailBranch)&&(!$this->isTail)&&($bl_mayBe);
+
+    //<a href="{{route_url params="action:branch" skip_controller="true" /}}/{$item.identifier}"></a>
+
+    ?>
+    <hr>
+    {{tree using="{$#wood}" as="$item" kids_prop="preloaded_children" counter="$counter" prefix=""}}
+    <ul >
+        {{tree:node}}
+        <li>
+            {$counter})
+            <a href="/branch/{$item.id}">:{$item.path}</a>&nbsp;|&nbsp;
+            <a href="/branch/{$item.identifier}">{$item.identifier}</a>
+            {{tree:nextlevel/}}
+        </li>
+        {{/tree:node}}
+        {{tree:empty}}
+        tree_array is empty
+        {{/tree:empty}}
+    </ul>
+    {{/tree}}
+
+    <hr>
+    {{tree using="{$tree_tst}" as="$item" kids_prop="preloaded_children" counter="$counter" prefix=""}}
+    <ul >
+        {{tree:node}}
+        <li>
+            {$counter})
+            <!-- <a href="/branch/{$item.id}">:{$item.path}</a>&nbsp;|&nbsp; -->
+            <a href="/branch/{$item.identifier}">{$item.path}</a>
+            {{tree:nextlevel/}}
+        </li>
+        {{/tree:node}}
+        {{tree:empty}}
+        tree_array is empty
+        {{/tree:empty}}
+    </ul>
+    {{/tree}}
+
+</div>
+
+
+<div class="list" style="lign-self: flex-end; margin: 5px 5px;">
+<!-- -->
+
+<div>
+
+
+    <table border="1">
+        <tr>
+            <td>id</td>
+            <td>udate</td>
+            <td>node_id</td>
+            <td>is_branch</td>
+            <td>path</td>
+            <td>par_id</td>
+            <td>uri</td>
+            <td>level</td>
+            <td>
+                all
+            </td>
+        </tr>
+        {{list using='{$#nodes_tree}'}}
+        {{list:item}}
+        <tr>
+            <td>{$item.id}</td>
+            <td>{$item.udate}</td>
+            <td>{$item.node_id}</td>
+            <td>{$item.is_branch}
+                <?php
+                echo ($item->get('is_branch')==0)?
+                    '<a href="/tree_cart/add/'. $item->get('node_id'). '">+++</a>':
+                    '---';
+                ?>
+            </td>
+            <td>{$item.path}</td>
+            <td>{$item.par_id}</td>
+            <td>{$item.uri}</td>
+            <td>{$item.level}</td>
+            <td>
+                {$item.id} / {$item.udate} / {$item.node_id} / {$item.is_branch} / {$item.path}  / {$item.par_id} / {$item.uri} / {$item.level}
+            </td>
+        </tr>
+        {{/list:item}}
+        {{/list}}
+    </table>
+
+
+</div>
+
+{{list using='{$#arr_tovar}' parity='{$parity}' key='{$key}' }}
+<div class="list">
+    <table>
+        <tr>
+            <th>#ID</th>
+            <th>Заголовок</th>
+            <th>Описание</th>
+            <th>Идентификатор</th>
+
+            <th>Дата добавления</th>
+            <th>Дата обновления</th>
+
+            <th>Цена</th>
+        </tr>
+        {{list:item}}
+        <tr class='{$parity}'>
+            <td>
+                #{$item.id}({$key})
+                <a href="/tree_cart/add/{$key}">+++</a>
+            </td>
+
+            <?php
+            //@todo this fragment to ShopTools
+            $arr_tovar_attr = array_reverse($item);
+            ?>
+
+            {{list using='{$arr_tovar_attr}' as='$tovar'}}
+            {{list:item}}
+            <td>
+                {$tovar.attr_value}
+            </td>
+            {{/list:item}}
+            {{/list}}
+
+        </tr>
+        {{/list:item}}
+        {{list:empty}}
+        <div class="empty_list">Empty items</div>
+        {{/list:empty}}
+    </table>
+</div>
+{{/list}}
+
+<!-- -->
+
+
+    <table>
+        <tr>
+            <th>#</th>
+            <th>id</th>
+            <th>id_sys_tree</th>
+            <th>id_pr</th>
+            <th>value_pr</th>
+            <th>is_branch</th>
+        </tr>
+
+        {{tree using="{$tree_tst}"
+            as="$item"
+            kids_prop="preloaded_children"
+            counter="$counter"
+            prefix="1"}}
+
+        {{tree:node}}
+        <tr>
+            <td colspan="6">
+
+                <h<?php echo $item['level']+1; ?>>
+                {$prefix}.({$counter}) :<?php echo $item['level']+1; ?>: <?php echo TreeItem :: getTitleByNodeId($item['node_id']); ?>
+                </h<?php echo $item['level']+1; ?>>
+                {$item.node_id}&nbsp;|&nbsp;{$item.path}&nbsp;|&nbsp;{$item.identifier}&nbsp;|&nbsp;{$item.level}
+                &nbsp;|&nbsp;
+                <?php
+                echo (TreeItem :: getIsBranchByNodeId($item['node_id'])==0)?
+                    '<a href="/tree_cart/add/'. $item['node_id']. '">В Корзину</a>': 'ВЕТКА';
+                ?>
+
+
+                {{tree:nextlevel prefix="$new_prefix"}}
+                    <?php $new_prefix = $prefix . "." . $counter; $this->ind = $this->i+1;?>
+                {{/tree:nextlevel}}
+
+            </td>
+        </tr>
+            {{/tree:node}}
+        {{/tree}}
+    </table>
+
+
+    <table border="1">
+        <tr>
+            <th>#</th>
+            <th>id</th>
+            <th>id_sys_tree</th>
+            <th>id_pr</th>
+            <th>value_pr</th>
+            <th>is_branch</th>
+        </tr>
+
+        <tr>
+            <th colspan="6">my_children</th>
+        </tr>
+        {{list using='$this->childrens' as='$item' counter='$my_counter' }}
+        {{list:item}}
+        <tr>
+            <td>{$my_counter}</td>
+            <td>{$item.id}</td>
+            <td>{$item.parent_id}</td>
+            <td>{$item.level} lvl </td>
+            <td>{$item.identifier}</td>
+            <td>{$item.path}</td>
+        </tr>
+        {{/list:item}}
+        {{list:empty}}
+        <tr>
+            <td colspan="6">...</td>
+        </tr>
+        {{/list:empty}}
+        {{/list}}
+
+        <?php
+//            echo '<img src="/shared/images/icons/application_view_detail.png" alt="detail" /></a>';
+//            echo '<img src="/shared/images/icons/cart_add.png" alt="2cart" /></a>';
+        ?>
+
+    </table>
+</div>
+
+</div>
+<!-- content_end -->
+{{/wrap}}

@@ -1,0 +1,149 @@
+<? $this->title = ($this->title) ? $this->title : 'Main page '; ?>
+
+{{wrap with="front_page_layout.phtml" into="content_zone"}}
+<!-- content_begin -->
+{{include file="_admin_object/actions.phtml"/}}
+
+
+<div id="body" style="display: flex; padding: 6px">
+
+
+    <div style="align-self: flex-start; width: 320px">
+
+        <hr>
+        <h4 style="background-color: #add8e6;">Список категорий</h4>
+        <p style="background-color: lightgray;">items_child_nodes</p>
+        {{list using='{$#items_child_nodes}' as='$item' counter='$my_counter' }}
+        {{list:item}}
+<!--        <h5> <a href="/pagecategory/{$item.identifier}">{$item.path} / --><?php //echo TreeItem :: getTitleByNodeId($item['node_id']); ?><!-- </a> </h5>-->
+        <h5> <a href="/pagecategory/{$item.identifier}">{$item.path} / {$item->getTitle()} </a> </h5>
+        {{/list:item}}
+        {{/list}}
+
+        <hr>
+        <div style="">
+        <?php
+            $sorted = lmbTreeHelper :: sort($this->childrens, array('id' => 'ASC'));
+            $tree_tst = new lmbTreeNestedCollection($sorted);
+            $tree_tst->setChildrenField('preloaded_children');
+            $tree_tst->rewind();
+        ?>
+        <h4>tree_tst by #childrens</h4>
+
+        {{tree using="{$tree_tst}" as="$item" kids_prop="preloaded_children" counter="$counter" prefix=""}}
+        <ul>
+            {{tree:node}}
+            <li>
+                {$counter})
+                <a href="/branch/{$item.id}">:{$item.path}</a>&nbsp;|&nbsp;
+                <a href="/branch/{$item.identifier}">{$item.identifier}</a>
+                {{tree:nextlevel/}}
+            </li>
+            {{/tree:node}}
+            {{tree:empty}}
+            tree_array is empty
+            {{/tree:empty}}
+        </ul>
+        {{/tree}}
+        </div>
+    </div>
+
+    {{template name="info_tpl"}}
+    <div style="margin: 2px; padding: 8px;">
+        <h2>
+            <?php
+            echo TreeItem :: getTitleByNodeId($item['node_id']);
+            $item_uri = TreeItem :: getUriByNodeId($item['node_id']);
+            ?>
+            <a href="/pageitem/{$item.id}"> #{$item.id}</a>
+            ::#::
+            <a href="/pageitem/{$item_uri}"> #byURI</a>
+        </h2>
+        <?php
+        echo ($item->get('is_branch') == 0) ?
+            '<a href="/tree_cart/add/'.$item->get('node_id').'">++ В корзину</a>':'';
+        ?>
+
+        <ul>
+            <li>id: {$item.id}</li>
+            <li>path: {$item.path}</li>
+            <li>node: {$item.node_id}</li>
+            <li>parent: {$item.par_id} </li>
+            <li>
+            <?php
+                $descr = TreeItem :: getAttrValueByNodeId($item['node_id'],TreeItem::ID_DESCR);
+            ?>
+            description:<br> {$descr|raw|nl2br}
+            </li>
+        </ul>
+    </div>
+    {{/template}}
+
+    <div class="list" style="lign-self: flex-end; margin: 5px 6px;">
+
+        {{list using="$#main_last"}}
+        <table border="1">
+            <tr>
+                {{list:item}}
+                <td>
+                    {$item.path} | node:{$item.node_id} | <b>[{$item.udate}]</b>
+                    {{apply template="info_tpl" item="$item"/}}
+                </td>
+                {{list:glue step="3"}}</tr><tr>{{/list:glue}}
+                {{/list:item}}
+                {{list:fill upto='3' items_left='$items_left'}}
+                <td colspan='{$items_left}'>&nbsp;</td>
+                {{/list:fill}}
+            </tr>
+        </table>
+        {{/list}}
+
+        <!-- for debug -->
+        <div class="list">
+        {{list using='{$#arr_tovar}' parity='{$parity}' key='{$key}' }}
+            <table>
+                <tr>
+                    <th>#ID</th>
+                    <th>Заголовок</th>
+                    <th>Описание</th>
+                    <th>Идентификатор</th>
+
+                    <th>Дата добавления</th>
+                    <th>Дата обновления</th>
+
+                    <th>Цена</th>
+                </tr>
+                {{list:item}}
+                <tr class='{$parity}'>
+                    <td>
+                        #(:{$key}:)
+                        <a href="/tree_cart/add/{$key}">+++</a>
+                    </td>
+
+                    <?php
+
+                    //@todo this fragment to ShopTools
+                    $arr_tovar_attr = array_reverse($item);
+                    ?>
+
+                    {{list using='{$arr_tovar_attr}' as='$tovar'}}
+                    {{list:item}}
+                    <td>
+                        {$tovar.attr_value}
+                    </td>
+                    {{/list:item}}
+                    {{/list}}
+
+                </tr>
+                {{/list:item}}
+                {{list:empty}}
+                <div class="empty_list">Empty arr_tovar</div>
+                {{/list:empty}}
+            </table>
+        {{/list}}
+        </div>
+
+    </div>
+</div>
+<!-- content_end -->
+{{/wrap}}

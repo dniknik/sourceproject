@@ -1,0 +1,90 @@
+<?php
+
+class TreeCartController extends lmbController
+{
+  protected function _checkoutCart($cart)
+  {
+    $user = lmbToolkit::instance()->getUser();
+    $this->cart = $cart;
+    $this->useForm('checkout_form');
+
+    if(!$this->request->hasPost())
+    {
+    	$this->setFormDatasource($user);
+
+      if(!$cart->getItemsCount())
+        return $this->flashAndRedirect('Your cart is empty! Nothing to checkout!', array('controller' => 'main_page'));
+
+      if(!$user->getIsLoggedIn())
+        return $this->flashAndRedirect('Your are not logged in yet! Please login or register to checkout!');
+    }
+    else
+    {
+    	$this->setFormDatasource($this->request);
+
+      $order = TreeOrder :: createForCart($cart); // @fixme
+      $order->setAddress($this->request->get('address'));
+      $order->setUser($user);
+
+      if($order->trySave($this->error_list))
+      {
+        $cart->reset();
+        return $this->flashAndRedirect('Your order has been sent. Your cart is now empty.', array('controller' => 'main_page'));
+      }
+    }
+  }
+
+  function doCheckout()
+  {
+    $cart = $this->_getCart();
+    return $this->_checkoutCart($cart);
+  }
+
+  function doDisplay()
+  {
+    $this->cart = $this->_getCart();
+  }
+
+  function doEmpty()
+  {
+    $cart = $this->_getCart();
+    $cart->reset();
+    $this->redirect();
+  }
+
+  function doAdd()
+  {
+    $product_id = $this->request->getInteger('id');// @fixme
+    try
+    {
+        $crit= new lmbSQLFieldCriteria('node_id', $product_id);
+      $product = TreeProduct :: findOne('TreeProduct', $crit);// @fixme
+//      $product = TreeProduct :: findById($product_id);// @fixme
+      $cart = $this->_getCart();
+      $cart->addProduct($product);
+      $this->flashMessage('Product "' . $product->getId() . '" added to your cart!'. $product_id);// @fixme
+//      $this->flashMessage('Product "' . $product->getTitle() . '" added to your cart!');
+    }
+    catch(lmbARException $e)
+    {
+      $this->flashError('Wrong product!');
+    }
+
+    if(isset($_SERVER['HTTP_REFERER']))
+      $this->redirect($_SERVER['HTTP_REFERER']);
+    else
+      $this->redirect();
+  }
+
+  protected function _getCart()
+  {
+    $session = $this->toolkit->getSession();
+    if(!$cart = $session->get('treecart'))// @fixme
+    {
+      $cart = new TreeCart();// @fixme
+      $session->set('treecart', $cart);// @fixme
+    }
+
+    return $cart;
+  }
+}

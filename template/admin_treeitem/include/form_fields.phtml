@@ -1,0 +1,80 @@
+{{include file='_admin/form_errors.phtml'/}}
+
+<?php
+//var_dump( $_GET );
+
+$id_sys_tree=0;
+$createProduct=1;
+{
+$field='ofnode';
+$id_sys_tree += isset($_GET[$field])?$_GET[$field]:0;
+$createProduct=$id_sys_tree;
+
+
+$field='tonode';
+$id_sys_tree += isset($_GET[$field])?$_GET[$field]:0;
+
+$field='node';
+$id_sys_tree += isset($_GET[$field])?$_GET[$field]:0;
+}
+
+echo $id_sys_tree;
+echo ($createProduct!=0)?' createProduct':' createCategory';
+
+?>
+
+<dl class="required field">
+    <dt><label for="title">Название(Заголовок):</label></dt>
+    <dd>{{input name='title' type='text' title='Название'/}}</dd>
+</dl>
+
+{{if var="$createProduct"}}
+<dl class="required field">
+    <dt><label for="price">Цена:</label></dt>
+    <dd>{{input name='price' type='text' title='Цена'/}}</dd>
+</dl>
+{{/if}}
+
+
+<dl class="required field">
+    <dt><label for="identifier">identifier:</label>
+    <dd>{{input name='identifier' type='text' title='identifier' /}}</dd>
+</dl>
+
+<dl class="required field">
+    <dt><label for="description">Описание:</label>
+    <dd>{{textarea name='description' title='Описание'/}}</dd>
+</dl>
+
+
+<dl class="required field">
+  <dt><label for="id_sys_tree">id_sys_tree:</label></dt>
+  <dd>{{input name='id_sys_tree' type='text' title='id_sys_tree' value='{$id_sys_tree}' /}}</dd>
+</dl>
+
+
+
+<dl class="required field">
+  <dt><label for="date_create">Дата добавления:</label></dt>
+  <dd>{{input name='date_create' type='text' title='date_create' value='{$#dt_cr}' /}}</dd>
+</dl>
+
+<dl class="required field">
+  <dt><label for="date_update">Дата обновления:</label></dt>
+  <dd>{{input name='date_update' type='text' title='date_update' value='{$#dt_up}' /}}</dd>
+</dl>
+
+
+
+<dl class="required field">
+    <dt><label for="is_branch">is_branch:</label>
+    <dd>
+        {{js_checkbox
+            name='is_branch'
+            id='is_branch'
+            checked_value='$createProduct==0'
+        /}}
+    </dd>
+</dl>
+
+{{include file='_admin/form_buttons.phtml'/}}

@@ -1,0 +1,61 @@
+{{wrap with="admin_page_layout.phtml" in="content_zone"}}
+
+{{include file="_admin/selectors.phtml"/}}
+{{include file="_admin_object/actions.phtml"/}}
+
+{{into slot="content_zone"}}
+<div id="header">
+    <h1>Preference</h1>
+    <a href="{{route_url params="action:node"/}}">Категории</a> &nbsp;|&nbsp;
+    <a href="{{route_url params="action:branch"/}}">"Ветки" дерева</a>
+
+    <div class="header_actions">
+        <a href='{{route_url params="action:create"/}}'
+           title="Create preference" class='thickbox'>
+            <img src='/shared/images/icons/page_white_add.png'/> Create preference
+        </a>
+    </div>
+
+</div>
+
+<div id="body">
+    {{list using='{$#items}' parity='{$parity}'}}
+    {{include file="_admin_object/actions.phtml"/}}
+    <div class="list">
+
+        <table>
+            <tr>
+                <th>{{apply template="selectors_toggler"/}}</th>
+                <th>#ID</th>
+                <th>id_sys_tree</th>
+                <th>id_pr</th>
+                <th>value_pr</th>
+                <th>is_branch</th>
+
+                <th>Actions</th>
+            </tr>
+            {{list:item}}
+            <tr class='{$parity}'>
+                <td>{{apply template="selector" value="{$item.id}"/}}</td>
+                <td>#{$item.id}</td>
+                <td>{$item.id_sys_tree}</td>
+                <td>{$item.id_pr}</td>
+                <td>{$item.value_pr}</td>
+                <td>{$item.is_branch}</td>
+
+                <td class='actions'>
+                    {{apply template="object_action_edit" item="{$item}" icon="page_white_edit" /}}
+                    {{apply template="object_action_delete" item="{$item}" icon="page_white_delete" /}}
+                </td>
+            </tr>
+            {{/list:item}}
+            {{list:empty}}
+            <div class="empty_list">Empty</div>
+            {{/list:empty}}
+        </table>
+    </div>
+    {{/list}}
+
+</div>
+{{/into}}
+{{/wrap}}

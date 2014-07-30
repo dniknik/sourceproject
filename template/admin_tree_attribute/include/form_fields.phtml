@@ -1,0 +1,40 @@
+{{include file='_admin/form_errors.phtml'/}}
+
+<dl class="required field">
+  <dt><label for="id">id:</label></dt>
+  <dd>{{input name='id' type='text' title='id' disabled='true' /}}</dd>
+</dl>
+
+<dl class="required field">
+  <dt><label for="title">Название:</label></dt>
+  <dd>{{input name='title' type='text' title='Название'/}}</dd>
+</dl>
+
+<dl class="required field">
+    <dt><label for="is_published">is_published:</label>
+    <dd>
+        {{js_checkbox
+            name='is_published'
+            id='is_published'
+            checked_value='is_published'
+        /}}
+    </dd>
+</dl>
+
+<?php
+//@todo check LIMB_APP_MODE and hide if != \devel\
+?>
+
+<dl class="required field">
+    <dt><label for="is_field_system">is_field_system:</label>
+    <dd>
+        {{js_checkbox
+            name='is_field_system'
+            id='is_field_system'
+            checked_value='is_field_system'
+        /}}
+    </dd>
+</dl>
+
+
+{{include file='_admin/form_buttons.phtml'/}}

@@ -1,0 +1,61 @@
+{{wrap with="admin_page_layout.phtml"}}
+
+  {{include file="_admin/selectors.phtml"/}}
+  {{include file="_admin_object/actions.phtml"/}}
+
+  {{into slot="content_zone"}}
+    <div id="header">
+      <h1>Products - Ware</h1>
+
+      <div class="header_actions">
+        <a href='{{route_url params="action:create"/}}'
+           title="Create product-ware" class='thickbox'>
+            <img src='/shared/images/icons/page_white_add.png'/> Create ware
+        </a>
+      </div>
+    </div>
+
+    <div id="body">
+      {{list using='{$#items}' parity='{$parity}'}}
+      {{include file="_admin_object/actions.phtml"/}}
+      <div class="list">
+
+        <table>
+          <tr>
+            <th>{{apply template="selectors_toggler"/}}</th>
+            <th>#ID</th>
+            <th width='20%'>Title</th>
+            <th width='10%'>Price</th>
+            <th width='10%'>identifier</th>
+            <th width='10%'>Date_created</th>
+            <th width="10%">Date_modified</th>
+            <th width='40%'>Decsription</th>
+            <th>Actions</th>
+          </tr>
+          {{list:item}}
+            <tr class='{$parity}'>
+              <td>{{apply template="selector" value="{$item.id}"/}}</td>
+              <td>#{$item.id}</td>
+              <td>{$item.title}</td>
+              <td>{$item.price}</td>
+
+              <td>{$item.identifier}</td>
+              <td>{$item.date_created}</td>
+              <td>{$item.date_modified|date:'Y/M/d h:m:s'}</td>
+
+              <td>{$item.description|raw|nl2br}</td>
+              <td class='actions'>
+                {{apply template="object_action_edit"  item="{$item}" icon="page_white_edit" /}}
+                {{apply template="object_action_delete" item="{$item}" icon="page_white_delete" /}}
+              </td>
+            </tr>
+          {{/list:item}}
+          {{list:empty}}
+            <div class="empty_list">Empty</div>
+          {{/list:empty}}
+        </table>
+      </div>
+      {{/list}}
+    </div>
+  {{/into}}
+{{/wrap}}

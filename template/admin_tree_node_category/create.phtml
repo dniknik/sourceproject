@@ -1,0 +1,9 @@
+{{wrap with="admin_modal_page_layout.phtml"}}
+  {{into slot='content_zone'}}
+    {{form id='object_form' name='user_form' method='post' enctype="multipart/form-data"}}
+      <h1>Добавление новой категории / подкатегории / товара</h1>
+<p>admin_tree_node_category</p>
+      {{include file='admin_tree_node_category/include/form_fields.phtml'/}}
+    {{/form}}
+  {{/into}}
+{{/wrap}}

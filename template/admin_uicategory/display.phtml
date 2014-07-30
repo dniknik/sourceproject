@@ -1,0 +1,159 @@
+{{wrap with="admin_modal_page_layout.phtml"}}
+
+{{into slot='content_zone'}}
+
+
+<!--
+{{wrap with="admin_page_layout.phtml"}}
+
+
+{{include file="_admin/selectors.phtml"/}}
+{{include file="_admin_object/actions.phtml"/}}
+
+{{into slot="content_zone"}}
+-->
+
+<h1>Добавление нового "узла" дерева</h1>
+
+<div id="header">
+
+    <div class="header_actions">
+        <a href='{{route_url params="action:create"/}}'
+           title="Create category" class='thickbox'>
+            <img src='/shared/images/icons/page_white_add.png'/> Create Category!
+        </a>
+
+    </div>
+</div>
+
+
+<div id="body">
+    <?php
+    $criteria = null;
+    $is_once = $this->id==0;
+
+    if($is_once) {
+        echo ' isNOL ';
+        $criteria = new lmbSQLCriteria('id_sys_tree > '.$this->id);
+    }
+    else {
+        echo ' not_NOL (show_AllRecords)';
+        $criteria = lmbSQLCriteria::equal('id_sys_tree', $this->id);
+    }
+
+    $this->items = lmbActiveRecord :: find('Objoftree', $criteria);
+    //$this->items = lmbCollection::toFlatArray(lmbActiveRecord :: find('Objoftree', $criteria));
+    echo sizeof($this->items);
+
+    $arr = lmbCollection::toFlatArray($this->items);
+    $arr_pr_ids = array_column($arr, 'id_pr');
+
+    ?>
+
+    {{form id='object_form' name='user_form' method='post' enctype="multipart/form-data"}}
+
+    {{list using='{$#items}' counter='$cnt' parity='{$parity}'}}
+    {{include file="_admin_object/actions.phtml"/}}
+
+    <div id="vw_category">
+        Список категорий:
+        <br>
+    </div>
+
+    <div class="list">
+
+        <table>
+            <tr>
+                <th>{{apply template="selectors_toggler"/}}</th>
+                <th>(№)#ID</th>
+                <th>id_sys_tree</th>
+                <th>id_pr</th>
+                <th>value_pr</th>
+                <th>is_branch</th>
+
+                <th>Actions</th>
+            </tr>
+            {{list:item}}
+
+            <tr class='{$parity}'>
+                <td>{{apply template="selector" value="{$item.id}"/}}</td>
+                <td>({$cnt})#{$item.id}</td>
+                <td>{$item.id_sys_tree} / {$item->getTree()->getIdentifier()}</td>
+                <td>{$item.id_pr} / {$item->getPreference()->getTitle()}</td>
+                <td>{$item.value_pr}</td>
+                <td>
+                    [ {$item.is_branch} ] ~
+                    <?php
+                    echo ((!$item->getIsBranch()==0) ? 'true-Ветка' : 'false-листок');
+                    ?>
+                </td>
+
+                <td class='actions'>
+                    {{apply template="object_action_edit"  item="{$item}" icon="page_white_edit" /}}
+                    {{apply template="object_action_delete" item="{$item}" icon="page_white_delete" /}}
+                </td>
+            </tr>
+
+            {{/list:item}}
+            {{list:empty}}
+            <div class="empty_list">Empty</div>
+            {{/list:empty}}
+
+            <tr class='{$parity}'>
+                <td>&nbsp;</td>
+                <td>#</td>
+                <td>
+                    <input type='hidden' name='id_sys_tree' value='{$this->id}'/>
+                    {{input name='id_sys_tree' type='text' title='id_sys_tree' value='{$this->id}' disabled='true'  style="width: 100px;" /}}
+                </td>
+                <td>
+                    <select  id="id_pr" name="id_pr" style="width: 200px;">
+                        <option value="0" prepend="true" selected="true">Укажите харектеристику ...</option>
+                        {{list using='{$this->pref}' key='{$key}' as='{$value}'}}
+                        {{list:item}}
+                        <option <?php echo in_array($key, $arr_pr_ids)?'disabled':''; ?> value='{$key}'>{$key} / {$value}</option>
+                        {{/list:item}}
+                        {{/list}}
+                        <!-- <option value='-1' disabled>Выбранное5</option> -->
+                    </select>
+                </td>
+                <td>
+                    {{input name='value_pr' type='text' title='value_pr' list="value_pr" style="width: 100px;" /}}
+                    <datalist id="value_pr">
+                        <option>Аперитивы</option>
+                        <option>Горячие</option>
+                        <option>Десертные</option>
+                        <option>Диджестивы</option>
+                        <option>Молочные</option>
+                        <option>Слоистые</option>
+                    </datalist>
+                </td>
+                <td>
+                    {{js_checkbox name='is_branch' id='is_branch'/}}
+                </td>
+
+                <td class='actions'>
+                    {{apply template="object_action_edit"  item="{$item}" icon="page_white_link" /}}
+                    <input id="create" type="submit" value="Save" name="create" />
+
+                </td>
+            </tr>
+
+        </table>
+    </div>
+    {{/list}}
+
+    {{/form}}
+
+</div>
+
+
+
+{{/into}}
+
+{{/wrap}}
+
+<!--
+{{/into}}
+{{/wrap}}
+-->

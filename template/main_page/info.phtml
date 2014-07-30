@@ -1,0 +1,11 @@
+{{template name="info_tpl"}}
+<div style="margin: 2px; padding: 8px;">
+    <h3><a href="/tree_cart/add/{$#item.id}">#{$#item.id}</a></h3>
+    <ul>
+        <li>id: {$#item.id}</li>
+        <li>title: {$#item.title}</li>
+        <li>image: {$#item.path}</li>
+        <li>description: {$#item.description|raw|nl2br}</li>
+    </ul>
+</div>
+{{/template}}

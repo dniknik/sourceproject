@@ -1,0 +1,24 @@
+{{include file='_admin/form_errors.phtml'/}}
+
+<dl class="required field">
+  <dt><label for="title">Название:</label></dt>
+  <dd>{{input name='title' type='text' title='Название'/}}</dd>
+</dl>
+
+<dl class="required field">
+  <dt><label for="price">Цена:</label></dt>
+  <dd>{{input name='price' type='text' title='Цена'/}}</dd>
+</dl>
+
+<dl class="required field">
+  <dt><label for="identifier">Описание-identifier:</label>
+  <dd>{{textarea name='identifier' title='ИД_Описание'/}}</dd>
+</dl>
+
+<dl class="required field">
+    <dt><label for="description">Описание:</label>
+    <dd>{{textarea name='description' title='Описание'/}}</dd>
+</dl>
+
+
+{{include file='_admin/form_buttons.phtml'/}}

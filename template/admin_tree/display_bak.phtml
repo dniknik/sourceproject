@@ -1,0 +1,395 @@
+{{wrap with="admin_page_layout.phtml" in="content_zone"}}
+
+{{include file="_admin/selectors.phtml"/}}
+{{include file="_admin_object/actions.phtml"/}}
+
+<div id="header">
+    <h1>Users-category-tree</h1>
+
+    <div class="header_actions">
+        {{apply template="object_action" action="create" is_link="true" title="Create user"/}}
+    </div>
+
+    {{include file='_admin/pager.phtml' items='{$this->items}'/}}
+</div>
+
+
+<div id="body">
+
+{{list using="{$#items}" as="$item" counter="$counter" parity='$parity'}}
+
+<div class='list'>
+    <table>
+        <tr>
+            <th>#ID</th>
+            <th>root_id</th>
+            <th>parent_id</th>
+            <th>priority</th>
+            <th>level</th>
+            <th>identifier</th>
+            <th>path</th>
+            <th>children</th>
+            <th>Actions</th>
+        </tr>
+
+        {{list:item}}
+        <tr class="{$parity}">
+            <td>{$item.id}</td>
+            <td>{$item.root_id}</td>
+            <td>{$item.parent_id}</td>
+            <td>{$item.priority}</td>
+            <td>{$item.level}</td>
+            <td>{$item.identifier}</td>
+            <td>{$item.path}</td>
+            <td>{$item.children}</td>
+            <td class='actions'>
+                {{apply template="object_action_edit" item="{$item}"/}}
+                {{apply template="object_action_delete" item="{$item}"/}}
+            </td>
+        </tr>
+        {{/list:item}}
+        {{list:empty}}
+        <div class="empty_list">Empty</div>
+        {{/list:empty}}
+    </table>
+</div>
+
+{{/list}}
+
+<div>
+    <table border="1">
+        <tr>
+            <th>test_tree_out</th>
+            <th>Tree_01</th>
+            <th>Tree_Counter</th>
+            <th>Tree_PassExtraParamsIntoTreeMethod</th>
+            <th>Tree_CheckBC</th>
+            <th>etc</th>
+        </tr>
+
+        <?php
+
+        lmb_require('limb/tree/src/lmbTreeNestedCollection.class.php');
+        lmb_require('limb/tree/src/lmbTreeHelper.class.php');
+
+        lmb_require('limb/tree/src/lmbTreeDecorator.class.php');
+        lmb_require('limb/tree/src/lmbMPTree.class.php');
+        //lmb_require('limb/tree/src/lmbMPTree.class.php');
+
+        $tree = 0;
+        $arr = array();
+        //$docs = lmbActiveRecord::find('lmbCmsDocument', lmbSQLCriteria::equal('is_published', 1)
+        //  ->addAnd(new lmbSQLCriteria('level > 0')));
+        //$sorted_docs = lmbTreeHelper :: sort($docs, array('id' => 'ASC'));
+
+        //$tree = new lmbTreeNestedCollection();
+        //$my_connect = lmbDBAL :: instanse() -> getDefaultDbConnection();
+//        $my_connect = lmbToolkit::instance()->getDefaultDbConnection();
+//
+//        $tree = new lmbTreeDecorator(
+//            new lmbMPTree(
+//                'sys_tree',
+//                $my_connect,
+//                array('id' => 'id',
+//                    'parent_id' => 'parent_id',
+//                    'level' => 'level',
+//                    'identifier' => 'identifier',
+//                    'path' => 'path'
+//                )));
+
+
+//        lmb_require('limb/tree/src/lmbTreeNestedCollection.class.php');
+//        lmb_require('limb/tree/src/lmbTreeHelper.class.php');
+
+        $docs = lmbActiveRecord::find('Tree', lmbSQLCriteria::equal('priority', 0)
+            ->addAnd(new lmbSQLCriteria('level > 0')));
+        $sorted_docs = lmbTreeHelper :: sort($docs, array('id' => 'ASC'));
+//echo( sizeof($docs));
+        //$processed_docs = new lmbTreeNestedCollection($sorted_docs);
+        $tree1 = new lmbTreeNestedCollection($sorted_docs);
+        //$tree1 = new lmbTreeNestedCollection($docs);
+        $tree1->setChildrenField('preloaded_children');
+        $tree1->rewind();
+//echo( sizeof($tree1));
+//var_dump( $tree1 );
+
+        /*
+                $root = $tree->initTree();
+
+                        $node_1 = $tree->createNode($root, array('identifier' => 'node_1'));
+                        $node_2_1 = $tree->createNode($node_1, array('identifier' => 'aaa'));
+                        $node_2_2 = $tree->createNode($node_1, array('identifier' => 'cccc'));
+                        $node_2_3 = $tree->createNode($node_1, array('identifier' => 'bbb'));
+                        $node_2_2_1 = $tree->createNode($node_2_2, array('identifier' => 'node_2_2_1'));
+                        $node_2_2_2 = $tree->createNode($node_2_2, array('identifier' => 'node_2_2_2'));
+                        $node_2_4 = $tree->createNode($node_1, array('identifier' => 'ddd'));
+                        $node_2_tmp = $tree->createNode($node_1, array('identifier' => 'eee'));
+                        $node_r_2 = $tree->createNode($root, array('identifier' => 'node_02'));
+                        $node_r_2_1 = $tree->createNode($node_r_2, array('identifier' => 'node_r_2'));
+                        //$tree->moveNode($node_2_tmp, $node_2_2);
+
+                        $rc = $tree->getChildren($node_1);
+                        //$rc = $tree->getChildren($root);
+                        $arr = $rc->sort(array('identifier' => 'DESC'))->getArray();
+                        echo 'count:' . sizeof($arr) . '<br>';
+                /* */
+        //$test = $tree1->getChildren($tree1->getRootNode());
+
+        //$processed_docs = new lmbTreeNestedCollection($sorted_docs);
+        //$processed_docs->setChildrenField('preloaded_children');
+        //$processed_docs->rewind();
+
+        $tree_array = array(
+            array('id' => 8, 'parent_id' => 0, 'sort1' => 'cunny', 'sort2' => 4),
+            array('id' => 1, 'parent_id' => 0, 'sort1' => 'bill', 'sort2' => 0),
+            array('id' => 5, 'parent_id' => 1, 'sort1' => 'body', 'sort2' => 0),
+            array('id' => 2, 'parent_id' => 1, 'sort1' => 'body', 'sort2' => 1),
+            array('id' => 3, 'parent_id' => 2, 'sort1' => 'merfy', 'sort2' => 0),
+            array('id' => 4, 'parent_id' => 2, 'sort1' => 'eddy', 'sort2' => 1),
+            array('id' => 6, 'parent_id' => 0, 'sort1' => 'alfred', 'sort2' => 1),
+            array('id' => 7, 'parent_id' => 6, 'sort1' => 'tom', 'sort2' => 0),
+        );
+
+        $tree01 = array(array('title' => 'foo'),
+            array('title' => 'bar', 'kids' => array(array('title' => 'bar1'),
+                array('title' => 'bar2'))),
+            array('title' => 'hey'));
+
+
+        $tree_counter = array(array('title' => 'foo'),
+            array('title' => 'bar', 'kids' => array(array('title' => 'bar1'),
+                array('title' => 'bar2'))),
+            array('title' => 'hey'));
+
+        $tree_PassExtraParamsIntoTreeMethod = array(array('title' => 'foo'),
+            array('title' => 'bar', 'kids' => array(array('title' => 'bar1'),
+                array('title' => 'bar2'))),
+            array('title' => 'hey'));
+
+        $tree_CheckBC = array(array('title' => 'foo'),
+            array('title' => 'bar', 'kids' => array(array('title' => 'bar1'),
+                array('title' => 'bar2'))),
+            array('title' => 'hey'));
+
+        ?>
+
+        <tr>
+            <td>
+                {{tree using="$tree_array" as="$item" counter="$counter" prefix=""}}
+                <ul>
+                    {{tree:node}}
+                    <li><a href="{$item.sort2}">{$counter}-{$item.sort1}</a>{{tree:nextlevel/}}</li>
+                    {{/tree:node}}
+
+                    {{tree:empty}}
+                    tree is empty
+                    {{/tree:empty}}
+                </ul>
+                {{/tree}}
+
+
+                {{tree using="{$#items}" as="$item" counter="$counter" prefix=""}}
+                <ul>
+                    {{tree:node}}
+                    <li><a href="{$item.identifier}">{$counter}-{$item.id}</a>{{tree:nextlevel/}}</li>
+                    {{/tree:node}}
+
+                    {{tree:empty}}
+                    tree is empty
+                    {{/tree:empty}}
+                </ul>
+                {{/tree}}
+
+
+            </td>
+
+            <td>
+
+                {{tree using="$tree01" kids_prop="kids"}}
+                <ul>
+                    {{tree:node}}
+                    <li>{$item.title}{{tree:nextlevel/}}</li>
+                    {{/tree:node}}
+                </ul>
+                {{/tree}}
+
+                {{tree using="{$tree1}" kids_prop="preloaded_children"}}
+                <ul>
+                    {{tree:node}}
+                    <li>{$item.id}{{tree:nextlevel/}}</li>
+                    {{/tree:node}}
+                </ul>
+                {{/tree}}
+
+            </td>
+
+            <td>
+
+                {{tree using="$tree_counter" kids_prop="kids" counter="$counter"}}
+                <ul>
+                    {{tree:node}}
+                    <li>{$counter}){$item.title}
+                        {{tree:nextlevel/}}
+                    </li>
+                    {{/tree:node}}
+                </ul>
+                {{/tree}}
+
+                {{tree using="{$tree1}" kids_prop="preloaded_children" counter="$counter"}}
+                <ul>
+                    {{tree:node}}
+                    <li>{$counter}){$item.id}
+                        {{tree:nextlevel/}}
+                    </li>
+                    {{/tree:node}}
+                </ul>
+                {{/tree}}
+            </td>
+
+            <td>
+
+                {{tree using="$tree_PassExtraParamsIntoTreeMethod" as="$node" kids_prop="kids" counter="$counter"
+                prefix="1"}}
+                <ul>
+                    {{tree:node}}
+                    <li>{$prefix}.{$counter}){$node.title}
+                        {{tree:nextlevel prefix="$new_prefix"}}<?php $new_prefix = $prefix . "." . $counter; ?>
+                        {{/tree:nextlevel}}
+                    </li>
+                    {{/tree:node}}
+                </ul>
+                {{/tree}}
+
+                {{tree using="{$tree1}" as="$node" kids_prop="preloaded_children" counter="$counter"
+                prefix="1"}}
+                <ul>
+                    {{tree:node}}
+                    <li>{$prefix}.{$counter}){$node.id}
+                        {{tree:nextlevel prefix="$new_prefix"}}<?php $new_prefix = $prefix . "." . $counter; ?>
+                        {{/tree:nextlevel}}
+                    </li>
+                    {{/tree:node}}
+                </ul>
+                {{/tree}}
+            </td>
+
+            <td>
+
+                {{tree using="$tree_CheckBC" kids_prop="kids"}}
+                <ul>
+                    {{tree:branch}}
+                    <li>{{tree:item}}{$item.title}{{/tree:item}}</li>
+                    {{/tree:branch}}
+                </ul>
+                {{/tree}}
+
+                {{tree using="{$tree1}" kids_prop="preloaded_children"}}
+                <ul>
+                    {{tree:branch}}
+                    <li>{{tree:item}}{$item.id}{{/tree:item}}</li>
+                    {{/tree:branch}}
+                </ul>
+                {{/tree}}
+            </td>
+            <td>
+                etc<br>
+                {{tree using="{$tree1}" kids_prop="preloaded_children"}}
+                <ul>
+                    {{tree:branch}}
+                    <li>{{tree:item}}{$item.identifier}{{/tree:item}}</li>
+                    {{/tree:branch}}
+                </ul>
+                {{/tree}}
+                <br>
+
+                {{tree using="{$tree1}" as="$item" kids_prop="preloaded_children" counter="$counter" prefix=""}}
+                <ul>
+                    {{tree:node}}
+                    <li>{$counter}-{$item.id} {{tree:nextlevel/}}</li>
+                    {{/tree:node}}
+                    {{tree:empty}}
+                    tree_array is empty
+                    {{/tree:empty}}
+                </ul>
+                {{/tree}}
+
+            </td>
+        </tr>
+    </table>
+</div>
+
+<br>
+
+<div>
+    <? $options = array('ff0000' => 'red', '00ff00' => 'green');
+    $selected_value_object = new lmbObject(array('my_color' => '00ff00', 'id' => 'ff0000')); ?>
+    {{select id="my_select" options="$options" value="$selected_value_object" value_field="my_color"/}}
+
+</div>
+<br>
+
+<div>
+    <? $options = array(2 => 'test2', 3 => 'test3'); ?>
+
+    {{select name="my_select" options="$options"}}
+    {{option value="1" prepend="true"}}test1{{/option}}
+    {{option value="4" selected="true"}}test4{{/option}}
+    {{/select}}
+</div>
+<br>
+
+<div>
+    <?
+    $teams = array(
+        array('id' => '1', 'title' => 'Spartak'),
+        array('id' => '2', 'title' => 'Dinamo'),
+        array('id' => '3', 'title' => 'Zenit'));
+    ?>
+
+    {{select_options_export from="$teams" to="$teams_as_options" key_field="id" text_field="title"/}}
+
+    {{select id='team_id' name='team_id' options="$teams_as_options"}}
+    {{option prepend="true" value='0'}}Выберите команду{{/option}}
+    {{/select}}
+</div>
+<br>
+
+<?php
+//$tr = $tree1->getArray();
+//lmb_var_debug ($tr);
+?>
+{{tree using="{$tree1}" as="$item"  kids_prop="preloaded_children" counter="$counter" prefix=""}}
+<ul>
+    {{tree:node}}
+    <li>{$counter}-{$item.id} {{tree:nextlevel/}}</li>
+    {{/tree:node}}
+    {{tree:empty}}
+    tree_array is empty
+    {{/tree:empty}}
+</ul>
+{{/tree}}
+
+<div>
+    {{form name='my_form'}}
+    <label for='is_special'>Mark as special:</label> {{js_checkbox name='is_special' id='is_special'/}}
+    {{/form}}
+</div>
+<br>
+<div>
+    <?
+    $teams = array(
+        array('id' => '1', 'title' => 'Spartak'),
+        array('id' => '2', 'title' => 'Dinamo'),
+        array('id' => '3', 'title' => 'Zenit'));
+    ?>
+
+    {{select_options_export from="{$tree1}" to="$teams_as_options" key_field="id" text_field="path"/}}
+
+    {{select id='team_id' name='team_id' options="$teams_as_options"}}
+    {{option prepend="true" value='0'}}Выберите команду{{/option}}
+    {{/select}}
+</div>
+
+</div>
+
+{{/wrap}}

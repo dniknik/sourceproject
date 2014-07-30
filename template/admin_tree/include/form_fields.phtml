@@ -1,0 +1,36 @@
+<div class='tabs'>
+    {{include file='_admin/form_errors.phtml'/}}
+
+    <dl class="required field">
+      <dt><label for="root_id">root_id:</label></dt>
+      <dd>{{input name='root_id' type='text' title='root_id'/}}</dd>
+    </dl>
+    <dl class="required field">
+      <dt><label for="parent_id">parent_id:</label></dt>
+      <dd>{{input name='parent_id' type='text' title='parent_id'/}}</dd>
+    </dl>
+    <dl class="required field">
+      <dt><label for="priority">priority:</label></dt>
+      <dd>{{input name='priority' type='text'  title='priority'/}}</dd>
+    </dl>
+    <dl class="required field">
+      <dt><label for="level">level:</label></dt>
+      <dd>{{input name='level' type='text'  title='level'/}}</dd>
+    </dl>
+
+    <dl class="required field">
+      <dt><label for="identifier">identifier:</label>
+      <dd>{{input name='identifier' type='text' title='identifier'/}}</dd>
+    </dl>
+
+    <dl class="required field">
+      <dt><label for="path">path:</label>
+      <dd>{{input name='path' type='text' title='path'/}}</dd>
+    </dl>
+
+    <dl class="required field">
+      <dt><label for="children">children:</label>
+      <dd>{{input name='children' type='text' title='children'/}}</dd>
+    </dl>
+    {{include file='_admin/form_buttons.phtml'/}}
+</div>

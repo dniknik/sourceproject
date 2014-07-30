@@ -1,0 +1,66 @@
+{{wrap with="admin_page_layout.phtml"}}
+
+  {{include file="_admin/selectors.phtml"/}}
+  {{include file="_admin_object/actions.phtml"/}}
+
+  {{into slot="content_zone"}}
+    <div id="header">
+      <h1>treeatrribute</h1>
+
+      <div class="header_actions">
+        <a href='{{route_url params="action:create"/}}'
+           title="Create preference" class='thickbox'>
+            <img src='/shared/images/icons/page_white_add.png'/> Create attribute
+        </a>
+      </div>
+    </div>
+
+    <div id="body">
+      {{list using='{$#items}' parity='{$parity}'}}
+      {{include file="_admin_object/actions.phtml"/}}
+      <div class="list">
+
+        <table>
+          <tr>
+            <th>{{apply template="selectors_toggler"/}}</th>
+            <th>#ID</th>
+            <th width='20%'>Title</th>
+            <th width='40%'>is_published_for_user</th>
+            <th>Actions</th>
+          </tr>
+          {{list:item}}
+            <tr class='{$parity}'>
+              <td>{{apply template="selector" value="{$item.id}"/}}</td>
+              <td>#{$item.id}</td>
+              <td>{$item.title}</td>
+              <td>
+                  {{form name='my_form'}}
+                  {$item.is_published} /
+                  <label for='importance'>({$item.is_field_system}):</label>
+                  {{js_checkbox name='is_field_system' id='is_field_system'
+                    checked_value='$item.is_field_system' /}}
+                  <?php
+                  //echo ((!$item->getImportance()==0) ? 'true' : 'FALSE');
+                  //echo ' :'.lmb_translit_russian( $item->getTitle() );
+                  //echo ' :'. str_replace(' ', '_', $item->getTitle() );
+                  //echo ' :'. lmb_translit_russian(str_replace(' ', '_', $item->getTitle() )); //@todo ot ShopTools
+                  //echo ' :'.lmb_i18n(str_replace(' ', '_', $item->getTitle()));
+                  ?>
+
+                  {{/form}}
+              </td>
+              <td class='actions'>
+                {{apply template="object_action_edit"  item="{$item}" icon="page_white_edit" /}}
+                {{apply template="object_action_delete" item="{$item}" icon="page_white_delete" /}}
+              </td>
+            </tr>
+          {{/list:item}}
+          {{list:empty}}
+            <div class="empty_list">Empty</div>
+          {{/list:empty}}
+        </table>
+      </div>
+      {{/list}}
+    </div>
+  {{/into}}
+{{/wrap}}

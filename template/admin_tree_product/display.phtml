@@ -1,0 +1,133 @@
+{{wrap with="admin_page_layout.phtml" in="content_zone"}}
+
+{{include file="_admin/selectors.phtml"/}}
+{{include file="_admin_object/actions.phtml"/}}
+
+{{into slot="content_zone"}}
+<div id="header">
+    <h1>
+        Product MENU: admin_tree_product display
+        <?php
+        echo sizeof($this->items);
+        //lmb_var_debug($this->items);
+        ?>
+    </h1>
+    <a href="{{route_url params="action:node"/}}">Категории</a> &nbsp;|&nbsp;
+    <a href="{{route_url params="action:branch"/}}">"Ветки" дерева</a>
+
+    <div class="header_actions">
+        <a href='{{route_url params="action:create"/}}'
+           title="Create product" class='thickbox'>
+            <img src='/shared/images/icons/page_white_add.png'/> Create tree_product
+        </a>
+    </div>
+
+</div>
+
+<div id="body">
+    {{list using='{$#items}' parity='{$parity}'}}
+    {{include file="_admin_object/actions.phtml"/}}
+    <div class="list">
+
+        <table>
+            <tr>
+                <th>{{apply template="selectors_toggler"/}}</th>
+                <th>#ID</th>
+                <th>node_id</th>
+                <th>Характеристика</th>
+                <th>Значение_Свойства</th>
+                <th>is_branch</th>
+
+                <th>Actions</th>
+            </tr>
+            {{list:item}}
+            <tr class='{$parity}'>
+                <td>{{apply template="selector" value="{$item.id}"/}}</td>
+                <td>#{$item.id}</td>
+                <td>#{$item.node_id}#</td>
+                <td>{$item->gettreeattribute()->getTitle()}</td>
+                <td>{$item.attr_value}</td>
+                <td>{$item.is_branch}</td>
+
+                <td class='actions'>
+                    {{apply template="object_action_edit" item="{$item}" icon="page_white_edit" /}}
+                    {{apply template="object_action_delete" item="{$item}" icon="page_white_delete" /}}
+                </td>
+            </tr>
+            {{/list:item}}
+            {{list:empty}}
+            <div class="empty_list">Empty items</div>
+            {{/list:empty}}
+        </table>
+    </div>
+    {{/list}}
+
+    <?php
+    //@todo this fragment to ShopTools
+
+    $arr = lmbCollection::toFlatArray($this->items);
+    //lmb_var_debug($arr);
+    $tmp = array();
+    foreach($arr as $key => $val) {
+        //$tmp[$key][$val[$key]][]= array('id'=>$val['id'], 'title'=>$val['title']);
+        $tmp[ $val['node_id']][] = array(
+            'id' => $val['id'],
+            'node_id' => $val['node_id'],
+                'attr_id' => $val['attr_id'],
+        'attr_value' => $val['attr_value'],
+        'is_branch' => $val['is_branch']) ;
+        //echo '<br>'.$key;
+    }
+    //lmb_var_debug($tmp);
+    $this->arr_tovar = $tmp;
+    ?>
+
+    {{list using='{$#arr_tovar}' parity='{$parity}'}}
+    {{include file="_admin_object/actions.phtml"/}}
+    <div class="list">
+
+        <table>
+            <tr>
+
+                <th>#ID</th>
+                <th>Заголовок</th>
+                <th>Описание</th>
+                <th>Идентификатор</th>
+
+                <th>Дата добавления</th>
+                <th>Дата обновления</th>
+
+                <th>Цена</th>
+
+            </tr>
+            {{list:item}}
+            <tr class='{$parity}'>
+                <td>#{$item.id}</td>
+
+                <?php
+                //@todo this fragment to ShopTools
+                $arr_tovar_attr = array_reverse($item);
+                ?>
+
+                {{list using='{$arr_tovar_attr}' as='$tovar'}}
+                {{list:item}}
+                <td>
+                    {$tovar.attr_value}
+                </td>
+                {{/list:item}}
+                {{/list}}
+
+            </tr>
+            {{/list:item}}
+            {{list:empty}}
+            <div class="empty_list">Empty items</div>
+            {{/list:empty}}
+        </table>
+    </div>
+    {{/list}}
+
+
+
+</div>
+{{/into}}
+{{/wrap}}

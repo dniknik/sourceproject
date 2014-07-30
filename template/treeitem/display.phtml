@@ -1,0 +1,157 @@
+{{wrap with="front_page_layout.phtml" in="content_zone"}}
+
+<h1>UI:Tree</h1>
+{{list:list using="$this->items" as="$item"}}
+<ul>
+    {{list:item}}
+    <li><a href="/user/item/{$item.id}">{$item.id}</a></li>
+    {{/list:item}}
+</ul>
+{{/list:list}}
+<br> Welcome ... <br>
+
+<?php
+    lmb_require('limb/tree/src/lmbTreeNestedCollection.class.php');
+    lmb_require('limb/tree/src/lmbTreeHelper.class.php');
+
+    lmb_require('limb/tree/src/lmbTreeDecorator.class.php');
+    lmb_require('limb/tree/src/lmbMPTree.class.php');
+
+    $tree = 0;
+    $arr = array();
+
+    $docs = lmbActiveRecord::find('Tree', lmbSQLCriteria::equal('priority', 0)
+        ->addAnd(new lmbSQLCriteria('level > 0')));
+    $sorted_docs = lmbTreeHelper :: sort($docs, array('id' => 'ASC'));
+
+    $tree1 = new lmbTreeNestedCollection($sorted_docs);
+    $tree1->setChildrenField('preloaded_children');
+    $tree1->rewind();
+
+    $docs = lmbActiveRecord::find('Tree', lmbSQLCriteria::equal('priority', 0)
+        ->addAnd(new lmbSQLCriteria('level > 0')));
+    $sorted_docs = lmbTreeHelper :: sort($docs, array('id' => 'ASC'));
+
+    $uitree = new lmbTreeNestedCollection($docs);
+    $uitree->setChildrenField('preloaded_children');
+    $uitree->rewind();
+
+   //lmb_var_debug($tree1->getArray()); // array 2
+    //lmb_var_debug($uitree->getArray()); // 6
+    //lmb_var_debug(sizeof($uitree));
+    //lmb_var_debug($sorted_docs->getArray()); // 11
+?>
+
+
+<table style="width: 90%;" border="1">
+    <th colspan="3">
+        <h4>root</h4>
+        +field_for_find
+    </th>
+    <tr>
+        <td style="width: 40%">
+            <div style="padding: 3px 20px; ">
+                {{tree using="{$tree1}" as="$item" kids_prop="preloaded_children" counter="$counter" prefix=""}}
+                <ul>
+                    {{tree:node}}
+                    <li>
+                        {$counter}) <a href="{{route_url params=" action:shownode"/}}/{$item.id}">{$item.id}</a>
+                        :<a href="{{route_url params=" action:shownode"/}}/{$item.identifier}">{$item.path}</a>{{tree:nextlevel/}}
+                    </li>
+                    {{/tree:node}}
+                    {{tree:empty}}
+                    tree_array is empty
+                    {{/tree:empty}}
+                </ul>
+                {{/tree}}
+            </div>
+        </td>
+
+        <td>
+            <b>список_характеристик текущей_категории/товара</b>
+
+            <div style="padding: 3px 20px;">
+                {{tree using="{$uitree}" kids_prop="preloaded_children"}}
+                <ul>
+                    {{tree:branch}}
+                    <li>{{tree:item}}{$item.identifier}{{/tree:item}}</li>
+                    {{/tree:branch}}
+                    {{tree:empty}}
+                    tree_array is empty
+                    {{/tree:empty}}
+
+                </ul>
+                {{/tree}}
+            </div>
+        </td>
+
+        <td>
+            <b>список последних добавленных товаров</b>
+
+            <div>
+                ..
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <a href="/cart/">Your Cart</a> Total summ is : <b>${$#cart.total_summ|number:2, '.', ' '}</b>
+        </td>
+    </tr>
+</table>
+
+<?php
+lmb_require('limb/tree/src/lmbTreeNestedCollection.class.php');
+lmb_require('limb/tree/src/lmbTreeHelper.class.php');
+
+lmb_require('limb/tree/src/lmbTreeDecorator.class.php');
+lmb_require('limb/tree/src/lmbMPTree.class.php');
+lmb_require('limb/tree/src/lmbNSTree.class.php');
+lmb_require('limb/dbal/src/drivers/pgsql/lmbPgsqlRecord.class.php');
+
+$my_connect = lmbToolkit::instance()->getDefaultDbConnection();
+$tree_MPTree = new lmbMPTree(
+    'sys_tree',
+    $my_connect
+);
+$tree_NSTree = new lmbNSTree(
+    'sys_tree',
+    $my_connect
+);
+
+$rootMP = $tree_MPTree->getRootNode();
+//    $rootNS = $tree_NSTree->getRootNode();
+//lmb_var_debug($rootMP);
+//echo('<br><br>');
+//lmb_var_debug($rootMP->export());
+//    lmb_var_debug($rootNS);
+//echo('<br><br>');
+
+$treeDecor = new lmbTreeDecorator(
+    new lmbMPTree(
+        'sys_tree',
+        $my_connect,
+        array('id' => 'id',
+            'parent_id' => 'parent_id',
+            'level' => 'level',
+            'identifier' => 'identifier',
+            'path' => 'path'
+        )));
+
+//lmb_var_debug($treeDecor);
+//echo('<br><br>');
+//lmb_var_debug($treeDecor->getRootNode() );
+
+
+$docs = lmbActiveRecord::find(
+    'Tree',
+    lmbSQLCriteria::equal('priority', 0)
+        ->addAnd(new lmbSQLCriteria('level > 0'))
+);
+
+//$test = $tree->getChildren($tree->getRootNode());
+
+?>
+
+<br> see you ...
+{{/wrap}}

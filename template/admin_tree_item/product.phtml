@@ -1,0 +1,61 @@
+{{wrap with="admin_page_layout.phtml"}}
+
+  {{include file="_admin/selectors.phtml"/}}
+  {{include file="_admin_object/actions.phtml"/}}
+
+  {{into slot="content_zone"}}
+    <div id="header">
+      <h1>Tree_item Product</h1>
+
+      <div class="header_actions">
+        <a href='{{route_url params="action:create"/}}'
+           title="Create product" class='thickbox'>
+            <img src='/shared/images/icons/page_white_add.png'/> Create product
+        </a>
+      </div>
+    </div>
+
+    <div id="body">
+      {{list using='{$#items}' parity='{$parity}'}}
+      {{include file="_admin_object/actions.phtml"/}}
+      <div class="list">
+
+        <table>
+          <tr>
+            <th>{{apply template="selectors_toggler"/}}</th>
+            <th>#ID</th>
+            <th width='20%'>Заголовок \ Title</th>
+            <th width='40%'>Описание \ Decsription</th>
+            <th>identifier</th>
+            <th>Цена \ Price</th>
+            <th width='10%'>Дата добавления</th>
+            <th width="10%">Дата создания</th>
+            <th width="16px">Другие</th>
+            <th>Actions</th>
+          </tr>
+          {{list:item}}
+            <tr class='{$parity}'>
+              <td>{{apply template="selector" value="{$item.id}"/}}</td>
+              <td>#{$item.id}</td>
+              <td>item.title</td>
+              <td>item.description|raw|nl2br</td>
+              <td>item.identifier</td>
+              <td>item.price</td>
+              <td>item.date_created</td>
+              <td>item.date_modified|date:'Y/M/d h:m:s'</td>
+              <td>etc</td>
+              <td class='actions'>
+                {{apply template="object_action_edit"  item="{$item}" icon="page_white_edit" /}}
+                {{apply template="object_action_delete" item="{$item}" icon="page_white_delete" /}}
+              </td>
+            </tr>
+          {{/list:item}}
+          {{list:empty}}
+            <div class="empty_list">Empty</div>
+          {{/list:empty}}
+        </table>
+      </div>
+      {{/list}}
+    </div>
+  {{/into}}
+{{/wrap}}

@@ -1,0 +1,6 @@
+{{wrap with="admin_modal_page_layout.phtml" into="content_zone"}}
+  <h1>Редактирование "узла" дерева &quot;{$#item.id}&quot;</h1>
+  {{form id='object_form' name='object_form' method='post' enctype="multipart/form-data"}}
+    {{include file='admin_objoftree/include/form_fields.phtml'/}}
+  {{/form}}
+{{/wrap}}

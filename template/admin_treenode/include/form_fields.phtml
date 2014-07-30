@@ -1,0 +1,22 @@
+{{include file='_admin/form_errors.phtml'/}}
+<div class='tabs'>
+
+
+  <div id="tab_properties">
+    <?php if(!$this->item->isRoot()): ?>
+      <dl class="required field">
+        <dt><label for="identifier">Идентификатор:</label></dt>
+        <dd>{{input type="text" name="identifier" id="identifier" title="Идентификатор"/}}</dd>
+      </dl>
+    <?php endif; ?>
+
+    <dl class="required field">
+      <dt><label for="id">Заголовок:</label></dt>
+      <dd>{{input type="text" name="id id="id" title="id-Заголовок"/}}</dd>
+    </dl>
+
+
+  </div>
+
+</div>
+{{include file='_admin/form_buttons.phtml'/}}
