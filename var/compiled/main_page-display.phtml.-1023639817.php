@@ -1,11 +1,11 @@
 <?php /* This file is generated from /home/dnn/web/webshop/template/main_page/display.phtml*/?><?php
-if(!class_exists('MacroTemplateExecutor8efc007209c02be8d5fa56ce05a9539a', false)){
+if(!class_exists('MacroTemplateExecutor9e995b3eaf5b001ec14f8c408d5f8505', false)){
 require_once('limb/macro/src/compiler/lmbMacroTemplateExecutor.class.php');
 require_once('limb/macro/src/filters/lmbMacroDefaultFilter.inc.php');
 require_once('limb/macro/src/tags/form/lmbMacroFormWidget.class.php');
 require_once('limb/macro/src/tags/form/lmbMacroInputWidget.class.php');
 require_once('limb/macro/src/tags/list/lmbMacroListGlueHelper.class.php');
-class MacroTemplateExecutor8efc007209c02be8d5fa56ce05a9539a extends lmbMacroTemplateExecutor {
+class MacroTemplateExecutor9e995b3eaf5b001ec14f8c408d5f8505 extends lmbMacroTemplateExecutor {
 
 function _init() {
 $this->form_search_form = new lmbMacroFormWidget('search_form');
@@ -101,7 +101,7 @@ $this->__staticInclude3('user/include/profile_box.phtml', $U); ?>
         <div id="container">
             <?php $this->__staticInclude4('flash_box.phtml'); ?>
 
-            <?php if(isset($this->__slot_handlers_content_zone)) {foreach($this->__slot_handlers_content_zone as $__slot_handler_content_zone) {call_user_func_array($__slot_handler_content_zone, array(array()));}}$this->__slotHandler1e39c4c82928f4d44826d0cad143beae(array()); ?>
+            <?php if(isset($this->__slot_handlers_content_zone)) {foreach($this->__slot_handlers_content_zone as $__slot_handler_content_zone) {call_user_func_array($__slot_handler_content_zone, array(array()));}}$this->__slotHandler70e931c976696105fa31cb922308f1cf(array()); ?>
 
         </div>
     </div>
@@ -220,7 +220,7 @@ echo htmlspecialchars($BL,3); ?></b></div><?php  } ?>
 <?php }
 }
 
-function __slotHandler1e39c4c82928f4d44826d0cad143beae($BN= array()) {
+function __slotHandler70e931c976696105fa31cb922308f1cf($BN= array()) {
 if($BN) extract($BN); ?>
 
 <!-- content_begin -->
@@ -290,7 +290,7 @@ $CM = $item;
 if((is_array($CM) || ($CM instanceof ArrayAccess)) && isset($CM['udate'])) { $CL = $CM['udate'];
 }else{ $CL = '';}
 echo htmlspecialchars($CL,3); ?>]</b>
-                    <?php $this->_template8c1140be411090da349ca8ec7997ec3d(array('template' => 'info_tpl','item' => $item,)); ?>
+                    <?php $this->_templated3e0c1fa5d6de4b872c2b3c6dc390799(array('template' => 'info_tpl','item' => $item,)); ?>
 
                 </td>
                 <?php $CK->next();
@@ -336,7 +336,7 @@ function __staticInclude5($file) {
 <?php 
 }
 
-function _template8c1140be411090da349ca8ec7997ec3d($CP= array()) {
+function _templated3e0c1fa5d6de4b872c2b3c6dc390799($CP= array()) {
 if($CP) extract($CP); ?>
 
     <div style="margin: 2px; padding: 8px;">
@@ -366,4 +366,4 @@ if($CP) extract($CP); ?>
 
 }
 }
-$macro_executor_class='MacroTemplateExecutor8efc007209c02be8d5fa56ce05a9539a';
+$macro_executor_class='MacroTemplateExecutor9e995b3eaf5b001ec14f8c408d5f8505';

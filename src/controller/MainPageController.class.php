@@ -320,19 +320,19 @@ class MainPageController extends lmbController
             $this->flashError('Wrong ...!');
         }
 
-        $this->itemsall = TreeItem :: findForFront($this->request);
-        $arr = lmbCollection::toFlatArray($this->itemsall);
-        $tmp = array();
-        foreach($arr as $key => $val) {
-            $tmp[ $val['node_id']][] = array(
-                'id' => $val['id'],
-                'node_id' => $val['node_id'],
-                'attr_id' => $val['attr_id'],
-                'attr_value' => $val['attr_value'],
-                'is_branch' => $val['is_branch']) ;
-        }
-        $this->arr_tovar = $tmp;
-        $this->arr_tovar = array();
+//        $this->itemsall = TreeItem :: findForFront($this->request);
+//        $arr = lmbCollection::toFlatArray($this->itemsall);
+//        $tmp = array();
+//        foreach($arr as $key => $val) {
+//            $tmp[ $val['node_id']][] = array(
+//                'id' => $val['id'],
+//                'node_id' => $val['node_id'],
+//                'attr_id' => $val['attr_id'],
+//                'attr_value' => $val['attr_value'],
+//                'is_branch' => $val['is_branch']) ;
+//        }
+//        $this->arr_tovar = $tmp;
+//        $this->arr_tovar = array();
 // ------------------
         $criteria = new lmbSQLCriteria('parent_id = '. $id);
         $this->items_child_nodes = lmbActiveRecord::find('TreeFull', array('criteria'=>$criteria));
