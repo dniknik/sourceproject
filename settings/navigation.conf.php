@@ -144,6 +144,6 @@ $conf[lmbCmsUserRoles :: ADMIN][0]['children'][] =
 $conf[lmbCmsUserRoles :: ADMIN][0]['children'][] =
     array(
         "title" => "|Страница Одного Товара|",
-        "url" => "/info/",
+        "url" => "/pageitem/",
         "icon" => "/shared/images/icons/application_side_tree.png",
     );

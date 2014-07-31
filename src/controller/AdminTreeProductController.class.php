@@ -13,7 +13,6 @@ lmb_require('limb/datetime/src/lmbDateTimeZone.class.php');
 lmb_require('src/helper/AlphabetHelper.class.php');
 //lmb_require('src/controller/AdminTreeItemController.class.php');
 
-
 //class AdminTreeProductController extends  AdminTreeItemController
 class AdminTreeProductController extends lmbAdminObjectController
 {
@@ -29,21 +28,31 @@ class AdminTreeProductController extends lmbAdminObjectController
         $dt = new lmbDate();
         $this->dt_cr = $dt->getStamp();
 //        //$this->dt_up = (new lmbDate($this->dt_cr)) ->toString();
-        $this->dt_up = (new lmbDate($this->dt_cr))->getIsoDate();
+        //$this->dt_up = (new lmbDate($this->dt_cr))->getIsoDate();
+        $this->dt_up = $dt->getStamp();
         parent :: doCreate();
+    }
+
+    function doEdit()
+    {
+        echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction(). '/ ';
+        $dt = new lmbDate();
+        $this->dt_up = $dt->getStamp();
+        //parent :: doCreate();
+        echo '<br>this->request: ';
+        echo $this->request->toString();
+
     }
 
     function doProduct()
     {
         echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction(). '/ ';
-        //lmbAdminObjectController :: doCreate();
         $this->items = array(
             array('id'=>1),
             array('id'=>2)
         );
 
     }
-
 
 //    function doCreate()
 //    {
@@ -71,11 +80,6 @@ class AdminTreeProductController extends lmbAdminObjectController
     protected function _onAfterSave()
     {
         $this->redirect('/' . $this->getName() . '/');
-//        //$this->request->hasPost()
-//        $this->msg += $this->getName(). '--'. $this->getCurrentAction().' ';
-//        $msg= '03';
-//        $this->flash($msg);
-//        //return 0;
     }
 
 
@@ -237,17 +241,11 @@ echo ' id_node='. $id_forSave;
     function  doDisplay()
     {
         echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction(). '/ ';
-//        $criteria = new lmbSQLCriteria('id > 0'); //todo show only Product (is_branch=0)
-        //parent :: doDisplay();
-        $criteria = new lmbSQLCriteria('is_branch = 0');//lmbSQLFieldCriteria('is_branch', 1);
+        $criteria = new lmbSQLCriteria('is_branch = 0');//todo show only Product (is_branch=0)
         $this->items = lmbActiveRecord :: find('TreeItem', $criteria);
         //lmb_var_debug(sizeof($this->items));
+        //parent :: doDisplay();
     }
-
-//    static function  getUri($id) {
-//        //i = l + n
-//        return 0;
-//    }
 
     protected function  getIdFromRequest($request, $class_name = null)
     {
@@ -323,8 +321,7 @@ echo ' id_node='. $id_forSave;
 
         $this->id = $this->getIdFromRequest($this->request, 'Tree');
 
-        //$id = $this->id;
-        echo ' #this_id:' . $this->id; // .' #id:'.$id. '<br>';
+        echo ' #this_id:' . $this->id;
 
         if ($this->id == 0) {
             $this->flash('Проверьте корректность адресной строки!');
@@ -332,25 +329,6 @@ echo ' id_node='. $id_forSave;
         }
 
         try {
-            //$node = Objoftree :: findById($id);//
-            //$node = lmbActiveRecord :: findById('Tree', $id);
-            //$node = Tree :: findById($id);
-
-            //$criteria = lmbSQLCriteria :: equal($this->field_name, $value);
-            //if(!$this->object->isNew())
-            //    $criteria->addAnd(new lmbSQLFieldCriteria('id', $this->object->getId(), lmbSQLFieldCriteria :: NOT_EQUAL));
-            //$records = lmbActiveRecord :: find($this->class, $criteria);
-            //
-            //$criteria = new lmbSQLFieldCriteria($this->field_name, $value);
-            //if(!$this->user->isNew())
-            //    $criteria->addAnd('id <> '. $this->user->getId());
-            //
-            //$criteria = lmbSQLCriteria :: equal($this->field_name, $value)->addAnd('parent_id = ' . ($this->parent_id ? $this->parent_id : $this->node->getParent()->getId()));
-            //if(!$this->node->isNew())
-            //    $criteria->addAnd('id <> '. $this->node->getId());
-
-            //$this->items = lmbActiveRecord :: find($this->_object_class_name, array('criteria' => $criteria, 'sort'=>array('priority'=>'ASC')));
-
             $id = $this->id;
             $criteria = lmbSQLCriteria :: like('path', '%/' . $id . '/');
             $cur_node = (lmbActiveRecord :: find('Tree', $criteria));
@@ -368,16 +346,12 @@ echo ' id_node='. $id_forSave;
             echo ' max_level: ' . $max_level;
             $cur_level = $records[0]['level'];
             echo ' cur_level: ' . $cur_level;
-            //lmb_var_debug($cur_level);
             echo ' : ';
             echo($max_level - $cur_level);
             $this->isMayBe = (2 > (int)$max_level - $cur_level) ? true : false;
             $this->isTail = ($cur_level == $max_level) ? true : false;
             $this->isTailBranch = (($cur_level != $max_level) || ($cur_level + 1 == $max_level)) ? true : false;
             $this->isBranch = (($cur_level != $max_level) || ($cur_level + 1 != $max_level)) ? true : false;
-            //$this->setIsBranch($this->isTail!=true);
-            //echo $this->isBransh;
-            //echo $this->getIsBranch();
 
             $criteria = lmbSQLCriteria :: equal('id_sys_tree', $id);
             $node = lmbCollection::toFlatArray(lmbActiveRecord :: find('Objoftree', $criteria));
@@ -395,19 +369,13 @@ echo ' id_node='. $id_forSave;
 
             $arr_prIds_legacy = array_column($this->legacy_specs, 'id_pr');
             $arr_prIds_child = array_column($this->child_specs, 'id_pr');
-            //array_column($records, 'first_name');
-            $arr_diff = array_diff($arr_prIds_legacy, $arr_prIds_child);
-            //lmb_var_debug($arr_diff);
-            $this->arr_notAdded = $arr_diff;
 
-            //lmb_var_debug($ids_from_path);
-            //$criteria = lmbSQLCriteria :: greaterOrEqual('id', 0);
-            //$criteria->addAnd('id > '. $this->user->getId());
+            $arr_diff = array_diff($arr_prIds_legacy, $arr_prIds_child);
+            $this->arr_notAdded = $arr_diff;
 
             $criteria = null;
             //$criteria = lmbSQLCriteria :: notEqual('importance', 0); // @todo Activation for production
             $records = lmbCollection::toFlatArray(lmbActiveRecord :: find('Preference', $criteria));
-            //lmb_var_debug($records);
             $this->specs = $records;
 
             $preference = array();
@@ -415,12 +383,6 @@ echo ' id_node='. $id_forSave;
                 $preference[$val['id']] = $val['title'];
             }
             $this->pref = $preference;
-            //lmb_var_debug($this->pref);
-
-            //$product = Product :: findById($product_id);
-            //$cart = $this->_getCart();
-            //$cart->addProduct($product);
-            //$this->flashMessage('Product "' . $product->getTitle() . '" added to your cart!');
         } catch (lmbARException $e) {
             $this->flashError('Wrong ...!');
         }
@@ -428,7 +390,6 @@ echo ' id_node='. $id_forSave;
 //            $this->redirect($_SERVER['HTTP_REFERER']);
 //        else
 //            $this->redirect();
-//        echo $this->getName().':'.$this->getCurrentAction();
     }
 
     function  doBranch()

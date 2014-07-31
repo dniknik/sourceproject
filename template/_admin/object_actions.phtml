@@ -5,6 +5,7 @@
 {{/template}}
 
 {{template name="object_action_edit"}}
+<br>file(object_actions) template_name--object_action_edit<br>
   <?php $title = isset($title) ? $title : lmb_i18n('Edit', 'cms'); ?>
   <a href='{{route_url params="action:edit,id:{$item.id}"/}}' title="{$title}" class="thickbox">
     <img src='/shared/cms/images/icons/{$icon|default:"pencil"}.png' title="$title"/>
