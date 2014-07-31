@@ -6,7 +6,10 @@
         <? if ($this->helper->getCurrentLetter() == $item) { ?>
             <b>{$item|uppercase}</b>
         <? } else { ?>
-            <?php $letter_param = AlphabetHelper :: REQUEST_PARAM_NAME; ?>
+            <?php
+            lmb_require('src/helper/AlphabetHelper.class.php');
+            $letter_param = AlphabetHelper :: REQUEST_PARAM_NAME;
+            ?>
             <a href='/search/?{$letter_param}={$item}'>{$item|uppercase}</a>
         <? } ?>
     {{/list:item}}

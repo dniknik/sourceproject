@@ -339,10 +339,12 @@ echo ' id_node='. $id_forSave;
             $criteria = lmbSQLCriteria :: like('path', $cur_node_path . '%');
             $records = lmbCollection::toFlatArray(lmbActiveRecord :: find('Tree', $criteria));
             $this->childrens = $records;
-            $ids_childrens = array_column($records, 'id');
+            //$ids_childrens = array_column($records, 'id');
+            $ids_childrens = array();
 
             //$cur_level
-            $max_level = max(array_column($records, 'level'));
+            //$max_level = max(array_column($records, 'level'));
+            $max_level = array();
             echo ' max_level: ' . $max_level;
             $cur_level = $records[0]['level'];
             echo ' cur_level: ' . $cur_level;
@@ -396,15 +398,16 @@ echo ' id_node='. $id_forSave;
     {
         echo ' ' . $this->getName() . ' :: ' . $this->getCurrentAction();
 
-        $this->helper = new AlphabetHelper();
-        $this->useForm('search_form');
-        $this->setFormDatasource($this->request);
+//        $this->helper = new AlphabetHelper();
+//        $this->useForm('search_form');
+//        $this->setFormDatasource($this->request);
 
-        echo '_getSearchParams()<br>this->_getSearchParams():<br>';
+        //echo '_getSearchParams()<br>this->_getSearchParams():<br>';
         //echo 'this->request<br>'.$this->request->toString().'<br>';
 
 
-        $this->items = Uitree :: findForFront($this->request);
+        //$this->items = Uitree :: findForFront($this->request);
+        $this->items = array();
         //$this->items = Uitree :: findForFront($this->_getSearchParams());
 
 

@@ -26,42 +26,6 @@
 
 <div id="body">
 
-    <div class="list" style="display: none;">
-        {{list using='{$#items}' parity='{$parity}'}}
-        {{include file="_admin_object/actions.phtml"/}}
-        <table>
-            <tr>
-                <th>{{apply template="selectors_toggler"/}}</th>
-                <th>#ID</th>
-                <th>node_id</th>
-                <th>Характеристика</th>
-                <th>Значение_Свойства</th>
-                <th>is_branch</th>
-
-                <th>Actions</th>
-            </tr>
-            {{list:item}}
-            <tr class='{$parity}'>
-                <td>{{apply template="selector" value="{$item.id}"/}}</td>
-                <td>#{$item.id}</td>
-                <td>#{$item.node_id}#</td>
-                <td>{$item->gettreeattribute()->getTitle()}</td>
-                <td>{$item.attr_value}</td>
-                <td>{$item.is_branch}</td>
-
-                <td class='actions'>
-                    {{apply template="object_action_edit" item="{$item}" icon="page_white_edit" /}}
-                    {{apply template="object_action_delete" item="{$item}" icon="page_white_delete" /}}
-                </td>
-            </tr>
-            {{/list:item}}
-            {{list:empty}}
-            <div class="empty_list">Empty items</div>
-            {{/list:empty}}
-        </table>
-        {{/list}}
-    </div>
-
 
     <div class="list">
         <?php
