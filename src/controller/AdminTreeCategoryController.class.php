@@ -28,26 +28,27 @@ class AdminTreeCategoryController extends lmbAdminObjectController
         echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction(). '/ ';
         $dt = new lmbDate();
         $this->dt_cr = $dt->getStamp();
-//        //$this->dt_up = (new lmbDate($this->dt_cr)) ->toString();
-        $this->dt_up = (new lmbDate($this->dt_cr))->getIsoDate();
+        $this->dt_up = $dt->getStamp();
+        //$this->dt_up = (new lmbDate($this->dt_cr)) ->toString();
+        //$this->dt_up = (new lmbDate($this->dt_cr))->getIsoDate();
 
-
-        $criteria = new lmbSQLFieldCriteria('is_branch', 0);
-        $criteria->addAnd('attr_id = '. 1 );//@fixme use coonfig value -after crated is confog:-)
+        $criteria = new lmbSQLFieldCriteria('is_branch', 1);
+        $criteria->addAnd('attr_id = '. TreeItem::ID_TITLE );//@fixme use coonfig value -after crated is confog:-)
         $this->items = lmbCollection::toFlatArray(lmbActiveRecord :: find('TreeItem', $criteria));
+        //lmb_var_debug(sizeof($this->items));
+        //lmb_var_debug($this->items);
 
-        lmb_var_debug(sizeof($this->items));
-        lmb_var_debug($this->items);
-
-
-        parent :: doCreate();
+        if($this->request->hasPost())
+        {
+            $this->_validateAndSave(true);
+            $this->_onAfterSave();
+        }
     }
 
 
     function doEdit()
     {
         // echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction() . '/ ';
-        //if ($this->request->has('edit')) echo 'HAS_EDIT';
         $dt = new lmbDate();
         $this->dt_up = $dt->getStamp();
 
@@ -66,7 +67,6 @@ class AdminTreeCategoryController extends lmbAdminObjectController
 
         if($this->request->hasPost())
         {
-            //$this->_import();
             $this->_validateAndSave(false);
             $this->_onAfterSave();
         }
@@ -76,12 +76,10 @@ class AdminTreeCategoryController extends lmbAdminObjectController
     function doProduct()
     {
         echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction(). '/ ';
-        //lmbAdminObjectController :: doCreate();
         $this->items = array(
             array('id'=>1),
             array('id'=>2)
         );
-
     }
 
 //    function doCreate()
@@ -105,57 +103,25 @@ class AdminTreeCategoryController extends lmbAdminObjectController
 //        else
 //            $this->_initCreateForm();
 //    }
-//    protected function _onBeforeSave()
-//    {
-//        echo('/' . $this->getName() . '/');
-//
-//    }
-
 
     protected function _onAfterSave()
     {
         $this->redirect('/' . $this->getName() . '/');
-//        //$this->request->hasPost()
-//        $this->msg += $this->getName(). '--'. $this->getCurrentAction().' ';
-//        $msg= '03';
-//        $this->flash($msg);
-//        //return 0;
     }
 
-    protected function _getTreeItemByNodeIdAndAttrId($node_id = 210, $attr_id = TreeItem::ID_TITLE)
+    protected function _getTreeItemByNodeIdAndAttrId($node_id = 0, $attr_id = TreeItem::ID_TITLE)
     {
         $node_id = (is_numeric($node_id)) ? $node_id : 0;
+        if($node_id==0) {
+            echo '<br><b>!node_id==0!</b><br>';
+            return null;
+        }
         $criteria = new lmbSQLCriteria('node_id = ' . $node_id);
         $criteria->addAnd(new lmbSQLFieldCriteria('attr_id', $attr_id));
         $item = lmbActiveRecord::findOne('TreeItem', array('criteria' => $criteria));
-        if (is_null($item)) { //or($node_id==0)
-            $cur_max_node_id = 0;
-            $sql = 'select max(node_id) as max from tree_item';
-            $sql_select_max_node_id = new lmbSelectQuery('tree_item');
-            $sql_select_max_node_id->addField('max(node_id)');
-
-            $cur = lmbActiveRecord::findBySql('TreeItem', $sql);
-            $arr_item = lmbCollection::toFlatArray($cur)[0];
-
-            if (isset($arr_item['max'])) {
-                //echo 'isset_max:(' . $arr_item['max'];
-            }
-
-            if (is_null($arr_item['max'])) {
-                //echo 'max_null:(' . $arr_item['max'];
-                $cur_max_node_id = 0;
-            }
-            if (is_numeric($arr_item['max'])) {
-                //echo 'max_is_numeric:( ';
-                $cur_max_node_id = $arr_item['max'];
-                //echo $cur_max_node_id . ')<br>';
-            } else {
-                //echo 'max_NOT_is_numeric:(' . $arr_item['max'];
-            }
-
-            $id_forSave = $cur_max_node_id + 1;
+        if (is_null($item)) {
             $item = new TreeItem();
-            $item->set('node_id', $id_forSave);
+            $item->set('node_id', $node_id);
         }
         return $item;
     }
@@ -163,8 +129,8 @@ class AdminTreeCategoryController extends lmbAdminObjectController
 
     protected function _validateAndSave($is_create = false)
     {
-
         echo '/ '. $this->getName() . '--' . $this->getCurrentAction() . ' /';
+        $is_editing_treeItem = (strlen($this->getCurrentAction())==4); //getCurrentAction() ~ 'edit'
 
         $pars['title'] = $this->request->get('title');
         $pars['identifier'] = $this->request->get('identifier');
@@ -191,13 +157,12 @@ class AdminTreeCategoryController extends lmbAdminObjectController
         //echo '<br>pars: ';         lmb_var_debug($pars);
         //echo '<br>request: ';         lmb_var_debug($this->request);
 
-        //$node = new Tree();
-        //$node->set('parent_id', $pars['id_sys_tree']);
-
         $str_uri = lmb_translit_russian(str_replace(' ', '_', $pars['title']));
-        //$node->set('identifier', $str_uri); // @fixme   use node of tree
         $pars['identifier'] = $str_uri;
 
+        //$node = new Tree();
+        //$node->set('parent_id', $pars['id_sys_tree']);
+        //$node->set('identifier', $str_uri); // @fixme   use node of tree
 
 //        $itemTree = lmbActiveRecord :: find(
 //            'Tree',
@@ -217,8 +182,6 @@ class AdminTreeCategoryController extends lmbAdminObjectController
         //lmb_var_debug($node);
         //lmb_var_debug($node->getId());
 
-
-
         //$id_forSave = $node->getId();
 //        $itemTree = lmbActiveRecord :: find(
 //            'TreeItem',
@@ -226,7 +189,7 @@ class AdminTreeCategoryController extends lmbAdminObjectController
 //        );
 //        $parent_item = lmbCollection::toFlatArray($itemTree)[0];
 //        $node->set('level', $parent_item['level'] + 1);
-        /*
+
         $cur_max_node_id =0;
         $sql = 'select max(node_id) as max from tree_item';
         $sql_select_max_node_id = new lmbSelectQuery('tree_item');
@@ -250,19 +213,16 @@ class AdminTreeCategoryController extends lmbAdminObjectController
             echo  $cur_max_node_id.  ')<br>';
         }
         else echo 'max_NOT_is_numeric:('.$arr_item['max'];
-        //$max_dode_id = new lmbSelectQuery('tree_item')
 
-        $id_forSave = $cur_max_node_id+1;
-        echo ' id_node='. $id_forSave;
-        */
+        $node_id_forSave = $cur_max_node_id + 1;
+        $node_id = $this->request->get('node_id');
+
         $iIsBranch = $pars['is_branch'];
         foreach ($arr_specifications as $key => $value) {
             $spec_value = $pars[$value];
             echo "<br>[$key]=$value:". $spec_value;
 
-//            $spec = new TreeItem();
-//            $spec->set('node_id', $id_forSave);
-            $spec = $this->_getTreeItemByNodeIdAndAttrId($this->request->get('node_id'), $key);
+            $spec = $this->_getTreeItemByNodeIdAndAttrId(($is_editing_treeItem)? $node_id: $node_id_forSave, $key);
 
             $spec->set('attr_id', $key);
             $spec->set('attr_value', $spec_value);

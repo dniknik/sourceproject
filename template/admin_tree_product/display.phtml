@@ -8,12 +8,10 @@
     <h1>
         Product MENU: admin_tree_product display
         <?php
-        echo sizeof($this->items);
-        //lmb_var_debug($this->items);
+        echo sizeof($this->items); //lmb_var_debug($this->items);
         ?>
     </h1>
-    <a href="{{route_url params="action:node"/}}">Категории</a> &nbsp;|&nbsp;
-    <a href="{{route_url params="action:branch"/}}">"Ветки" дерева</a>
+    <a href="{{route_url params="action:node"/}}">Категории</a>
 
     <div class="header_actions">
         <a href='{{route_url params="action:create"/}}'
@@ -21,16 +19,12 @@
             <img src='/shared/images/icons/page_white_add.png'/> Create tree_product
         </a>
     </div>
-
 </div>
 
 <div id="body">
-
-
     <div class="list">
         <?php
         //@todo this fragment to ShopTools
-
         $arr = lmbCollection::toFlatArray($this->items);
         //lmb_var_debug($arr);
         $tmp = array();
@@ -53,7 +47,7 @@
         <table>
             <tr>
                 <th>Actions</th>
-                <th>#ID</th>
+                <th>#node_ID</th>
                 <th>Заголовок</th>
                 <th>Описание</th>
                 <th>Идентификатор</th>
@@ -66,7 +60,7 @@
             {{list:item}}
             <?php
                 $node_id = $item[0]['node_id'];
-                $product['id'] = $item[0]['node_id'];
+                $product['id'] = $node_id;
                 $product['title']= TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_TITLE);
                 $product['desription']= TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_DESCR);
                 $product['identifier']= TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_URI);
@@ -76,9 +70,8 @@
             <tr class='{$parity}'>
                 <td class='actions'>
                     {{apply template="object_action_edit" item="$product" icon="page_white_edit" /}}
-                    {{apply template="object_action_delete" item="{$item}" icon="page_white_delete" /}}
                 </td>
-                <td>#node_id<?php    ?>
+                <td>#{$node_id}
 
                 <?php
                 //@todo this fragment to ShopTools
@@ -103,7 +96,6 @@
         </table>
         {{/list}}
     </div>
-
 </div>
 {{/into}}
 {{/wrap}}

@@ -8,8 +8,7 @@
     <h1>
         Category MENU: admin_tree_category display
         <?php
-        echo sizeof($this->items);
-        //lmb_var_debug($this->items);
+        echo sizeof($this->items); //lmb_var_debug($this->items);
         ?>
     </h1>
     <a href="{{route_url params="action:node"/}}">Категории</a> &nbsp;|&nbsp;
@@ -21,11 +20,9 @@
             <img src='/shared/images/icons/page_white_add.png'/> Create tree_category
         </a>
     </div>
-
 </div>
 
 <div id="body">
-
     <div class="list" style="display:none;">
         {{list using='{$#items}' parity='{$parity}'}}
         {{include file="_admin_object/actions.phtml"/}}
@@ -65,7 +62,6 @@
     <div class="list">
         <?php
         //@todo this fragment to ShopTools
-
         $arr = lmbCollection::toFlatArray($this->items);
         //lmb_var_debug($arr);
         $tmp = array();
@@ -85,7 +81,6 @@
 
         {{list using='{$#arr_tovar}' parity='{$parity}'}}
         {{include file="_admin_object/actions.phtml"/}}
-
         <table>
             <tr>
 
@@ -101,17 +96,11 @@
             <tr class='{$parity}'>
                 <?php
                 $node_id = $item[0]['node_id'];
-                $category['id'] = $item[0]['node_id'];
-//                $product['title']= TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_TITLE);
-//                $product['desription']= TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_DESCR);
-//                $product['identifier']= TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_URI);
-//                $product['price']= TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_PRICE);
-                //$item = $product;
+                $category['id'] = $node_id
                 ?>
 
                 <td class='actions'>
                     {{apply template="object_action_edit" item="$category" icon="page_white_edit" /}}
-                    {{apply template="object_action_delete" item="{$item}" icon="page_white_delete" /}}
                 </td>
 
                 <?php
@@ -126,7 +115,6 @@
                 </td>
                 {{/list:item}}
                 {{/list}}
-
             </tr>
             {{/list:item}}
             {{list:empty}}
@@ -135,7 +123,6 @@
         </table>
         {{/list}}
     </div>
-
 </div>
 {{/into}}
 {{/wrap}}

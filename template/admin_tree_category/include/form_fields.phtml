@@ -7,8 +7,7 @@
 
     if(sizeof($arr_get))
     {
-        echo 'YES_get';
-         //var_dump( $_GET );
+        //echo 'YES_get';//var_dump( $_GET );
         $field='ofnode';
         $id_sys_tree += isset($_GET[$field])?$_GET[$field]:0;
         $createProduct=$id_sys_tree;
@@ -20,11 +19,10 @@
         $id_sys_tree += isset($_GET[$field])?$_GET[$field]:0;
     }
 
-    echo $id_sys_tree;
-    echo ($createProduct!=0)?' createProduct':' createCategory';
-
+    //echo $id_sys_tree;
+    //echo ($createProduct!=0)?' createProduct':' createCategory';
 ?>
-
+<!--
 <p>admin_tree_category <?php echo sizeof($this->items); ?> </p>
 
 <select  id="id_parent" name="id_parent">
@@ -35,7 +33,7 @@
     {{/list:item}}
     {{/list}}
 </select>
-
+-->
 <dl class="required field">
     <dt><label for="node_id">node_id:</label></dt>
     <dd>{{input name='node_id' type='text' title='node_id' /}}</dd>
@@ -48,7 +46,7 @@
 </dl>
 
 <dl class="required field">
-    <dt><label for="title">Название(Заголовок):</label></dt>
+    <dt><label for="title">Заголовок:</label></dt>
     <dd>{{input name='title' type='text' title='Название'/}}</dd>
 </dl>
 
