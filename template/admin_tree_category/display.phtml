@@ -25,10 +25,10 @@
 </div>
 
 <div id="body">
-    {{list using='{$#items}' parity='{$parity}'}}
-    {{include file="_admin_object/actions.phtml"/}}
-    <div class="list">
 
+    <div class="list" style="display:none;">
+        {{list using='{$#items}' parity='{$parity}'}}
+        {{include file="_admin_object/actions.phtml"/}}
         <table>
             <tr>
                 <th>{{apply template="selectors_toggler"/}}</th>
@@ -59,50 +59,60 @@
             <div class="empty_list">Empty items</div>
             {{/list:empty}}
         </table>
+        {{/list}}
     </div>
-    {{/list}}
 
-    <?php
-    //@todo this fragment to ShopTools
-
-    $arr = lmbCollection::toFlatArray($this->items);
-    //lmb_var_debug($arr);
-    $tmp = array();
-    foreach($arr as $key => $val) {
-        //$tmp[$key][$val[$key]][]= array('id'=>$val['id'], 'title'=>$val['title']);
-        $tmp[ $val['node_id']][] = array(
-            'id' => $val['id'],
-            'node_id' => $val['node_id'],
-                'attr_id' => $val['attr_id'],
-        'attr_value' => $val['attr_value'],
-        'is_branch' => $val['is_branch']) ;
-        //echo '<br>'.$key;
-    }
-    //lmb_var_debug($tmp);
-    $this->arr_tovar = $tmp;
-    ?>
-
-    {{list using='{$#arr_tovar}' parity='{$parity}'}}
-    {{include file="_admin_object/actions.phtml"/}}
     <div class="list">
+        <?php
+        //@todo this fragment to ShopTools
+
+        $arr = lmbCollection::toFlatArray($this->items);
+        //lmb_var_debug($arr);
+        $tmp = array();
+        foreach($arr as $key => $val) {
+            //$tmp[$key][$val[$key]][]= array('id'=>$val['id'], 'title'=>$val['title']);
+            $tmp[ $val['node_id']][] = array(
+                'id' => $val['id'],
+                'node_id' => $val['node_id'],
+                'attr_id' => $val['attr_id'],
+                'attr_value' => $val['attr_value'],
+                'is_branch' => $val['is_branch']) ;
+            //echo '<br>'.$key;
+        }
+        //lmb_var_debug($tmp);
+        $this->arr_tovar = $tmp;
+        ?>
+
+        {{list using='{$#arr_tovar}' parity='{$parity}'}}
+        {{include file="_admin_object/actions.phtml"/}}
 
         <table>
             <tr>
 
-                <th>#ID</th>
+                <th></th>
                 <th>Заголовок</th>
                 <th>Описание</th>
                 <th>Идентификатор</th>
 
                 <th>Дата добавления</th>
                 <th>Дата обновления</th>
-
-                <th>Цена</th>
-
             </tr>
             {{list:item}}
             <tr class='{$parity}'>
-                <td>#{$item.id}</td>
+                <?php
+                $node_id = $item[0]['node_id'];
+                $category['id'] = $item[0]['node_id'];
+//                $product['title']= TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_TITLE);
+//                $product['desription']= TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_DESCR);
+//                $product['identifier']= TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_URI);
+//                $product['price']= TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_PRICE);
+                //$item = $product;
+                ?>
+
+                <td class='actions'>
+                    {{apply template="object_action_edit" item="$category" icon="page_white_edit" /}}
+                    {{apply template="object_action_delete" item="{$item}" icon="page_white_delete" /}}
+                </td>
 
                 <?php
                 //@todo this fragment to ShopTools
@@ -123,10 +133,8 @@
             <div class="empty_list">Empty items</div>
             {{/list:empty}}
         </table>
+        {{/list}}
     </div>
-    {{/list}}
-
-
 
 </div>
 {{/into}}
