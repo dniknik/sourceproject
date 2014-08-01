@@ -24,7 +24,7 @@ class AdminTreeProductController extends lmbAdminObjectController
 
     function doCreate()
     {
-        echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction(). '/ ';
+       // echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction() . '/ ';
         $dt = new lmbDate();
         $this->dt_cr = $dt->getStamp();
 //        //$this->dt_up = (new lmbDate($this->dt_cr)) ->toString();
@@ -35,23 +35,40 @@ class AdminTreeProductController extends lmbAdminObjectController
 
     function doEdit()
     {
-        echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction(). '/ ';
+       // echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction() . '/ ';
+        //if ($this->request->has('edit')) echo 'HAS_EDIT';
         $dt = new lmbDate();
         $this->dt_up = $dt->getStamp();
-        //parent :: doCreate();
-        echo '<br>this->request: ';
-        echo $this->request->toString();
 
+        $node_id = $this->request->getInteger('id');
+        $product['node_id'] = $node_id;
+        $product['title'] = TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_TITLE);
+        $product['description'] = TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_DESCR);
+        $product['identifier'] = TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_URI);
+
+        $this->dt_cr = TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_CREATE_DATE);
+        $product['date_create'] = TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_CREATE_DATE);
+        $product['date_update'] = TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_UPDATE_DATE);
+        $product['price'] = TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_PRICE);
+        $product['is_branch'] = TreeItem::getIsBranchByNodeId($node_id);
+
+        $this->setFormDatasource($product, 'object_form');
+
+        if($this->request->hasPost())
+        {
+            //$this->_import();
+            $this->_validateAndSave(false);
+            $this->_onAfterSave();
+        }
     }
 
     function doProduct()
     {
-        echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction(). '/ ';
+        echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction() . '/ ';
         $this->items = array(
-            array('id'=>1),
-            array('id'=>2)
+            array('id' => 1),
+            array('id' => 2)
         );
-
     }
 
 //    function doCreate()
@@ -83,9 +100,67 @@ class AdminTreeProductController extends lmbAdminObjectController
     }
 
 
+    protected function _getTreeItemByNodeIdAndAttrId($node_id = 210, $attr_id = TreeItem::ID_TITLE)
+    {
+        $node_id = (is_numeric($node_id)) ? $node_id : 0;
+        $criteria = new lmbSQLCriteria('node_id = ' . $node_id);
+        $criteria->addAnd(new lmbSQLFieldCriteria('attr_id', $attr_id));
+        $item = lmbActiveRecord::findOne('TreeItem', array('criteria' => $criteria));
+        if (is_null($item)) { //or($node_id==0)
+            $cur_max_node_id = 0;
+            $sql = 'select max(node_id) as max from tree_item';
+            $sql_select_max_node_id = new lmbSelectQuery('tree_item');
+            $sql_select_max_node_id->addField('max(node_id)');
+
+            $cur = lmbActiveRecord::findBySql('TreeItem', $sql);
+            $arr_item = lmbCollection::toFlatArray($cur)[0];
+
+            //lmb_var_debug($arr_item);
+            //lmb_var_debug($arr_item['max']);
+
+            if (isset($arr_item['max'])) {
+                //echo 'isset_max:(' . $arr_item['max'];
+            }
+
+            if (is_null($arr_item['max'])) {
+                //echo 'max_null:(' . $arr_item['max'];
+                $cur_max_node_id = 0;
+            }
+            if (is_numeric($arr_item['max'])) {
+                //echo 'max_is_numeric:( ';
+                $cur_max_node_id = $arr_item['max'];
+                //echo $cur_max_node_id . ')<br>';
+            } else {
+                //echo 'max_NOT_is_numeric:(' . $arr_item['max'];
+            }
+            //$max_dode_id = new lmbSelectQuery('tree_item')
+
+//return 0;
+            $id_forSave = $cur_max_node_id + 1;
+            //$id_forSave = $node_id;
+            $item = new TreeItem();
+            $item->set('node_id', $id_forSave);
+        }
+
+        return $item;
+    }
+
     protected function _validateAndSave($is_create = false)
     {
-        echo '/ '. $this->getName() . '--' . $this->getCurrentAction() . ' /';
+        echo '/ ' . $this->getName() . '--' . $this->getCurrentAction() . ' /';
+
+        //echo '<br>request: ' . $this->request->toString();
+        //$this->request->get('title');
+        //echo ' <br> iscreate: ' . ($is_create == true) ? 'true' : 'false';
+ //echo '<br>iscreate:'. ($is_create)?'true':'false';
+        //$tree_item = lmbActiveRecord::findOne('TreeItem', array());
+        //$criteria = new lmbSQLCriteria('node_id = ' . 210);
+        //$item = lmbActiveRecord::findOne('TreeItem', array('criteria' => $criteria));
+        //echo '<br>item:  '; lmb_var_debug($item);
+        //$check = new TreeItem($item['id']);
+        //$check = $this->_getTreeItemByNodeIdAndAttrId($this->request->get('node_id'));
+        //echo '<br>check: '; lmb_var_debug($check);
+
 
         $pars['title'] = $this->request->get('title');
         $pars['identifier'] = $this->request->get('identifier');
@@ -104,98 +179,73 @@ class AdminTreeProductController extends lmbAdminObjectController
         );
 
         if ($this->request->has('price')) {
-            echo '<b>! HAVE_price !</b>';
+            //echo '<b>! HAVE_price !</b>';
             $pars['price'] = $this->request->get('price');
             array_push($arr_specifications, 'price');
         }
 
-        echo '<br>pars: ';
-        lmb_var_debug($pars);
-        echo '<br>request: ';
-        lmb_var_debug($this->request);
-
-        //$node = new Tree();
-        //$node->set('parent_id', $pars['id_sys_tree']);
+        //echo '<br>pars: '; lmb_var_debug($pars);
+        //echo '<br>request: '; lmb_var_debug($this->request);
 
         $str_uri = lmb_translit_russian(str_replace(' ', '_', $pars['title']));
-        //$node->set('identifier', $str_uri); // @fixme   use node of tree
         $pars['identifier'] = $str_uri;
 
-
-//        $itemTree = lmbActiveRecord :: find(
-//            'Tree',
-//            new lmbSQLCriteria('id=' . $pars['id_sys_tree'])
-//        );
+//        $cur_max_node_id = 0;
+//        $sql = 'select max(node_id) as max from tree_item';
+//        $sql_select_max_node_id = new lmbSelectQuery('tree_item');
+//        $sql_select_max_node_id->addField('max(node_id)');
 //
-//        $parent_item = lmbCollection::toFlatArray($itemTree)[0];
-//        $node->set('level', $parent_item['level'] + 1);
-
-//echo '<br>saving node ...';
-//lmb_var_debug($node);
-
-//return 0;
-        //$node->save();
-        //$node->set('path', $parent_item['path'] . $node->getId() . '/');
-        //$node->save();
-        //lmb_var_debug($node);
-        //lmb_var_debug($node->getId());
-
-
-
-        //$id_forSave = $node->getId();
-//        $itemTree = lmbActiveRecord :: find(
-//            'TreeItem',
-//            new lmbSQLCriteria ('id=' . $pars['id_sys_tree'])
-//        );
-//        $parent_item = lmbCollection::toFlatArray($itemTree)[0];
-//        $node->set('level', $parent_item['level'] + 1);
-
-        $cur_max_node_id =0;
-        $sql = 'select max(node_id) as max from tree_item';
-        $sql_select_max_node_id = new lmbSelectQuery('tree_item');
-        $sql_select_max_node_id->addField('max(node_id)');
-
-        $cur = lmbActiveRecord::findBySql('TreeItem', $sql);
-        $arr_item = lmbCollection::toFlatArray($cur)[0];
-lmb_var_debug($arr_item);
-lmb_var_debug($arr_item['max']);
-        if (isset($arr_item['max'])) {
-            echo 'isset_max:('.$arr_item['max'];
-        }
-
-        if (is_null($arr_item['max'])) {
-            echo 'max_null:('.$arr_item['max'];
-            $cur_max_node_id = 0;
-        }
-        if (is_numeric($arr_item['max'])) {
-            echo 'max_is_numeric:( ';
-            $cur_max_node_id = $arr_item['max'];
-            echo  $cur_max_node_id.  ')<br>';
-        }
-        else echo 'max_NOT_is_numeric:('.$arr_item['max'];
-        //$max_dode_id = new lmbSelectQuery('tree_item')
-
-//return 0;
-        $id_forSave = $cur_max_node_id+1;
+//        $cur = lmbActiveRecord::findBySql('TreeItem', $sql);
+//        $arr_item = lmbCollection::toFlatArray($cur)[0];
+//
+//        lmb_var_debug($arr_item);
+//        lmb_var_debug($arr_item['max']);
+//
+//        if (isset($arr_item['max'])) {
+//            echo 'isset_max:(' . $arr_item['max'];
+//        }
+//
+//        if (is_null($arr_item['max'])) {
+//            echo 'max_null:(' . $arr_item['max'];
+//            $cur_max_node_id = 0;
+//        }
+//        if (is_numeric($arr_item['max'])) {
+//            echo 'max_is_numeric:( ';
+//            $cur_max_node_id = $arr_item['max'];
+//            echo $cur_max_node_id . ')<br>';
+//        } else echo 'max_NOT_is_numeric:(' . $arr_item['max'];
+//        //$max_dode_id = new lmbSelectQuery('tree_item')
+//
+////return 0;
+//        $id_forSave = $cur_max_node_id + 1;
         $iIsBranch = $pars['is_branch'];
-echo ' id_node='. $id_forSave;
+
+        //echo ' id_node=' . $id_forSave;
+$node_id = $this->request->get('node_id');
         foreach ($arr_specifications as $key => $value) {
             $spec_value = $pars[$value];
-            echo "<br>[$key]=$value:". $spec_value;
+            //echo "<br>[$key]=$value:" . $spec_value;
 
-            $spec = new TreeItem();
-            $spec->set('node_id', $id_forSave);
+            //$criteria = new lmbSQLCriteria('node_id = ' . $node_id);
+            //$criteria->addAnd(new lmbSQLFieldCriteria('attr_id', $key));
+            //$item = lmbActiveRecord::findOne('TreeItem', array('criteria' => $criteria));
+        //echo '<br>item: ';
+        //lmb_var_debug($item);
+
+            //$spec = new TreeItem($item['id']);
+            //$spec->set('node_id', $id_forSave);
+
+            $spec = $this->_getTreeItemByNodeIdAndAttrId($this->request->get('node_id'), $key);
 
             $spec->set('attr_id', $key);
             $spec->set('attr_value', $spec_value);
 
             $spec->set('is_branch', $iIsBranch);
             $spec->save();
-            //lmb_var_debug($spec);
-            //echo '<br>';
+            //echo '<br>spec: '; lmb_var_debug($spec); echo '<br>';
         }
         //$node->addToObj
-//return 0;
+
         /*
             $this->_onBeforeValidate();
             $this->item->validate($this->error_list);
@@ -235,13 +285,13 @@ echo ' id_node='. $id_forSave;
 
     function doAppend()
     {
-        echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction(). '/ ';
+        echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction() . '/ ';
     }
 
     function  doDisplay()
     {
-        echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction(). '/ ';
-        $criteria = new lmbSQLCriteria('is_branch = 0');//todo show only Product (is_branch=0)
+        echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction() . '/ ';
+        $criteria = new lmbSQLCriteria('is_branch = 0'); //todo show only Product (is_branch=0)
         $this->items = lmbActiveRecord :: find('TreeItem', $criteria);
         //lmb_var_debug(sizeof($this->items));
         //parent :: doDisplay();

@@ -104,9 +104,10 @@ class TreeItem extends lmbActiveRecord
         if ($node_id=='') {
             $node_id = $this->get('node_id');
         }
+        if ($node_id==0) return '';
         $criteria =  new lmbSQLFieldCriteria('node_id', $node_id);
         $criteria->addAnd(new lmbSQLFieldCriteria('attr_id', $this->ID_ATTR_TITLE));
-        $attr = TreeItem::findFirst('TreeItem', $criteria);
+        $attr = TreeItem::findFirst('TreeItem', $criteria); //fixme
         return (isset($attr['attr_value'])?$attr['attr_value']:'');
     }
 //    static function createForPreference(Preference $specification)

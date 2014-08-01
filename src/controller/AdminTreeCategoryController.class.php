@@ -54,7 +54,6 @@ class AdminTreeCategoryController extends lmbAdminObjectController
 
     }
 
-
 //    function doCreate()
 //    {
 //        if(!$this->parent = $this->_getObjectByRequestedId())

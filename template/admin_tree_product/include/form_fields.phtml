@@ -4,8 +4,7 @@
     //lmb_var_debug($product);
 
     $arr_get = $_GET;
-    echo '<br>GET:';  lmb_var_debug($arr_get);
-    echo '<br>';
+    //echo '<br>GET:';  lmb_var_debug($arr_get); echo '<br>';
 
     $createProduct=1;
     $id_sys_tree=0;
@@ -25,8 +24,8 @@
         $id_sys_tree += isset($_GET[$field])?$_GET[$field]:0;
     }
 
-    echo $id_sys_tree;
-    echo ($createProduct!=0)?' createProduct':' createCategory';
+    //echo $id_sys_tree;
+    //echo ($createProduct!=0)?' createProduct':' createCategory';
 
 ?>
 
@@ -35,6 +34,11 @@
 <dl class="required field">
     <dt><label for="id_sys_tree">id_sys_tree:</label></dt>
     <dd>{{input name='id_sys_tree' type='text' title='id_sys_tree' value='{$id_sys_tree}' disabled='true' /}}</dd>
+</dl>
+
+<dl class="required field">
+    <dt><label for="node_id">node_id:</label></dt>
+    <dd>{{input name='node_id' type='text' title='node_id' /}}</dd>
 </dl>
 
 <dl class="required field">
