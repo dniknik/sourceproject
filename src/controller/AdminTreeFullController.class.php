@@ -27,17 +27,58 @@ class AdminTreeFullController extends lmbAdminObjectController
         $dt = new lmbDate();
         $this->dt_cr = $dt->getStamp();
 //        //$this->dt_up = (new lmbDate($this->dt_cr)) ->toString();
-        $this->dt_up = (new lmbDate($this->dt_cr))->getIsoDate();
+        //$this->dt_up = (new lmbDate($this->dt_cr))->getIsoDate();
+        $this->dt_up = $dt->getStamp();
 
         $criteria = new lmbSQLFieldCriteria('is_branch', 1);
-        $criteria->addAnd('attr_id = '. 1 );//@fixme use coonfig value -after crated is confog:-)
-        $this->items = lmbCollection::toFlatArray(lmbActiveRecord :: find('TreeItem', $criteria));
+        $criteria->addAnd('attr_id = '. TreeItem::ID_TITLE );
+        $this->items = lmbActiveRecord :: find('TreeItem', $criteria);
+        //$this->items = lmbCollection::toFlatArray(lmbActiveRecord :: find('TreeItem', $criteria));
 
-        lmb_var_debug(sizeof($this->items));
-        lmb_var_debug($this->items);
+        //lmb_var_debug(sizeof($this->items));
+        //lmb_var_debug($this->items);
 
-        parent :: doCreate();
+        //parent :: doCreate();
+        if($this->request->hasPost())
+        {
+            $this->_validateAndSave(true);
+            //$this->_onAfterSave();
+        }
+
     }
+
+    function doEdit()
+    {
+        // echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction() . '/ ';
+        $dt = new lmbDate();
+        $this->dt_up = $dt->getStamp();
+
+        $node_id = $this->request->getInteger('id');
+        $node['node_id'] = $node_id;
+        $node['title'] = TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_TITLE);
+        $node['description'] = TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_DESCR);
+        $node['identifier'] = TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_URI);
+        $node['price'] = TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_PRICE);
+
+        $this->dt_cr = TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_CREATE_DATE);
+        $node['date_create'] = TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_CREATE_DATE);
+        $node['date_update'] = TreeItem::getAttrValueByNodeId($node_id, TreeItem::ID_UPDATE_DATE);
+        $node['is_branch'] = TreeItem::getIsBranchByNodeId($node_id);
+
+        $this->setFormDatasource($node, 'object_form');
+
+        $criteria = new lmbSQLFieldCriteria('is_branch', 1);
+        $criteria->addAnd('attr_id = '. TreeItem::ID_TITLE );
+        $this->items = lmbActiveRecord :: find('TreeItem', $criteria);
+
+
+        if($this->request->hasPost())
+        {
+            $this->_validateAndSave(false);
+            //$this->_onAfterSave();
+        }
+    }
+
 
     function doProduct()
     {
@@ -76,10 +117,29 @@ class AdminTreeFullController extends lmbAdminObjectController
         //$this->request->hasPost()
     }
 
+    protected function _getTreeItemByNodeIdAndAttrId($node_id = 0, $attr_id = TreeItem::ID_TITLE)
+    {
+        $node_id = (is_numeric($node_id)) ? $node_id : 0;
+        if($node_id==0) {
+            echo '<br><b>!node_id==0!</b><br>';
+            return null;
+        }
+        $criteria = new lmbSQLCriteria('node_id = ' . $node_id);
+        $criteria->addAnd(new lmbSQLFieldCriteria('attr_id', $attr_id));
+        $item = lmbActiveRecord::findOne('TreeItem', array('criteria' => $criteria));
+        if (is_null($item)) {
+            $item = new TreeItem();
+            $item->set('node_id', $node_id);
+        }
+        return $item;
+    }
 
     protected function _validateAndSave($is_create = false)
     {
         echo '/ '. $this->getName() . '--' . $this->getCurrentAction() . ' /';
+        $is_editing_treeItem = (strlen($this->getCurrentAction())==4); //getCurrentAction() ~ 'edit'
+        echo '<br> validation for '. ($is_editing_treeItem)? 'EDIT': 'NO_EDIT';
+        echo '<br>request: '. $this->request->toString();
 
         $pars['title'] = $this->request->get('title');
         $pars['identifier'] = $this->request->get('identifier');
@@ -135,41 +195,76 @@ class AdminTreeFullController extends lmbAdminObjectController
         else echo 'max_NOT_is_numeric:('.$arr_item['max'];
         //$max_dode_id = new lmbSelectQuery('tree_item')
 
-        $id_forSave = $cur_max_node_id+1;
+        //$id_forSave = $cur_max_node_id+1;
+        $node_id_forSave = $cur_max_node_id + 1;
+        $node_id = $this->request->get('node_id');
+        echo ' <br>node_id_forSave='. $node_id_forSave. ' node_id: '. $node_id;
+
         $iIsBranch = $pars['is_branch'];
-        //echo ' id_node='. $id_forSave;
         foreach ($arr_specifications as $key => $value) {
             $spec_value = $pars[$value];
             //echo "<br>[$key]=$value:". $spec_value;
 
-            $spec = new TreeItem();
-            $spec->set('node_id', $id_forSave);
+//            $spec = new TreeItem();
+//            $spec->set('node_id', $id_forSave);
+            $spec = $this->_getTreeItemByNodeIdAndAttrId(($is_editing_treeItem)? $node_id: $node_id_forSave, $key);
 
             $spec->set('attr_id', $key);
             $spec->set('attr_value', $spec_value);
 
             $spec->set('is_branch', $iIsBranch);
-            $spec->save();
+        $spec->save();
             //lmb_var_debug($spec);
             //echo '<br>';
         }
+//return 0;
+        $parent_req_id = $this->request->get('id_parent'); // node_id - parent nodeTree
+        $tmp = lmbActiveRecord :: findOne('TreeFull',' node_id='. $parent_req_id);
+        //lmbCollection::toFlatArray
+        $sql = ('select id from tree_full where node_id ='. $parent_req_id);
+        //$row = lmbActiveRecord::findBySql('TreeFull', $sql);
+        $row = lmbDBAL::fetchOneValue($sql);
 
-        $parent_req_id = $this->request->get('id_parent');
-        $tmp = lmbActiveRecord :: findFirst('TreeFull',' node_id='. $parent_req_id);
-        //lmb_var_debug($tmp);
-        $parent_id = $tmp['id'];
-        //echo '<br>parent_id='. $parent_id. '<br>';
+        echo '<br>(sql)'; lmb_var_debug(($row)); echo '<br>';
+        //echo '<br>(sql)'; lmb_var_debug(lmbCollection::toFlatArray($row)); echo '<br>';
+
+        //$tmp = lmbActiveRecord :: findOneBySql('TreeFull','select id from tree_full where node_id='. $parent_req_id);
+        echo '<br> TMP by-node_id-parent: '; lmb_var_debug($tmp);
+        if($tmp) echo ' hasTMP ';
+        else echo ' notHasTMP ';
+        //$par_id = $tmp['id'];
+        // getPrimaryKeyName()
+        //$f = $tmp->getPrimaryKeyName();
+        //$par_id = $tmp->getId();
+        $par_id =  (integer)$row;
+        echo '<br>()id(by node_id Parent-Category)='. $par_id. '<br>';
+        //echo '<br>(f)'. $f. '<br>';
+
+        // fixme getTreeFull for create and edit
 
         $node = new TreeFull();
-        $node->set('parent_id', $parent_id);
+        $change_nodeTree = new TreeFull();
+
+        $change_nodeTree->set('node_id', ($is_editing_treeItem)? $node_id: $node_id_forSave);
+        $change_nodeTree->set('root_id', 0);
+        $change_nodeTree->set('parent_id', $par_id);
+        $change_nodeTree->set('priority', 0);
+        $change_nodeTree->set('level', $tmp['level']+1);
+        //$change_nodeTree->set('path', '');
+        $change_nodeTree->set('children', 0);
+        $change_nodeTree->set('path', rtrim($tmp['path'],'/') .'/'. 'getId' . '/');
+        $change_nodeTree->set('identifier', $pars['identifier']);
+        $change_nodeTree->set('is_branch', 0);
+
+        $node->set('parent_id', $par_id);
         $node->set('identifier', $pars['identifier']);
 
-        $itemTree = lmbActiveRecord :: find(
-            'TreeFull',
-            new lmbSQLCriteria('id='.$parent_id)
-        );
-
+        $itemTree = lmbActiveRecord :: find('TreeFull', new lmbSQLCriteria('id='.$par_id));
+        echo '<br>double_check: ';
         lmb_var_debug(sizeof($itemTree));
+        echo '<br>';
+        lmb_var_debug($itemTree);
+        echo '<br>';
 
         $parent_item = array();
         if(sizeof($itemTree)!=0)
@@ -185,10 +280,21 @@ class AdminTreeFullController extends lmbAdminObjectController
         else'<br> NOT_CORRECT_parent_item_level <br>';
 
         $node->set('level', $parent_item['level']+1 );
-        $node->set('node_id', $id_forSave);
-        $node->save();
+        $node->set('node_id', ($is_editing_treeItem)? $node_id: $node_id_forSave);
+        //$node->save();
+        $change_nodeTree->set('path', rtrim($tmp['path'],'/') .'/'. '/');
+        $change_nodeTree->save();
+        $sql = 'select id from tree_full where node_id ='. ($is_editing_treeItem)? $node_id: $node_id_forSave;
+        echo '<br>sql: '. $sql;
+        //$row = lmbActiveRecord::findBySql('TreeFull', $sql);
+        $row_val_id = 111;//lmbDBAL::fetchOneValue($sql);
         $node->set('path', rtrim($parent_item['path'],'/') .'/'. $node->getId() . '/');
-        $node->save();
+        $change_nodeTree->set('path', rtrim($tmp['path'],'/') .'/'. $change_nodeTree->getId() . '/');
+        $change_nodeTree->save();
+        //$node->save();
+        echo '<br>node: '; lmb_var_debug($node); echo '<br>';
+        echo '<br>change_node: '; lmb_var_debug($change_nodeTree); echo '<br>';
+//return 0;
     }
 
     function doAppend()

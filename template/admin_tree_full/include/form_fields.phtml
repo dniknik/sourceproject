@@ -20,12 +20,61 @@
         $id_sys_tree += isset($_GET[$field])?$_GET[$field]:0;
     }
 
-    echo $id_sys_tree;
+    //echo $id_sys_tree;
     echo ($createProduct!=0)?' createProduct':' createCategory';
 
 ?>
 
 <p>admin_tree_full <?php echo sizeof($this->items); ?> </p>
+
+<div>
+    Добавление
+    <label for='type_product'>
+        {{input type="radio" name="node_type" id="type_product" onchange = 'showOrHide(this);' title='Продукт' checked_value='$createProduct!=0' /}}
+        Продукта
+    </label>
+    <label for='type_category'>
+        {{input type="radio" name="node_type" id="type_category" onchange = 'showOrHide(this);' title='Категория' /}}
+        Категории
+    </label>
+    <br>
+
+    <?php
+        //echo $type_model;
+    ?>
+    <br />
+    <div id = 'cat1' style = 'display: none;'>Содержимое категории 1</div>
+    <br />
+    <div id = 'cat2' style = 'display: none;'>Содержимое категории 2</div>
+    <br />
+    <div id = 'cat3' style = 'display: none;'>Содержимое категории 3</div>
+
+    <script type="text/javascript">
+        function showOrHide(cb, cat) {
+            cb = document.getElementById(cb);
+            cat = document.getElementById(cat);
+            if (cb.checked) cat.style.display = "block";
+            else cat.style.display = "none";
+            console.log("-----");
+            console.log(cb.name);
+        }
+        function showOrHide(obj) {
+            cb = document.getElementById("type_product");
+            cat = document.getElementById("cat2");
+            is = document.getElementById("is_branch");
+            if (cb.checked) {
+                cat.style.display = "block";
+                is.setAttribute("checked", 0 );
+            }
+            else {
+                cat.style.display = "none";
+                is.setAttribute("checked", 1 );
+            }
+            console.log(obj.id);
+        }
+    </script>
+</div>
+
 
 <select  id="id_parent" name="id_parent">
     <option value="0" prepend="true" selected="true">0::Корень...</option>
@@ -43,7 +92,7 @@
 </dl>
 
 <dl class="required field">
-    <dt><label for="title">Название(Заголовок):</label></dt>
+    <dt><label for="title">Заголовок:</label></dt>
     <dd>{{input name='title' type='text' title='Название'/}}</dd>
 </dl>
 

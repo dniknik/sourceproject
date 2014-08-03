@@ -12,36 +12,28 @@
         //lmb_var_debug($this->items);
         ?>
     </h1>
-    <a href="{{route_url params="action:node"/}}">Категории</a> &nbsp;|&nbsp;
-    <a href="{{route_url params="action:branch"/}}">"Ветки" дерева</a>
 
     <div class="header_actions">
         <a href='{{route_url params="action:create"/}}'
-           title="Create category" class='thickbox'>
-            <img src='/shared/images/icons/page_white_add.png'/> Create tree_category
-        </a>
-        <a href='{{route_url params="action:create"/}}'
-           title="Create full" class='thickbox'>
+           title="Create category or product" class='thickbox'>
             <img src='/shared/images/icons/page_white_add.png'/> Create -tree_full-
         </a>
 
         <a href='{{route_url params="action:treefull"/}}'
-           title="Create full" class='thickbox'>
+           title="View for user design" class='thickbox'>
             <!-- <img src='/shared/images/icons/page_white_add.png'/> --> Пользовательский вид
         </a>
-
     </div>
-
 </div>
 
 <div id="body">
-    {{list using='{$#items}' parity='{$parity}'}}
-    {{include file="_admin_object/actions.phtml"/}}
     <div class="list">
-
+        {{list using='{$#items}' parity='{$parity}'}}
+        {{include file="_admin_object/actions.phtml"/}}
+        ( items )
         <table>
             <tr>
-                <th>{{apply template="selectors_toggler"/}}</th>
+                <th>Actions</th>
                 <th>#ID</th>
                 <th>node_id</th>
                 <th>root_id</th>
@@ -52,12 +44,14 @@
                 <th>children</th>
                 <th>identifier</th>
                 <th>is_branch</th>
-
-                <th>Actions</th>
             </tr>
             {{list:item}}
             <tr class='{$parity}'>
-                <td>{{apply template="selector" value="{$item.id}"/}}</td>
+                <td class='actions'>
+                    {{apply template="object_action_edit" item="{$item}" icon="page_white_edit" /}}
+                    {{apply template="object_action_delete" item="{$item}" icon="page_white_delete" /}}
+                </td>
+
                 <td>#{$item.id}</td>
                 <td>#{$item.node_id}#</td>
                 <td>{$item.root_id}</td>
@@ -72,65 +66,56 @@
                     //lmb_var_debug($item->gettreeitem());
                     //lmb_var_debug($item->gettreeitem()->getIds());
                     //lmb_var_debug($item->gettreeitem()->getArray());
-
                     //lmb_var_debug($item->gettreefull());
                     ?>
                 </td>
                 <td>{$item.is_branch}</td>
 
-                <td class='actions'>
-                    {{apply template="object_action_edit" item="{$item}" icon="page_white_edit" /}}
-                    {{apply template="object_action_delete" item="{$item}" icon="page_white_delete" /}}
-                </td>
             </tr>
             {{/list:item}}
             {{list:empty}}
             <div class="empty_list">Empty items</div>
             {{/list:empty}}
         </table>
+        {{/list}}
     </div>
-    {{/list}}
 
-    {{list using='{$#tree_items}' parity='{$parity}'}}
-    {{include file="_admin_object/actions.phtml"/}}
+
     <div class="list">
-
+        {{list using='{$#tree_items}' parity='{$parity}'}}
+        {{include file="_admin_object/actions.phtml"/}}
+        ( tree_items )
         <table>
             <tr>
-                <th>{{apply template="selectors_toggler"/}}</th>
+                <th>Actions</th>
                 <th>#ID</th>
                 <th>node_id</th>
                 <th>Характеристика</th>
                 <th>Значение_Свойства</th>
                 <th>is_branch</th>
-
-                <th>Actions</th>
             </tr>
             {{list:item}}
             <tr class='{$parity}'>
-                <td>{{apply template="selector" value="{$item.id}"/}}</td>
+                <td class='actions'>
+                    {{apply template="object_action_edit" item="{$item}" icon="page_white_edit" /}}
+                    {{apply template="object_action_delete" item="{$item}" icon="page_white_delete" /}}
+                </td>
                 <td>#{$item.id}</td>
                 <td>#{$item.node_id}#</td>
                 <td>{$item->gettreeattribute()->getTitle()}</td>
                 <td>{$item.attr_value}</td>
                 <td>{$item.is_branch}</td>
-
-                <td class='actions'>
-                    {{apply template="object_action_edit" item="{$item}" icon="page_white_edit" /}}
-                    {{apply template="object_action_delete" item="{$item}" icon="page_white_delete" /}}
-                </td>
             </tr>
             {{/list:item}}
             {{list:empty}}
             <div class="empty_list">Empty tree_items</div>
             {{/list:empty}}
         </table>
+        {{/list}}
     </div>
-    {{/list}}
 
     <?php
     //@todo this fragment to ShopTools
-
     $arr = lmbCollection::toFlatArray($this->tree_items);
     //lmb_var_debug($arr);
     $tmp = array();
@@ -148,13 +133,12 @@
     $this->arr_tovar = $tmp;
     ?>
 
-    {{list using='{$#arr_tovar}' parity='{$parity}'}}
-    {{include file="_admin_object/actions.phtml"/}}
     <div class="list">
-
+        {{list using='{$#arr_tovar}' parity='{$parity}'}}
+        {{include file="_admin_object/actions.phtml"/}}
+        ( arr_tovar )
         <table>
             <tr>
-
                 <th>#ID</th>
                 <th>Заголовок</th>
                 <th>Описание</th>
@@ -164,11 +148,20 @@
                 <th>Дата обновления</th>
 
                 <th>Цена</th>
-
             </tr>
             {{list:item}}
             <tr class='{$parity}'>
-                <td>#{$item.id}</td>
+
+                <?php
+                $node_id = $item[0]['node_id'];
+                $node['id'] = $node_id
+                ?>
+
+                <td class='actions'>
+                    {{apply template="object_action_edit" item="$node" icon="page_white_edit" /}}#
+                    {$item[0].node_id}#{$item[0].is_branch}::
+                    <!-- <img src='/shared/images/icons/application_view_detail.png'/> -->
+                </td>
 
                 <?php
                 //@todo this fragment to ShopTools
@@ -176,23 +169,20 @@
                 ?>
 
                 {{list using='{$arr_tovar_attr}' as='$tovar'}}
-                {{list:item}}
-                <td>
-                    {$tovar.attr_value}
-                </td>
-                {{/list:item}}
+                    {{list:item}}
+                    <td>
+                        {$tovar.attr_value}
+                    </td>
+                    {{/list:item}}
                 {{/list}}
-
             </tr>
             {{/list:item}}
             {{list:empty}}
             <div class="empty_list">Empty items</div>
             {{/list:empty}}
         </table>
+        {{/list}}
     </div>
-    {{/list}}
-
-
 
 </div>
 {{/into}}
