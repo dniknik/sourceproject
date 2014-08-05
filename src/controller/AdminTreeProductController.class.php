@@ -201,6 +201,9 @@ class AdminTreeProductController extends lmbAdminObjectController
             $spec->save();
             //echo '<br>spec: '; lmb_var_debug($spec); echo '<br>';
         }
+        if ($is_editing_treeItem) {
+            lmbActiveRecord ::updateRaw( 'TreeFull', array('identifier' => $pars['identifier']), new lmbSQLFieldCriteria('node_id', $node_id));
+        }
 
         /*
             $this->_onBeforeValidate();

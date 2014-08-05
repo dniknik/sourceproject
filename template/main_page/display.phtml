@@ -50,7 +50,7 @@
             <tr>
                 {{list:item}}
                 <td>
-                    <b>[Сортировка по дате: {$item.udate}]</b>
+                    <b>[ <?php if (is_numeric($item['udate'])) { ?> {$item.udate|date:"Y-m-d G:i:s"} <?php } ?> ]</b>
                     {{apply template="info_tpl" item="$item"/}}
                 </td>
                 {{list:glue step="3"}}</tr><tr>{{/list:glue}}

@@ -157,6 +157,10 @@ class TreeItem extends lmbActiveRecord
         {
             $criteria->addAnd(lmbSQLCriteria :: like('attr_value', $str_like. $params['title'].'%'));
         }
+        if (isset($params['node_id']))
+        {
+            $criteria->addAnd(lmbSQLCriteria ::equal('tree_item.node_id', $params['node_id']));
+        }
 
         $query->addCriteria($criteria);
 

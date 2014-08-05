@@ -16,10 +16,12 @@
     $tree_tst = new lmbTreeNestedCollection($sorted);
     $tree_tst->setChildrenField('preloaded_children');
     $tree_tst->rewind();
+    //$tree_tst=array();
 
     ?>
-<div style="display: none;">
+<div style="display: none;"> <!--   -->
     <hr>
+    <h2>wood</h2>
     {{tree using="{$#wood}" as="$item" kids_prop="preloaded_children" counter="$counter" prefix=""}}
     <ul >
         {{tree:node}}
@@ -27,17 +29,15 @@
         {{if var="$title"}
         <li>
             {$counter})
-            <a href="/pagecategory/{$item.uri}">:{$item.path}</a>&nbsp;|&nbsp;
+            <a href="/pagecategory/{$item.uri}">:{$item.path}&nbsp;|&nbsp;{$item.udate} <?php if (is_numeric($item['udate'])) { ?> - {$item.udate|date:"Y-m-d G:i:s"} <?php } ?> </a>
             {{tree:nextlevel/}}
         </li>
         {{/if}}
         {{/tree:node}}
-        {{tree:empty}}
-        tree_array is empty
-        {{/tree:empty}}
     </ul>
     {{/tree}}
 </div>
+<div id="tree_tst">
     <hr>
     {{tree using="{$tree_tst}" as="$item" kids_prop="preloaded_children" counter="$counter" prefix=""}}
     <ul >
@@ -52,6 +52,26 @@
         {{/tree:node}}
     </ul>
     {{/tree}}
+</div>
+    <div style="display: none;"> <!--  -->
+    <hr>
+    {{tree using="{$#wood}" as="$item" kids_prop="preloaded_children" counter="$counter" prefix=""}}
+    <ul >
+        {{tree:node}}
+        <?php
+        $title = TreeItem::getTitleByNodeId($item['node_id']);
+        $uri = TreeItem::getUriByNodeId($item['node_id']);
+        ?>
+        <li>
+            <a href="/pagecategory/{$uri}">
+                <?php echo $title; ?>
+            </a>
+            {{tree:nextlevel/}}
+        </li>
+        {{/tree:node}}
+    </ul>
+    {{/tree}}
+    </div>
 
 </div>
 
@@ -169,28 +189,24 @@
                     <?php
                     $isProduct = (TreeItem :: getIsBranchByNodeId($item['node_id'])==0);
                     $uri = TreeItem::getUriByNodeId($item['node_id']);
-                    echo ($isProduct)?'<a href="/tree_cart/add/'. $item['node_id']. '"><img src="/shared/images/icons/cart_add.png" alt="2cart" /></a>': '';
+                    if($isProduct)
+                    {
+                        echo '<a href="/tree_cart/add/'. $item['node_id']. '"><img src="/shared/images/icons/cart_add.png" alt="2cart" /></a>';
+                        $price = TreeItem::getPriceByNodeId($item['node_id']);
+                        echo ($price)? ' Цена: '. $price. ' y.e.': '';
+                    }
+
                     ?>
 
                     <h<?php echo $item['level']+1; ?>>
-                    {$prefix}.{$counter} )
-
-                        <a href="./{$item.identifier}">{$title}</a>
-                        <?php
-                        if($isProduct) {
-                            $price = TreeItem::getPriceByNodeId($item['node_id']);
-                            echo ($price)? 'Цена: '. $price. ' y.e.': '';
-                            }
-                        ?>
-
-
+                        {$prefix}.{$counter} ) <a href="./{$uri}">{$title}</a>
                     </h<?php echo $item['level']+1; ?>>
 
                     <?php
                         $description = TreeItem::getDescriptionByNodeId($item['node_id']);
                         if($description) {
                     ?>
-                    <p>Описание:<br> {$description|raw|nl2br}</p>
+                        <p>Описание:<br> {$description|raw|nl2br}</p>
                     <?php
                         }
                     ?>

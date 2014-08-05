@@ -4,7 +4,8 @@ class TreeFull extends lmbActiveRecord
 {
     protected $ID_ATTR_TITLE = 1;
 
-    protected $_primary_key_name = 'node_id';
+    //fixme todo !разобраться! зачем это, выборка корректно работает, но редактирование косячит
+    //protected $_primary_key_name = 'node_id';
 
     protected $_db_table_name = 'tree_full';
 

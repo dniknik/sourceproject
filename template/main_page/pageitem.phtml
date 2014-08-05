@@ -49,10 +49,26 @@
                     <!-- <td> </td> -->
                 </tr>
                 {{/if}}
+                <!-- @fixme use without  gettreeitem()-->
+                <?php
+                        $specs = TreeItem::findFromFrame(array('node_id' => $item['node_id']));
+                        //lmb_var_debug( lmbCollection::toFlatArray($specs));
+                ?>
+                {{list using='{$specs}' parity='{$parity}' as='$sp'}}
+                {{list:item}}
+                <tr>
+                    <td>
+                        {$sp.title}
+                    </td>
+                    <td>{$sp.attr_value}</td>
+                </tr>
+                {{/list:item}}
+                {{/list}}
+
                 {{list using='{$item->gettreeitem()}' parity='{$parity}' as='$it'}}
                         {{list:item}}
                         {{if var="{$it->gettreeattribute()->getIsPublished()}"}}
-                        <tr>
+                        <tr style="display: none;">
                             <td>{$it->gettreeattribute()->getTitle()}</td>
                             <td>{$it.attr_value}</td>
                         </tr>
@@ -60,6 +76,7 @@
                         {{/list:item}}
                 {{/list}}
                 {{/list:item}}
+
             </table>
         </div>
         {{/list}}

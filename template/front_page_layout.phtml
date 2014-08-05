@@ -31,23 +31,17 @@
     </div>
 
     <div id="top_menu">
-
-        НАВИГАЦИОННОЕ МЕНЮ: |
-
-        <a  href="/">*Главная страница</a> |
-
-        <a  href="/admin/">Админка</a> |
-
-        <a  href="/tree_cart/">*Корзина</a> |
-        <a  href="/pagecategory/">*Страница категори</a> |
-
-        <a  href="/pageitem/">*Страница Одного Товара</a>
+<!--        НАВИГАЦИОННОЕ МЕНЮ: |-->
+        <a  href="/" style="text-color: red;">*Главная страница</a>
+<!--        <a  href="/admin/">Админка</a> |-->
+        &nbsp;|&nbsp;<a  href="/tree_cart/">*Корзина</a>
+        &nbsp;|&nbsp;<a  href="/pagecategory/">*Категории</a>
+        &nbsp;|&nbsp;<a  href="/pageitem/">*Товары</a>
 
         <? if ($this->toolkit->getUser()->is_logged_in) { ?>
             &nbsp;|&nbsp;<a href="/user/orders/">Заказы</a>
         <? } ?>
     </div>
-
 </div>
 
 <div id="center">

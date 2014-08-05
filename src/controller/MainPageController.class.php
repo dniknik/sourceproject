@@ -78,9 +78,9 @@ class MainPageController extends lmbController
             $records = lmbCollection::toFlatArray(lmbActiveRecord :: find('TreeFull', $criteria));
             //$ids_childrens = array_column($records, 'id');
             // -------------------------------------------
-            $criteria = new lmbSQLCriteria('is_branch = 0');//lmbSQLFieldCriteria('is_branch', 1);
-            $criteria -> addAnd( new lmbSQLCriteria('node_id = 21') );
-            $this->items_product = lmbActiveRecord :: find('TreeItem', $criteria);
+//            $criteria = new lmbSQLCriteria('is_branch = 0');//lmbSQLFieldCriteria('is_branch', 1);
+//            $criteria -> addAnd( new lmbSQLCriteria('node_id = 21') );
+//            $this->items_product = lmbActiveRecord :: find('TreeItem', $criteria);
 //----------------------------------
             //$criteria = new lmbSQLFieldCriteria('id', $id);
             $this->itemsall = TreeItem :: findForFront($this->request);
@@ -133,7 +133,7 @@ class MainPageController extends lmbController
 
         $this->id = $this->getIdFromRequest($this->request, 'TreeFull');
 
-        //echo ' #this_id:' . $this->id; // .' #id:'.$id. '<br>';
+//        echo ' #this_id:' . $this->id; // .' #id:'.$id. '<br>';
 
         if ($this->id == 0) {
             $this->flash('Проверьте корректность адресной строки!');
@@ -166,17 +166,19 @@ class MainPageController extends lmbController
                 //echo '<br>'.$key;
             }
             $this->arr_tovar = $tmp;
-// ------------------
+// ----------------------------------------------------------------
             $criteria = new lmbSQLCriteria('parent_id = '. $id);
             $this->items_child_nodes = lmbActiveRecord :: find('TreeFull', array('criteria'=>$criteria));
-// -----------------------------------------------
+// ---------------------------------------------------------------
+            $criteria = lmbSQLCriteria :: like('path', $cur_node_path . '%');
             $sql ='select ';
             $sql =$sql. 'it.attr_value as udate, it.node_id, it.is_branch, ';
-            $sql =$sql. 'tr.path, tr.id, tr.parent_id as par_id, tr.identifier as uri, tr.level ';
+            $sql =$sql. 'tr.path as path, tr.id, tr.parent_id as parent_id, tr.parent_id as par_id, tr.identifier as identifier, tr.identifier as uri, tr.level as level ';
             $sql =$sql. 'from tree_item it, tree_attribute pr, tree_full tr ';
             $sql =$sql. 'where it.attr_id=pr.id and it.node_id=tr.node_id ';
-            $sql =$sql. 'and pr.id in (5) ';             //@fixme not use digital!
+            $sql =$sql. 'and pr.id in ('.TreeItem::ID_URI.') ';             //@fixme not use digital!
             $sql =$sql. 'and it.is_branch in (0,1) ';    //category && tovars
+            $sql =$sql. "and tr.path like '". $cur_node_path. "%' ";
             //$sql =$sql. 'order by it.attr_value DESC;';
 
             $this->nodes_tree =  lmbDBAL :: fetch($sql);
@@ -186,7 +188,8 @@ class MainPageController extends lmbController
 //                $this->nodes_tree,
 //                get_class($this));
 
-            $sorted = lmbTreeHelper :: sort($this->nodes_tree, array('path' => 'ASC'));
+            //$sorted = lmbTreeHelper :: sort($this->nodes_tree, array('path' => 'ASC'));
+            $sorted = lmbTreeHelper :: sort($this->nodes_tree, array('path' => 'DESC'));
             //$this->wood = new lmbTreeNestedCollection($this->nodes_tree);
             $this->wood = new lmbTreeNestedCollection($sorted);
             //$this->wood = new lmbTreeNestedCollection($sorted, array('udate' => 'DESC'));

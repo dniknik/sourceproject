@@ -126,6 +126,22 @@ class AdminTreeCategoryController extends lmbAdminObjectController
         return $item;
     }
 
+    protected function _getNodeTreeByNodeId($node_id = 0)
+    {
+        $node_id = (is_numeric($node_id)) ? $node_id : 0;
+        if($node_id==0) {
+            echo '<br><b>!node_id==0!</b><br>';
+            return null;
+        }
+        $criteria = new lmbSQLCriteria('node_id = ' . $node_id);
+        $item = lmbActiveRecord::findOne('TreeFull', array('criteria' => $criteria));
+        //if (is_null($item)) {
+            //$item = new TreeItem();
+            //$item->set('node_id', $node_id);
+        //}
+        return $item;
+    }
+
 
     protected function _validateAndSave($is_create = false)
     {
@@ -218,11 +234,12 @@ class AdminTreeCategoryController extends lmbAdminObjectController
         $node_id = $this->request->get('node_id');
 
         $iIsBranch = $pars['is_branch'];
+        $idNode = ($is_editing_treeItem)? $node_id: $node_id_forSave;
         foreach ($arr_specifications as $key => $value) {
             $spec_value = $pars[$value];
-            echo "<br>[$key]=$value:". $spec_value;
+            //echo "<br>[$key]=$value:". $spec_value;
 
-            $spec = $this->_getTreeItemByNodeIdAndAttrId(($is_editing_treeItem)? $node_id: $node_id_forSave, $key);
+            $spec = $this->_getTreeItemByNodeIdAndAttrId($idNode, $key);
 
             $spec->set('attr_id', $key);
             $spec->set('attr_value', $spec_value);
@@ -232,7 +249,21 @@ class AdminTreeCategoryController extends lmbAdminObjectController
             //lmb_var_debug($spec);
             //echo '<br>';
         }
-
+        if ($is_editing_treeItem) {
+        //$nodeTree = $this->_getNodeTreeByNodeId($idNode);
+        lmbActiveRecord ::updateRaw( 'TreeFull', array('identifier' => $pars['identifier']), new lmbSQLFieldCriteria('node_id', $idNode));
+//        if ($nodeTree)
+//        {
+//            lmb_var_debug($nodeTree);
+//            $nodeTree['identifier'] = $pars['identifier'];
+//            echo '<br>';
+//            lmb_var_debug($nodeTree);
+//
+//            //return 0;
+//            $nodeTree->save();
+//            //$nodeTree->updateRaw();
+//        }
+        }
 //        $my_connect = lmbToolkit::instance()->getDefaultDbConnection();
 //        $tree = //new lmbTreeDecorator(
 //            new lmbMPTree(
