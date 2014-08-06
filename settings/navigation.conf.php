@@ -35,20 +35,6 @@ $conf[lmbCmsUserRoles :: ADMIN][0]['children'][] =
     "icon" => "/shared/images/icons/money.png",
 );
 
-//$conf[lmbCmsUserRoles :: ADMIN][0]['children'][] =
-//    array(
-//        "title" => "* Категории",
-//        "url" => "/admin_category/",
-//        "icon" => "/shared/images/icons/accept.png",
-//    );
-
-//$conf[lmbCmsUserRoles :: ADMIN][0]['children'][] =
-//    array(
-//        "title" => "* Товар",
-//        "url" => "/admin_ware/",
-//        "icon" => "/shared/images/icons/accept.png",
-//    );
-
 $conf[lmbCmsUserRoles :: ADMIN][0]['children'][] =
     array(
         "title" => "** Tree",

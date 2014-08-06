@@ -11,34 +11,14 @@ class ShopTools extends lmbAbstractTools
 {
     protected $tree;
     protected $user;
-//    protected $ID_ATTR_TITLE = 1;
 
-//    function getTree()
-//    {
-//        if(is_object($this->tree))
-//            return $this->tree;
-//
-//        $this->tree = new lmbMaterializedPathTree();
-//
-//        return $this->tree;
-//    }
-//
-//    function setTree($tree)
-//    {
-//        $this->tree = $tree;
-//    }
-
-//    function getTitle($node_id= null) {
-//        if(is_null($node_id)) {
-//            $node_id = $this->get('node_id');
-//        }
-//        $criteria =  new lmbSQLFieldCriteria('node_id', $node_id);
-//        $criteria->addAnd(new lmbSQLFieldCriteria('attr_id', $this->ID_ATTR_TITLE));
-//        $attr = TreeItem::findFirst('TreeItem', $criteria);
-//        return (isset($attr['attr_value'])?$attr['attr_value']:'(empty)');
-//    }
-
-
+    //function getTree()
+    //{
+    //    if(is_object($this->tree))
+    //        return $this->tree;
+    //    $this->tree = new lmbMaterializedPathTree();
+    //    return $this->tree;
+    //}
 
     function getTree($tree_name = 'tree_full') //fixme check table_name
     {
@@ -78,7 +58,6 @@ class ShopTools extends lmbAbstractTools
     static function getCountTreeNodes() {
         $sql = 'select count(id) as count from tree_full';
         $cur = lmbActiveRecord::findBySql('TreeFull', $sql);
-        //lmb_var_debug($cur[0]['count']);
         return $cur[0]['count'];
     }
 
@@ -87,5 +66,4 @@ class ShopTools extends lmbAbstractTools
         $cur = lmbActiveRecord::findBySql('TreeItem', $sql);
         return $cur[0]['count'];
     }
-
 }

@@ -13,8 +13,8 @@ class TreeOrderLine extends lmbActiveRecord
     $line = new TreeOrderLine(); // @todo доделать!
     //$line = new OrderLine();
     $line->setProduct($product);
-    $line->setQuantity(1);
-    $line->setPrice(101);
+    $line->setQuantity(0); //@ не ясно почему так, но корректно вроде бы
+    $line->setPrice( (integer)TreeItem::getPriceByNodeId($product->getNodeId()) ); // fixme
     //$line->setPrice($product->getPrice());
     return $line;
   }

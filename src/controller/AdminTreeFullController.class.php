@@ -143,9 +143,7 @@ class AdminTreeFullController extends lmbAdminObjectController
         $pars['date_update'] = $this->request->get('date_update');
 
         $arr_specifications = array( // @todo вынести в файл настроек проекта
-            1 => "title", 'description', 'identifier', //'price',
-            'date_create', 'date_update'
-            //'date_create', 'date_modified'
+            1 => "title", 'description', 'identifier', 'date_create', 'date_update'
         );
 
         if ($this->request->has('price')) {
@@ -154,11 +152,7 @@ class AdminTreeFullController extends lmbAdminObjectController
             array_push($arr_specifications, 'price');
         }
 
-        //echo '<br>pars: ';  lmb_var_debug($pars);
-        //echo '<br>request: '; lmb_var_debug($this->request);
-
         $str_uri = lmb_translit_russian(str_replace(' ', '_', $pars['title']));
-        //$node->set('identifier', $str_uri); // @fixme   use node of tree
         $pars['identifier'] = $str_uri;
 
         $cur_max_node_id =0;
@@ -168,28 +162,27 @@ class AdminTreeFullController extends lmbAdminObjectController
 
         $cur = lmbActiveRecord::findBySql('TreeItem', $sql);
         $arr_item = lmbCollection::toFlatArray($cur)[0];
-        //lmb_var_debug($arr_item);
-        //lmb_var_debug($arr_item['max']);
-        if (isset($arr_item['max'])) {
-            echo 'isset_max:('.$arr_item['max'];
-        }
+
+//        if (isset($arr_item['max'])) {
+//            echo 'isset_max:('.$arr_item['max'];
+//        }
 
         if (is_null($arr_item['max'])) {
-            echo 'max_null:('.$arr_item['max'];
+            //echo 'max_null:('.$arr_item['max'];
             $cur_max_node_id = 0;
         }
         if (is_numeric($arr_item['max'])) {
-            echo 'max_is_numeric:( ';
+            //echo 'max_is_numeric:( ';
             $cur_max_node_id = $arr_item['max'];
             //echo  $cur_max_node_id.  ')<br>';
         }
-        else echo 'max_NOT_is_numeric:('.$arr_item['max'];
+        //else echo 'max_NOT_is_numeric:('.$arr_item['max'];
         //$max_dode_id = new lmbSelectQuery('tree_item')
 
         //$id_forSave = $cur_max_node_id+1;
         $node_id_forSave = $cur_max_node_id + 1;
         $node_id = $this->request->get('node_id');
-        echo ' <br>node_id_forSave='. $node_id_forSave. ' node_id: '. $node_id;
+        //echo ' <br>node_id_forSave='. $node_id_forSave. ' node_id: '. $node_id;
 
         $iIsBranch = $pars['is_branch'];
         foreach ($arr_specifications as $key => $value) {
@@ -382,14 +375,9 @@ class AdminTreeFullController extends lmbAdminObjectController
             $this->childrens = $records;
             $ids_childrens = array_column($records, 'id');
 
-            //$cur_level
             $max_level = max(array_column($records, 'level'));
-            //echo ' max_level: ' . $max_level;
             $cur_level = $records[0]['level'];
-            //echo ' cur_level: ' . $cur_level;
-            //lmb_var_debug($cur_level);
-            //echo ' : ';
-            //echo($max_level - $cur_level);
+
             $this->isMayBe = (2 > (int)$max_level - $cur_level) ? true : false;
             $this->isTail = ($cur_level == $max_level) ? true : false;
             $this->isTailBranch = (($cur_level != $max_level) || ($cur_level + 1 == $max_level)) ? true : false;
@@ -416,9 +404,6 @@ class AdminTreeFullController extends lmbAdminObjectController
             //lmb_var_debug($arr_diff);
             $this->arr_notAdded = $arr_diff;
 
-            //lmb_var_debug($ids_from_path);
-            //$criteria = lmbSQLCriteria :: greaterOrEqual('id', 0);
-            //$criteria->addAnd('id > '. $this->user->getId());
             $criteria = null;
             //$criteria = lmbSQLCriteria :: notEqual('importance', 0); // @todo Activation for production
             $records = lmbCollection::toFlatArray(lmbActiveRecord :: find('TreeAttribute', $criteria));
@@ -430,7 +415,6 @@ class AdminTreeFullController extends lmbAdminObjectController
                 $preference[$val['id']] = $val['title'];
             }
             $this->pref = $preference;
-            //lmb_var_debug($this->pref);
         } catch (lmbARException $e) {
             $this->flashError('Wrong ...!');
         }

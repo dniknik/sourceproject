@@ -103,5 +103,3 @@ class lmbCmsDocument extends lmbActiveRecordTreeNode
     return false;
   }
 }
-
-

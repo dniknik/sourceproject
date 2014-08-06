@@ -60,13 +60,10 @@ class TreeCartController extends lmbController
     $product_id = $this->request->getInteger('id');// @fixme
     try
     {
-        $crit= new lmbSQLFieldCriteria('node_id', $product_id);
-      $product = TreeProduct :: findOne('TreeProduct', $crit);// @fixme
-//      $product = TreeProduct :: findById($product_id);// @fixme
+      $product = TreeProduct :: findOne('TreeProduct', new lmbSQLFieldCriteria('node_id', $product_id));// @fixme
       $cart = $this->_getCart();
       $cart->addProduct($product);
       $this->flashMessage('Product "' . $product->getId() . '" added to your cart!'. $product_id);// @fixme
-//      $this->flashMessage('Product "' . $product->getTitle() . '" added to your cart!');
     }
     catch(lmbARException $e)
     {
@@ -87,7 +84,6 @@ class TreeCartController extends lmbController
       $cart = new TreeCart();// @fixme
       $session->set('treecart', $cart);// @fixme
     }
-
     return $cart;
   }
 }

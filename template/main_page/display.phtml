@@ -12,7 +12,7 @@
         {{list using='{$#items_child_nodes}' as='$item' counter='$my_counter' }}
         {{list:item}}
 
-        <h5> <a href="/pagecategory/{$item.identifier}"> {$item->getTitle()} </a> </h5>
+        <h5> <a href="/pagecategory/{$item.identifier}/"> {$item->getTitle()} </a> </h5>
         {{/list:item}}
         {{/list}}
         <hr>

@@ -80,52 +80,9 @@ class AdminUitreeController extends lmbAdminObjectController
 //    }
 
 
-//    protected function _onBeforeSave()
-//    {
-//        //$this->redirect('/' . $this->getName() . '/');
-//        //$this->request->hasPost()
-//        $this->msg += $this->getName(). '--'. $this->getCurrentAction().' ';
-//        $msg= '02';
-//        $this->flash($msg);
-//        //return 0;
-//    }
-//    protected function _onAfterSave()
-//    {
-//        //$this->redirect('/' . $this->getName() . '/');
-//        //$this->request->hasPost()
-//        $this->msg += $this->getName(). '--'. $this->getCurrentAction().' ';
-//        $msg= '03';
-//        $this->flash($msg);
-//        //return 0;
-//    }
-
 
     protected function _validateAndSave($is_create = false)
     {
-        $this->msg += $this->getName(). '--'. $this->getCurrentAction().' ';
-        $msg= '01';
-        //$this->flash($msg);
-//lmb_var_debug($this->request);
-        //lmb_var_debug( new $this->_object_class_name());
-        /*
-          ["title"]=> STRING(2) "33"
-         ["identifier"]=> STRING(1) "0"
-         ["description"]=> STRING(2) "44"
-         ["id_sys_tree"]=> STRING(1) "0"
-         ["id_pr"]=> STRING(1) "1"
-         ["value_pr"]=> STRING(2) "44"
-         ["is_branch"]=> STRING(1)
-
-title	11
-identifier	ident
-description	22
-id_sys_tree	123
-id_pr	1
-value_pr	101
-is_branch	1
-create	Save
-         */
-
         $pars['title'] = $this->request->get('title');
         $pars['identifier'] = $this->request->get('identifier');
         $pars['description'] = $this->request->get('description');
@@ -143,118 +100,44 @@ create	Save
         );
 
         if($this->request->has('price')){
-            echo  '<b>! HAVE_price !</b>';
             $pars['price'] = $this->request->get('price');
             array_push($arr_specifications, 'price');
         }
 
-        echo '<br>';
-        echo '<br>pars: ';
-        lmb_var_debug($pars);
-        echo '<br>request: ';
-        lmb_var_debug($this->request);
-
         $node = new Tree();
-        //$node->set('root_id', 0);
         $node->set('parent_id', $pars['id_sys_tree']);
 
-        //$node->set('level', 3); // @fixme  use nood of tree
-        //$node->set('path', 3); // @fixme   use nood of tree
-        //$node->set('identifier', $pars['identifier']); //$pars['title']
         $str_uri = lmb_translit_russian(str_replace(' ', '_', $pars['title'] ));
         $node->set('identifier', $str_uri); // @fixme   use nood of tree
         $pars['identifier'] = $str_uri;
 
-        //$spec1 = new Objoftree($node);
-        //$spec1->set('id_sys_tree', $pars['id_sys_tree']);
-        //$spec1->set('id_pr', 1);//title
-        //$spec1->set('value_pr', $pars['title']);//title
 
-        //$spec1->setTree($node);//title
-        //lmb_var_debug($spec1);
-
-        //$node->setObjoftree($spec1);
-        //lmb_var_debug($node);
-
-$itemTree = lmbActiveRecord :: find('Tree',
-     new lmbSQLCriteria('id='.$pars['id_sys_tree']));
-//        echo '<br>itemTree:<br>'.sizeof($itemTree);
-//lmb_var_debug($itemTree);
-//echo '<br>level=';
-        //lmb_var_debug( lmbCollection::toFlatArray( $itemTree)[0]['level'] );
+        $itemTree = lmbActiveRecord :: find('Tree', new lmbSQLCriteria('id='.$pars['id_sys_tree']));
         $parent_item = lmbCollection::toFlatArray( $itemTree)[0];
-$node->set('level', $parent_item['level']+1 );
+        $node->set('level', $parent_item['level']+1 );
 
-    //$values[$this->_level] = $parent_node['level'] + 1;
 
-//        $nodeTree = new lmbMPTree('Tree');//$this->_object_class_name
-//        $nd = $nodeTree->getNodeByPath($pars['id_sys_tree']);
-//        echo '<br>item:<br>'.sizeof($nd);
-                //$newNode= $nodeTree->createNode($itemTree, array('identifier'=>'new_ident'));
-//echo '<br>saving node ...';
-//lmb_var_debug($node);
-
-//return 0;
-    $node->save();
+        $node->save();
         $node->set('path', $parent_item['path'].$node->getId().'/' );
-    $node->save();
-        //lmb_var_debug($node);
-        //lmb_var_debug($node->getId());
+        $node->save();
 
         $id_forSave = $node->getId();
         $iIsBranch = $pars['is_branch'];
 
-foreach($arr_specifications as $key => $value)
-{
-    $spec_value = $pars[$value];
-    //echo "<br>[$key]=$value:". $pars[$value];
+        foreach($arr_specifications as $key => $value)
+        {
+            $spec_value = $pars[$value];
+            //echo "<br>[$key]=$value:". $pars[$value];
 
-    $spec = new Objoftree();
-    $spec->set('id_sys_tree', $id_forSave);
+            $spec = new Objoftree();
+            $spec->set('id_sys_tree', $id_forSave);
 
-    $spec->set('id_pr', $key);
-    $spec->set('value_pr', $spec_value);
+            $spec->set('id_pr', $key);
+            $spec->set('value_pr', $spec_value);
 
-    $spec->set('is_branch', $iIsBranch);
-    $spec->save();
-    lmb_var_debug($spec);
-    echo '<br>';
-}
-    //$node->addToObj
-
-/*
-    $this->_onBeforeValidate();
-    $this->item->validate($this->error_list);
-    $this->_onAfterValidate();
-
-    if($this->error_list->isValid())
-    {
-      if($is_create)
-        $this->_onBeforeCreate();
-      else
-        $this->_onBeforeUpdate();
-
-      $this->_onBeforeSave();
-      $this->item->saveSkipValidation();
-      $this->_onAfterSave();
-
-      if($is_create)
-        $this->_onAfterCreate();
-      else
-        $this->_onAfterUpdate();
-
-      $this->_endDialog();
-    }
-
- */
-//        try
-//        {
-//            parent :: _validateAndSave($is_create);
-//        }
-//        catch (lmbException $e)
-//        {
-//            $this->error_list->addError('Документ со значением поля "Идентификатор" уже существует на данном уровне вложения');
-//        }
+            $spec->set('is_branch', $iIsBranch);
+            $spec->save();
+        }
     }
 
 
@@ -268,65 +151,33 @@ foreach($arr_specifications as $key => $value)
         echo ' ' . $this->getName() . ' :: ' . $this->getCurrentAction();
     }
 
-//    static function  getUri($id) {
-//        //i = l + n
-//        return 0;
-//    }
-
   protected function  getIdFromRequest($request, $class_name = null) {
       $id = 0;
-      //echo('<br>::request:<br>');
-      //lmb_var_debug($request);
-
-      //echo('<br>::class_name:<br>');
-      //lmb_var_debug($class_name);
-
         $req_filed = 'identifier';
         $req_val = 0;
 
         if (isset($request['identifier'])) {
-            //echo('<br>yes_identifier<br>');
             $req_val = $request['identifier'];
         } else
             if (isset($request['id'])) {
-                //echo('<br>yes_id<br>');
                 $req_val = $request['id'];
             } else {
-                //echo('<br>by__parent_id<br>');
                 $req_filed = 'parent_id';
             }
-        //echo '<br>';
-        if (is_numeric($req_val) && intval($req_val) - $req_val == 0)
-            echo ' par_is_int';
-        else
-            echo ' par_is_NOT_int';
 
         $criteria = lmbSQLCriteria :: equal($req_filed, $req_val);
         $current = lmbCollection::toFlatArray(lmbActiveRecord :: find('Tree', $criteria));
 
         if (sizeof($current) == 0) {
-            //echo('<br>size_result_by_identifier=0 ..');
             if (is_numeric($req_val) && intval($req_val) - $req_val == 0) {
-                //echo '<br>par_is_int';
                 $criteria = lmbSQLCriteria :: equal('id', $req_val);
                 $current = lmbCollection::toFlatArray(lmbActiveRecord :: find($class_name, $criteria));
-//                $current = lmbCollection::toFlatArray(lmbActiveRecord :: find('Tree', $criteria));
-                //echo('size_result_by_id:');
-                //lmb_var_debug(sizeof($current));
-
                 if (sizeof($current) != 0) {
-                    //echo '<br>';
-                    //lmb_var_debug($current);
-                    //echo '<br>';
-                    //lmb_var_debug($current[0]['id']);
                     $id = $current[0]['id'];
                 }
             }
         } else {
-            //lmb_var_debug($current);
-            //lmb_var_debug($current[0]['id']);
             $id = $current[0]['id'];
-
         }
         return $id;
     }
@@ -346,34 +197,12 @@ foreach($arr_specifications as $key => $value)
 
         $this->id = $this->getIdFromRequest($this->request, 'Tree');
 
-        //$id = $this->id;
-        echo ' #this_id:' . $this->id;// .' #id:'.$id. '<br>';
-
         if($this->id == 0) {
             $this->flash('Проверьте корректность адресной строки!');
             return 0;
         }
 
         try {
-            //$node = Objoftree :: findById($id);//
-            //$node = lmbActiveRecord :: findById('Tree', $id);
-            //$node = Tree :: findById($id);
-
-            //$criteria = lmbSQLCriteria :: equal($this->field_name, $value);
-            //if(!$this->object->isNew())
-            //    $criteria->addAnd(new lmbSQLFieldCriteria('id', $this->object->getId(), lmbSQLFieldCriteria :: NOT_EQUAL));
-            //$records = lmbActiveRecord :: find($this->class, $criteria);
-            //
-            //$criteria = new lmbSQLFieldCriteria($this->field_name, $value);
-            //if(!$this->user->isNew())
-            //    $criteria->addAnd('id <> '. $this->user->getId());
-            //
-            //$criteria = lmbSQLCriteria :: equal($this->field_name, $value)->addAnd('parent_id = ' . ($this->parent_id ? $this->parent_id : $this->node->getParent()->getId()));
-            //if(!$this->node->isNew())
-            //    $criteria->addAnd('id <> '. $this->node->getId());
-
-            //$this->items = lmbActiveRecord :: find($this->_object_class_name, array('criteria' => $criteria, 'sort'=>array('priority'=>'ASC')));
-
             $id = $this->id;
             $criteria = lmbSQLCriteria :: like('path', '%/' . $id . '/');
             $cur_node = (lmbActiveRecord :: find('Tree', $criteria));
@@ -388,19 +217,12 @@ foreach($arr_specifications as $key => $value)
 
             //$cur_level
             $max_level = max(array_column($records, 'level'));
-            echo ' max_level: '. $max_level;
             $cur_level = $records[0]['level'];
-            echo ' cur_level: '. $cur_level;
-            //lmb_var_debug($cur_level);
-            echo ' : ';
-            echo ($max_level-$cur_level);
+
             $this->isMayBe = (2>(int)$max_level-$cur_level) ? true : false;
             $this->isTail = ($cur_level ==  $max_level) ? true : false;
             $this->isTailBranch = (($cur_level !=  $max_level) || ($cur_level+1 == $max_level)) ? true : false;
             $this->isBranch = (($cur_level !=  $max_level) || ($cur_level+1 != $max_level)) ? true : false;
-            //$this->setIsBranch($this->isTail!=true);
-            //echo $this->isBransh;
-            //echo $this->getIsBranch();
 
             $criteria = lmbSQLCriteria :: equal('id_sys_tree', $id);
             $node = lmbCollection::toFlatArray(lmbActiveRecord :: find('Objoftree', $criteria));
@@ -423,10 +245,6 @@ foreach($arr_specifications as $key => $value)
             //lmb_var_debug($arr_diff);
             $this->arr_notAdded = $arr_diff;
 
-            //lmb_var_debug($ids_from_path);
-            //$criteria = lmbSQLCriteria :: greaterOrEqual('id', 0);
-            //$criteria->addAnd('id > '. $this->user->getId());
-
             $criteria = null;
             //$criteria = lmbSQLCriteria :: notEqual('importance', 0); // @todo Activation for production
             $records = lmbCollection::toFlatArray(lmbActiveRecord :: find('Preference', $criteria));
@@ -438,20 +256,9 @@ foreach($arr_specifications as $key => $value)
                 $preference[$val['id']] = $val['title'];
             }
             $this->pref = $preference;
-            //lmb_var_debug($this->pref);
-
-            //$product = Product :: findById($product_id);
-            //$cart = $this->_getCart();
-            //$cart->addProduct($product);
-            //$this->flashMessage('Product "' . $product->getTitle() . '" added to your cart!');
         } catch (lmbARException $e) {
             $this->flashError('Wrong ...!');
         }
-//        if(isset($_SERVER['HTTP_REFERER']))
-//            $this->redirect($_SERVER['HTTP_REFERER']);
-//        else
-//            $this->redirect();
-//        echo $this->getName().':'.$this->getCurrentAction();
     }
 
     function  doBranch()
@@ -462,14 +269,7 @@ foreach($arr_specifications as $key => $value)
         $this->useForm('search_form');
         $this->setFormDatasource($this->request);
 
-        echo '_getSearchParams()<br>this->_getSearchParams():<br>';
-        //echo 'this->request<br>'.$this->request->toString().'<br>';
-
-
         $this->items = Uitree :: findForFront($this->request);
-        //$this->items = Uitree :: findForFront($this->_getSearchParams());
-
-
 
         $this->childrens = array();
         $this->specifications = array();
@@ -482,34 +282,12 @@ foreach($arr_specifications as $key => $value)
 
         $this->id = $this->getIdFromRequest($this->request, 'Tree');
 
-        //$id = $this->id;
-        echo ' #this_id:' . $this->id;// .' #id:'.$id. '<br>';
-
         if($this->id == 0) {
             $this->flash('Проверьте корректность адресной строки!');
             return 0;
         }
 
         try {
-            //$node = Objoftree :: findById($id);//
-            //$node = lmbActiveRecord :: findById('Tree', $id);
-            //$node = Tree :: findById($id);
-
-            //$criteria = lmbSQLCriteria :: equal($this->field_name, $value);
-            //if(!$this->object->isNew())
-            //    $criteria->addAnd(new lmbSQLFieldCriteria('id', $this->object->getId(), lmbSQLFieldCriteria :: NOT_EQUAL));
-            //$records = lmbActiveRecord :: find($this->class, $criteria);
-            //
-            //$criteria = new lmbSQLFieldCriteria($this->field_name, $value);
-            //if(!$this->user->isNew())
-            //    $criteria->addAnd('id <> '. $this->user->getId());
-            //
-            //$criteria = lmbSQLCriteria :: equal($this->field_name, $value)->addAnd('parent_id = ' . ($this->parent_id ? $this->parent_id : $this->node->getParent()->getId()));
-            //if(!$this->node->isNew())
-            //    $criteria->addAnd('id <> '. $this->node->getId());
-
-            //$this->items = lmbActiveRecord :: find($this->_object_class_name, array('criteria' => $criteria, 'sort'=>array('priority'=>'ASC')));
-
             $id = $this->id;
             $criteria = lmbSQLCriteria :: like('path', '%/' . $id . '/');
             $cur_node = (lmbActiveRecord :: find('Tree', $criteria));
@@ -524,19 +302,12 @@ foreach($arr_specifications as $key => $value)
 
             //$cur_level
             $max_level = max(array_column($records, 'level'));
-            echo ' max_level: '. $max_level;
             $cur_level = $records[0]['level'];
-            echo ' cur_level: '. $cur_level;
-            //lmb_var_debug($cur_level);
-            echo ' : ';
-            echo ($max_level-$cur_level);
+
             $this->isMayBe = (2>(int)$max_level-$cur_level) ? true : false;
             $this->isTail = ($cur_level ==  $max_level) ? true : false;
             $this->isTailBranch = (($cur_level !=  $max_level) || ($cur_level+1 == $max_level)) ? true : false;
             $this->isBranch = (($cur_level !=  $max_level) || ($cur_level+1 != $max_level)) ? true : false;
-            //$this->setIsBranch($this->isTail!=true);
-            //echo $this->isBransh;
-            //echo $this->getIsBranch();
 
             $criteria = lmbSQLCriteria :: equal('id_sys_tree', $id);
             $node = lmbCollection::toFlatArray(lmbActiveRecord :: find('Objoftree', $criteria));
@@ -559,14 +330,9 @@ foreach($arr_specifications as $key => $value)
             //lmb_var_debug($arr_diff);
             $this->arr_notAdded = $arr_diff;
 
-            //lmb_var_debug($ids_from_path);
-            //$criteria = lmbSQLCriteria :: greaterOrEqual('id', 0);
-            //$criteria->addAnd('id > '. $this->user->getId());
-
             $criteria = null;
             //$criteria = lmbSQLCriteria :: notEqual('importance', 0); // @todo Activation for production
             $records = lmbCollection::toFlatArray(lmbActiveRecord :: find('Preference', $criteria));
-            //lmb_var_debug($records);
             $this->specs = $records;
 
             $preference = array();
@@ -574,20 +340,9 @@ foreach($arr_specifications as $key => $value)
                 $preference[$val['id']] = $val['title'];
             }
             $this->pref = $preference;
-            //lmb_var_debug($this->pref);
-
-            //$product = Product :: findById($product_id);
-            //$cart = $this->_getCart();
-            //$cart->addProduct($product);
-            //$this->flashMessage('Product "' . $product->getTitle() . '" added to your cart!');
         } catch (lmbARException $e) {
             $this->flashError('Wrong ...!');
         }
-//        if(isset($_SERVER['HTTP_REFERER']))
-//            $this->redirect($_SERVER['HTTP_REFERER']);
-//        else
-//            $this->redirect();
-//        echo $this->getName().':'.$this->getCurrentAction();
     }
 
     function _getSearchParams()
@@ -595,18 +350,6 @@ foreach($arr_specifications as $key => $value)
         $params = array();
         if($this->request->get('title'))
             $params['title'] = $this->request->getSafe('title');
-$msg = $this->getName(). '--'. $this->getCurrentAction().' ';
-echo '<br>msg:'. $msg. '<br>';
-lmb_var_debug($params);
-
-//        if($this->request->get('price_greater'))
-//            $params['price_greater'] = $this->request->getInteger('price_greater');
-//
-//        if($this->request->get('price_less'))
-//            $params['price_less'] = $this->request->getInteger('price_less');
-
         return $params;
     }
-
-
 }

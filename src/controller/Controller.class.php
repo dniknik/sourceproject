@@ -15,9 +15,5 @@ lmb_require('src/helper/AlphabetHelper.class.php');
 
 class Controller extends lmbController
 {
-    function  doDisplay()
-    {
-        echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction(). '/ ';
-        echo '111';
-    }
+    function  doDisplay() { }
 }

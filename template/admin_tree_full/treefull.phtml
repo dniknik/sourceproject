@@ -33,19 +33,6 @@
     $tree_tst->setChildrenField('preloaded_children');
     $tree_tst->rewind();
 
-//    $uri = lmbToolkit::instance()->getRequest()->getUri();
-//    lmb_var_debug($uri); new lmbUri()
-
-    /*
-        echo ($this->isTail)? 'is_tail':'is_not_tail';
-        echo '<br>';
-        echo ($this->isTailBranch)? 'is_tailBranch':'is_not_tailBranch';
-        echo '<br>';
-        echo ($this->isBranch)? 'is_Branch':'is_not_Branch';
-        echo '<br>';
-        echo (($this->isBranch)&&($this->isTailBranch)&&(!$this->isTail))? 'access_add_product':'not_access_add_tovar';
-        echo '<br>';
-    */
         $bl_mayBe = $this->isMayBe;
         $bl_access = ($this->isBranch)&&($this->isTailBranch)&&(!$this->isTail)&&($bl_mayBe);
 
@@ -53,6 +40,7 @@
         {
             //<a href='{{route_url params="controller:admin_uitree,action:append"/}}/{$this->id}'
             //<a href='{{route_url params="controller:admin_uitree,action:сreate"/}}?ofnode={$this->id}'
+            //<a href="{{route_url params="action:branch"/}}/{$item.identifier}">{$item.identifier}</a>
             ?>
             <a href='{{route_url params="action:create"/}}?ofnode={$this->id}'
                title="Create product" class='thickbox'>
@@ -66,8 +54,8 @@
     <ul >
         {{tree:node}}
         <li>
-            {$counter}) <a href="branch/{$item.id}">{$item.id}</a>&nbsp;|&nbsp;
-            <a href="{{route_url params="action:branch"/}}/{$item.identifier}">{$item.identifier}</a>
+            {$counter}) <a href="./{$item.id}">{$item.id}</a>&nbsp;|&nbsp;
+            <a href="./{$item.identifier}">{$item.identifier}</a>
             {{tree:nextlevel/}}
         </li>
         {{/tree:node}}
@@ -79,18 +67,16 @@
 
     <p>May be append product this Node_tree: {$this->isTail}</p>
     <?php
-    echo ($bl_mayBe)? 'yes_isMayBe':'no_isMayBe';
-    echo '<br>';
-    echo ($bl_access)? 'yes_access':'not_access';
-
+        echo ($bl_mayBe)? 'yes_isMayBe':'no_isMayBe';
+        echo '<br>';
+        echo ($bl_access)? 'yes_access':'not_access';
     ?>
-
 </div>
 
 
 <div class="list" style="lign-self: flex-end; margin: 5px 5px;">
 
-    <div id="found">
+    <div id="found" style="display: none;">
 
         <a href="{{route_url params='controller:admin_uitree,action:branch'}}">Display all</a>
         {{list using="$#helper->getAlphabet()"}}
@@ -112,7 +98,6 @@
             {{input type="text" name="title" id="product" size='10'/}}
             <input type='submit' name='search' value="Search!" class='button'/><br/>
         {{/form}}
-
     </div>
 
     <table border="1">

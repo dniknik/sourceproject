@@ -23,8 +23,6 @@ class Preference extends lmbActiveRecord
     {
         $validator = new lmbValidator();
         $validator->addRequiredRule('title');
-//    $validator->addRequiredRule('description');
-//    $validator->addRequiredRule('price');
         return $validator;
     }
 
@@ -34,10 +32,6 @@ class Preference extends lmbActiveRecord
         $criteria = null;
         if (isset($params['title']))
             $criteria->addAnd(lmbSQLCriteria :: like('title', $params['title'] . '%'));
-//  	if (isset($params['price_greater']))
-//      $criteria->addAnd(lmbSQLCriteria :: greater('price', (int) $params['price_greater']));
-//    if (isset($params['price_less']))
-//      $criteria->addAnd(lmbSQLCriteria :: less('price', (int) $params['price_less']));
         return Product :: find($criteria);
     }
 

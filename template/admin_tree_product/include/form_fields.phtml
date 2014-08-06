@@ -81,4 +81,123 @@
     </dd>
 </dl>
 
+
+<!-- -->
+<?php
+$criteria = null;
+//echo((strcmp(LIMB_APP_MODE,'devel')==0)?'|:dev:|':'| not_dev |' );
+$records = lmbCollection::toFlatArray(lmbActiveRecord :: find('TreeAttribute', $criteria));
+
+$preference = array();
+foreach ($records as $key => $val) {
+    $preference[$val['id']] = $val['title'];
+}
+$this->pref = $preference;
+$this->pr = $records;
+
+?>
+
+
+<?php
+
+$criteria = null;
+//echo '#node: ' . $this->node;
+if ($this->node) {
+    $criteria = new lmbSQLFieldCriteria('node_id', $this->node);
+    //$sql = 'select tr.node_id from tree_full tr, tree_item it where tr.node_id=it.node_id and it.node_id'
+    $cur_tree_item = lmbActiveRecord::findOne('TreeItem', array('criteria' => $criteria));
+    $parent_tree_item = $cur_tree_item->getParent();
+    //lmb_var_debug($parent_tree_item);
+} else {
+    return 0;
+    $criteria = new lmbSQLCriteria('node_id >', $this->node);
+}
+$items = lmbActiveRecord :: find('TreeItem', $criteria);
+$items_parent = lmbActiveRecord :: find('TreeItem', new lmbSQLFieldCriteria('node_id', $parent_tree_item['node_id']));
+$arr = lmbCollection::toFlatArray($items);
+$arr_parent = lmbCollection::toFlatArray($items_parent);
+$arr_pr_ids = array_column($arr, 'attr_id');
+$arr_par_ids = array_column($arr_parent, 'attr_id');
+//echo '<br>';lmb_var_debug($arr_pr_ids);
+//echo '<br>';lmb_var_debug($arr_par_ids);
+$arr_diff = array_diff($arr_par_ids, $arr_pr_ids);
+//echo '<br>';lmb_var_debug($arr_diff);
+//echo '<br>';
+
+?>
+
+<table border="1" style="margin: 6px;">
+
+    <tr class='odd'>
+        <td>&nbsp;</td>
+        <td>#</td>
+        <td>Характеристика:</td>
+        <td>Название</td>
+        <td>Значение</td>
+        <td class='actions'>
+            от Категории-родителя
+        </td>
+    </tr>
+    {{list using='$arr_diff' as='$item' counter='$my_counter' }}
+    {{list:item}}
+    <tr class='odd'>
+        <td>&nbsp;</td>
+        <td>#</td>
+        <td>{$item.id}:{$item}-{$key}-</td> <!-- style="text-transform: uppercase;"  -->
+        <td><p> <?php echo TreeItem::getAttrTitleByAttrId($item);  ?> </p> </td>
+        <td><?php echo strtoupper(TreeItem::getAttrValueByNodeId($parent_tree_item['node_id']));  ?></td>
+        <td class='actions'> + </td>
+    </tr>
+    {{/list:item}}
+    {{/list}}
+
+    {{list using='$arr' as='$item' counter='$my_counter' }}
+    {{list:item}}
+    <tr class='odd'>
+        <td>&nbsp;</td>
+        <td>#</td>
+        <td>{$item.id}:{$item.attr_id}</td>
+        <td><?php echo TreeItem::getAttrTitleByAttrId($item['attr_id']);  ?></td>
+        <td>{$item.attr_value}</td>
+        <td class='actions'></td>
+    </tr>
+    {{/list:item}}
+    {{/list}}
+
+
+    <tr class='odd'>
+        <td>&nbsp;</td>
+        <td>#</td>
+        <td>Добавление существующей характеристики:</td>
+        <td>
+            <select  id="id_pr" name="id_pr" style="width: 200px;">
+                <option value="0" prepend="true" selected="true">Укажите харектеристику ...</option>
+                {{list using='{$this->pref}' key='{$key}' as='{$value}'}}
+                {{list:item}}
+                <option <?php echo (!in_array($key, $arr_diff))?'disabled':''; ?> value='{$key}'>{$key} / {$value}</option>
+                {{/list:item}}
+                {{/list}}
+            </select>
+        </td>
+        <td>
+            {{input name='value_pr' type='text' title='value_pr' list="value_pr" style="width: 100px;" /}}
+            <datalist id="value_pr">
+                <option>Аперитивы</option>
+                <option>Горячие</option>
+                <option>Десертные</option>
+                <option>Диджестивы</option>
+                <option>Молочные</option>
+                <option>Слоистые</option>
+            </datalist>
+        </td>
+
+        <td class='actions'>
+            <input id="create" type="submit" value="Save" name="create" />
+        </td>
+    </tr>
+</table>
+
+<!-- -->
+
+
 {{include file='_admin/form_buttons.phtml'/}}

@@ -9,14 +9,31 @@
     <div style="align-self: flex-start; width: 320px;">
 
         <hr>
-        <h4>"Узлы" дерева</h4>
+        <h4>Список товаров </h4>
         {{list using='{$#records}' parity='{$parity}'
          as="$item" counter="$counter" prefix=""}}
         <ul>
             {{list:item}}
-            {{if var="{$item->getTitle()}"}}
+            <?php
+            $node_id = $item['node_id'];
+            $isProduct = (TreeItem :: getIsBranchByNodeId($node_id)==0);
+            $title = $item->getTitle();
+            $is_out = ($isProduct)&&($title);
+            //lmb_var_debug($is_out);
+            //$uri = TreeItem::getUriByNodeId($item['node_id']);
+            //echo ($isProduct)?'<a href="/tree_cart/add/'. $item['node_id']. '"><img src="/shared/images/icons/cart_add.png" alt="2cart" /></a>': '';
+            ?>
+            {{if var="$is_out"}}
             <li>
-                <a href="/pageitem/{$item.identifier}">{$item->getTitle()}</a>
+                <?php
+                echo ($isProduct)?'<a href="/tree_cart/add/'. $node_id. '"><img src="/shared/images/icons/cart_add.png" alt="addToCart" /></a>': '';
+                $price = TreeItem::getPriceByNodeId($node_id);
+                if (is_numeric($price)&&($price>0))
+                echo '&nbsp;Цена[ '. (integer)$price. ' ]&nbsp;';
+
+                ?>
+
+                <a href="/pageitem/{$item.identifier}">{$title}</a>
             </li>
             {{/if}}
             {{/list:item}}

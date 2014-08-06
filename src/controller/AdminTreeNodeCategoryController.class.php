@@ -26,15 +26,6 @@ class AdminTreeNodeCategoryController extends lmbAdminObjectController
   function doDisplay()
   {
       echo ' /' . $this->getName() . ' :: ' . $this->getCurrentAction(). '/ ';
-      //parent :: doDisplay();
-
-//      $criteria = new lmbSQLFieldCriteria('is_branch', 0);
-//      $this->items = lmbActiveRecord :: find('TreeItem', $criteria);
-
-      //lmb_var_debug(sizeof($this->items));
-      //lmb_var_debug($this->items);
-      echo '<br>';
-      lmb_var_debug($this->request);
 
     if(!$id = $this->request->getInteger('id')  ){
       $this->is_root = true;
@@ -71,10 +62,8 @@ class AdminTreeNodeCategoryController extends lmbAdminObjectController
 
         $dt = new lmbDate();
         $this->dt_cr = $dt->getStamp();
-        //$this->dt_cr = 111;
-        //$this->dt_up = (new lmbDate($this->dt_cr)) ->toString();
         $this->dt_up = (new lmbDate($this->dt_cr))->getIsoDate();
-        //$this->dt_up = 222;
+
         parent :: doCreate();
     }
 
@@ -99,51 +88,13 @@ class AdminTreeNodeCategoryController extends lmbAdminObjectController
         );
 
         if ($this->request->has('price')) {
-            echo '<b>! HAVE_price !</b>';
+            //echo '<b>! HAVE_price !</b>';
             $pars['price'] = $this->request->get('price');
             array_push($arr_specifications, 'price');
         }
 
-        echo '<br>pars: ';
-        lmb_var_debug($pars);
-        echo '<br>request: ';
-        lmb_var_debug($this->request);
-
-        //$node = new Tree();
-        //$node->set('parent_id', $pars['id_sys_tree']);
-
         $str_uri = lmb_translit_russian(str_replace(' ', '_', $pars['title']));
-        //$node->set('identifier', $str_uri); // @fixme   use node of tree
         $pars['identifier'] = $str_uri;
-
-
-//        $itemTree = lmbActiveRecord :: find(
-//            'Tree',
-//            new lmbSQLCriteria('id=' . $pars['id_sys_tree'])
-//        );
-//
-//        $parent_item = lmbCollection::toFlatArray($itemTree)[0];
-//        $node->set('level', $parent_item['level'] + 1);
-
-//echo '<br>saving node ...';
-//lmb_var_debug($node);
-
-//return 0;
-        //$node->save();
-        //$node->set('path', $parent_item['path'] . $node->getId() . '/');
-        //$node->save();
-        //lmb_var_debug($node);
-        //lmb_var_debug($node->getId());
-
-
-
-        //$id_forSave = $node->getId();
-//        $itemTree = lmbActiveRecord :: find(
-//            'TreeItem',
-//            new lmbSQLCriteria ('id=' . $pars['id_sys_tree'])
-//        );
-//        $parent_item = lmbCollection::toFlatArray($itemTree)[0];
-//        $node->set('level', $parent_item['level'] + 1);
 
         $cur_max_node_id =0;
         $sql = 'select max(node_id) as max from tree_item';
@@ -154,20 +105,12 @@ class AdminTreeNodeCategoryController extends lmbAdminObjectController
         $arr_item = lmbCollection::toFlatArray($cur)[0];
         lmb_var_debug($arr_item);
         lmb_var_debug($arr_item['max']);
-        if (isset($arr_item['max'])) {
-            echo 'isset_max:('.$arr_item['max'];
-        }
 
         if (is_null($arr_item['max'])) {
-            echo 'max_null:('.$arr_item['max'];
+            //echo 'max_null:('.$arr_item['max'];
             $cur_max_node_id = 0;
         }
-        if (is_numeric($arr_item['max']))
-            echo 'max_is_numeric:('.$arr_item['max'];
-        else echo 'max_NOT_is_numeric:('.$arr_item['max'];
-        //$max_dode_id = new lmbSelectQuery('tree_item')
 
-//return 0;
         $id_forSave = $cur_max_node_id+1;
         $iIsBranch = $pars['is_branch'];
         $arr_attr = array();
@@ -184,14 +127,10 @@ class AdminTreeNodeCategoryController extends lmbAdminObjectController
             $spec->set('is_branch', $iIsBranch);
             //$spec->save();
             //lmb_var_debug($spec);
-            echo '<br>';
-            array_push($arr_attr, $spec);
-            lmb_var_debug($spec);
-            echo '<br>';
 
+            array_push($arr_attr, $spec);
         }
-        echo '<br>arr_attr:<br>';
-        lmb_var_debug($arr_attr);
+        echo '<br>arr_attr:<br>'; lmb_var_debug($arr_attr);
 
         $treeItem = new TreeItem();
         //$treeItem->settreeattribute();
@@ -200,8 +139,7 @@ class AdminTreeNodeCategoryController extends lmbAdminObjectController
         //$tr->getTree();
         $tr->initTree();
         $root = $this->tr->getRootNode();
-        echo '<br>root:<br>';
-        lmb_var_debug($root);
+        echo '<br>root:<br>'; lmb_var_debug($root);
 
 //retrun 0;
         $treeCategory = new TreeFull();
@@ -213,18 +151,14 @@ class AdminTreeNodeCategoryController extends lmbAdminObjectController
         //$node->set('identifier', $str_uri); // @fixme   use node of tree
         $pars['identifier'] = $str_uri;
         $itemTree = lmbActiveRecord :: find(
-            'tee_full',
+            'tree_full',
             new lmbSQLCriteria('id=' . $pars['id_sys_tree'])
         );
 //
-        echo '<br>item_tree:<br>';
-        lmb_var_debug($itemTree);
-
+        echo '<br>item_tree:<br>'; lmb_var_debug($itemTree);
 
         $parent_item = lmbCollection::toFlatArray($itemTree)[0];
-        echo '<br>parent_item_:<br>';
-lmb_var_debug($parent_item);
-
+        echo '<br>parent_item_:<br>'; lmb_var_debug($parent_item);
 
         $treeCategory->set('level', $parent_item['level'] + 1);
 
@@ -233,9 +167,7 @@ lmb_var_debug($parent_item);
         //$treeCategory->save();
         //lmb_var_debug($node);
         //lmb_var_debug($node->getId());
-        echo '<br>tree_category:<br>';
-        lmb_var_debug($treeCategory);
-
+        echo '<br>tree_category:<br>'; lmb_var_debug($treeCategory);
     }
 
 //  function doCreate()

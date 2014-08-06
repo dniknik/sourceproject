@@ -12,7 +12,6 @@ class PreferenceController extends lmbObjectController
   	$this->helper = new AlphabetHelper();
   	$this->useForm('search_form');
     $this->setFormDatasource($this->request);
-
     $this->items = Ware :: findForFront($this->_getSearchParams());
   }
 
@@ -22,13 +21,6 @@ class PreferenceController extends lmbObjectController
       echo($this->request);
   	if($this->request->get('title'))
   	  $params['title'] = $this->request->getSafe('title');
-
-//  	if($this->request->get('price_greater'))
-//      $params['price_greater'] = $this->request->getInteger('price_greater');
-//
-//    if($this->request->get('price_less'))
-//      $params['price_less'] = $this->request->getInteger('price_less');
-
     return $params;
   }
 }

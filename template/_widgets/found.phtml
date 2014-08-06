@@ -1,6 +1,7 @@
 <div id="found" style="padding: 6px;">
 
     <a href="{$base_path|default:''}">[ALL]</a>&nbsp;
+    <div style="display: none;">
     {{list using="$#helper->getAlphabet()"}}
     {{list:item}}
         <? if ($this->helper->getCurrentLetter() == $item) { ?>
@@ -14,6 +15,7 @@
         <? } ?>
     {{/list:item}}
     {{/list}}
+    </div>
 
     <p><strong>Search the products:</strong></p>
 

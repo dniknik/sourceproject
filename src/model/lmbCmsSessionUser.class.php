@@ -58,5 +58,3 @@ class lmbCmsSessionUser extends lmbObject
     return array('user_id', 'is_logged_in');
   }
 }
-
-

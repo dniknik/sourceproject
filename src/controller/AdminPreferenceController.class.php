@@ -8,10 +8,8 @@ class AdminPreferenceController extends lmbAdminObjectController
 {
     protected $_object_class_name = 'Preference';
 
-
     protected function _onAfterSave()
     {
-        //$this->flashAndRedirect('.', array('controller' => 'admin_preference'));
         $this->redirect('/' . $this->getName() . '/');
     }
 }

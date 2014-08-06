@@ -3,8 +3,7 @@
 class Objoftree extends lmbActiveRecord
 {
     protected $_db_table_name = 'objoftree';
-//    protected $_default_sort_params = array('id' => 'DESC');
-//
+
     protected $_has_one = array(
         'tree' => array(
             'field' => 'id_sys_tree',
@@ -19,15 +18,4 @@ class Objoftree extends lmbActiveRecord
             'class' => 'Preference',
             'can_be_null' => true
         ));
-
-//    static function createForPreference(Preference $specification)
-//    {
-//        $line = new Objoftree();
-//        $line->setIdSysTree(0);
-//        $line->setIdPr($specification);
-//        $line->setValuePr('');
-//        $line->setIsBranch(0);
-//        return $line;
-//    }
-
 }

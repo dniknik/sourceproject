@@ -19,8 +19,7 @@ lmb_require('src/model/lmbActiveRecordMPTreeNode.class.php');
 class TreeNode extends lmbActiveRecordMPTreeNode
 {
   protected $_db_table_name = 'sys_tree';
-  //protected $_db_table_name = 'tree_node';
-  //protected $_lazy_attributes = array('content');
+
   protected $_is_being_destroyed = false;
   /**
    * @var lmbMPTree

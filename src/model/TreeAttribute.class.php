@@ -2,7 +2,6 @@
 
 class TreeAttribute extends lmbActiveRecord
 {
-    //protected $_db_table_name = 'preference';
     protected $_db_table_name = 'tree_attribute';
     protected $_default_sort_params = array('id' => 'DESC');
 
@@ -26,10 +25,6 @@ class TreeAttribute extends lmbActiveRecord
         $criteria = lmbSQLCriteria::equal('is_published', 1);
         if (isset($params['title']))
             $criteria->addAnd(lmbSQLCriteria :: like('attr_value', $params['title'] . '%'));
-//  	if (isset($params['price_greater']))
-//      $criteria->addAnd(lmbSQLCriteria :: greater('price', (int) $params['price_greater']));
-//    if (isset($params['price_less']))
-//      $criteria->addAnd(lmbSQLCriteria :: less('price', (int) $params['price_less']));
         return TreeItem :: find($criteria);
     }
 }

@@ -7,8 +7,13 @@
  * @license    LGPL http://www.gnu.org/copyleft/lesser.html
  */
 lmb_require('limb/web_app/src/request/lmbRequestDispatcher.interface.php');
+lmb_require('limb/web_app/src/filter/lmbRequestDispatchingFilter.class.php');
 lmb_require('limb/cms/src/model/lmbCmsDocument.class.php');
-lmb_require('limb/cms/src/model/TreeNode.class.php');
+lmb_require('src/model/TreeNode.class.php');
+lmb_require('src/model/TreeItem.class.php');
+lmb_require('src/model/TreeFull.class.php');
+
+lmb_require('src/toolkit/ShopTools.class.php');
 
 /**
  * class lmbDbRequestDispatcher.
@@ -18,30 +23,27 @@ lmb_require('limb/cms/src/model/TreeNode.class.php');
  */
 class lmbTreeNodeRequestDispatcher implements lmbRequestDispatcher
 {
-  function dispatch($request)
-  {
-	$path = $request->getUriPath();
-	if ($path == '/')
-		return;
-		
-    if(!$document = TreeNode::findByUri($path))
-      return;
+    function dispatch($request)
+    {
+        $path = $request->getUriPath();
+        $path = '/'.ltrim($path, '/pagecategory');
+        //echo $path;
+        if ($path == '/')
+            return;
+    //echo '<b>lmbTreeNodeRequestDispatcher</b>';
+        //echo '<br>'; lmb_var_debug( lmbToolkit :: instance()->getRequest()->toString());
+        //echo '<br>';
 
-//    if(!$document->getIsPublished())
-//    {
-//      if(lmbToolkit::instance()->isWebAppDebugEnabled())
-//        throw new lmbException('Page not published');
-//      else
-//        return;
-//    }
-
-    return array(
-        'controller' => 'treenode',
-        //'controller' => 'document',
-        'action' => 'item',
-        'id' => $document->getId()
-    );
-  }
+        //return 0;
+        if (!$document = TreeItem::findByUri($path)) {
+            //echo ' ! ';
+            return;
+        }
+//lmb_var_debug($document);
+        return array(
+            'controller' => 'main_page',
+            'action' => 'pagecategory',
+            'id' => $document->getId()
+        );
+    }
 }
-
-

@@ -20,9 +20,5 @@ class DocumentController extends lmbObjectController
     $this->response->addHeader('Last-Modified: ' . $last_modified);
     $this->response->addHeader('Expires: '.$expire_date);
     $this->response->addHeader('Cache-Control: max-age='.$expires.', must-revalidate'); //half day
-
   }
-
 }
-
-

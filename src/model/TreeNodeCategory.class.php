@@ -19,7 +19,6 @@ lmb_require('src/model/lmbActiveRecordMPTreeNode.class.php');
       //TreeNodeCategory
 class TreeNodeCategory extends lmbActiveRecordMPTreeNode
 {
-  //protected $_db_table_name = 'sys_tree';
   protected $_db_table_name = 'tree_full';
   //protected $_lazy_attributes = array('content');
   //protected $_is_being_destroyed = false;
@@ -31,7 +30,6 @@ class TreeNodeCategory extends lmbActiveRecordMPTreeNode
   function _createValidator()
   {
     $validator = new lmbValidator();
-//
     $validator->addRequiredRule('title', 'Поле "Заголовок" обязательно для заполнения');
 //    $validator->addRequiredRule('content', 'Поле "Текст" обязательно для заполнения');
     $validator->addRequiredRule('identifier', 'Поле "Идентификатор" обязательно для заполнения');
@@ -42,14 +40,8 @@ class TreeNodeCategory extends lmbActiveRecordMPTreeNode
     return $validator;
   }
 
-//  protected function _onBeforeSave()
-//  {
-//    $this->save();
-//  }
-
   function _onCreate()
   {
-//      echo '<b>function _onCreate()<b>';
     $this->_setPriority();
   }
 

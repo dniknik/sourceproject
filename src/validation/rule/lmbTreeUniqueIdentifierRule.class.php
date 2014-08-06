@@ -33,4 +33,3 @@ class lmbTreeUniqueIdentifierRule extends lmbSingleFieldRule
       $this->error($this->error_message);
   }
 }
-

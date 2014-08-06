@@ -141,6 +141,4 @@ class lmbCmsUser extends lmbActiveRecord
       self::ROLE_NAME_EDITOR => 'Editor'
     );
   }
-
 }
-

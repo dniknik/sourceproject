@@ -18,5 +18,4 @@ class Uicategory extends lmbActiveRecord
             'class' => 'Preference',
             'can_be_null' => true
         ));
-
 }

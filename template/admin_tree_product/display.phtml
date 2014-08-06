@@ -7,11 +7,7 @@
 <div id="header">
     <h1>
         Product MENU: admin_tree_product display
-        <?php
-        echo sizeof($this->items); //lmb_var_debug($this->items);
-        ?>
     </h1>
-    <a href="{{route_url params="action:node"/}}">Категории</a>
 
     <div class="header_actions">
         <a href='{{route_url params="action:create"/}}'
@@ -22,6 +18,31 @@
 </div>
 
 <div id="body">
+    <div style="display: none;">
+        <hr>
+        {{list using='{$#items}' parity='{$parity}'}}
+        {{list:item}}
+        {{/list:item}}
+        <?php
+        /*
+        $criteria = new lmbSQLCriteria('node_id='. 35);
+        $it = lmbActiveRecord :: findOne('TreeItem', array('criteria' => $criteria));
+        lmb_var_debug($it);
+        echo '<br>:';
+        $test_uri = $it->getUri();
+        lmb_var_debug($test_uri);
+        echo '<br>:';
+        lmb_var_debug(TreeItem::findByUri($test_uri));
+        //lmb_var_debug(TreeItem::findByUri('/Derevo/Processory/Firma_2/'));
+        */
+            ?>
+
+        {{/list}}
+        test
+
+        <hr>
+    </div>
+
     <div class="list">
         <?php
         //@todo this fragment to ShopTools
@@ -74,6 +95,7 @@
                 <td>#{$node_id}
 
                 <?php
+
                 //@todo this fragment to ShopTools
                 $arr_tovar_attr = array_reverse($item);
                 //lmb_var_debug($arr_tovar_attr);

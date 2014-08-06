@@ -77,5 +77,3 @@ class lmbCmsUserRoles
       return '';
   }
 }
-
-

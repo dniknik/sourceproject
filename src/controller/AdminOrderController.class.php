@@ -1,4 +1,5 @@
 <?php
+
 lmb_require('limb/cms/src/controller/lmbAdminObjectController.class.php');
 
 class AdminOrderController extends lmbAdminObjectController

@@ -153,10 +153,7 @@ class UitreeController extends lmbController
 //                    'identifier' => 'identifier',
 //                    'path' => 'path'
 //                )));
-
         //$var =  $tree ->getChildrenAll(1662);
-
-
     }
 
     function doItem()
@@ -164,19 +161,15 @@ class UitreeController extends lmbController
         echo 'UitreeController::doItem()';
         $this->id = 0;
         $request = $this->request;
-        //echo('<br>request:<br>');
-        //lmb_var_debug($request);
 
         $req_filed = 'identifier';
         $req_val = 0;
         if(isset($request['identifier']))
         {
-            //echo('<br>yes_identifier<br>');
             $req_val =  $request['identifier'];
         }
         if(isset($request['id']))
         {
-            //echo('<br>yes_id<br>');
             $req_val = $request['id'];
         }
         //echo '<br>';
@@ -185,14 +178,8 @@ class UitreeController extends lmbController
         else
             echo ' par_is_NOT_int';
 
-
         $criteria = lmbSQLCriteria :: equal($req_filed, $req_val);
         $current = lmbCollection::toFlatArray(lmbActiveRecord :: find('Tree', $criteria));
-        //echo('<br>par_val:');
-        //lmb_var_debug($req_val);
-
-        //echo('<br>size_result_by_identifier:');
-        //lmb_var_debug(sizeof($current));
 
         if(sizeof($current) == 0) {
             echo('<br>size_result_by_identifier=0 ..');
@@ -201,34 +188,19 @@ class UitreeController extends lmbController
                 echo '<br>par_is_int';
                 $criteria = lmbSQLCriteria :: equal('id', $req_val);
                 $current = lmbCollection::toFlatArray(lmbActiveRecord :: find('Tree', $criteria));
-                //echo('size_result_by_id:');
-                //lmb_var_debug(sizeof($current));
-
                 if(sizeof($current) != 0 ) {
-                    //echo '<br>';
-                    //lmb_var_debug($current);
-                    //echo '<br>';
-                    //lmb_var_debug($current[0]['id']);
                     $this->id = $current[0]['id'];
                 }
             }
         } else {
-            //lmb_var_debug($current);
-            //lmb_var_debug($current[0]['id']);
             $this->id = $current[0]['id'];
-
         }
-
-    //$this->id = $this->request->getInteger('id');
-    $id = $this->id;
-    echo ' this_id:'.$this->id;
-
+        $id = $this->id;
+        echo ' this_id:'.$this->id;
     }
 
     function doShownode()
     {
-        echo 'UitreeController::Shownode()';
-        {
         $this->childrens = array();
         $this->specifications = array();
         $this->child_specs = array();
@@ -239,35 +211,20 @@ class UitreeController extends lmbController
         $this->id = 0;
 
         $request = $this->request;
-        //echo('<br>request:<br>');
-        //lmb_var_debug($request);
 
         $req_filed = 'identifier';
         $req_val = 0;
         if(isset($request['identifier']))
         {
-            //echo('<br>yes_identifier<br>');
             $req_val =  $request['identifier'];
         }
         if(isset($request['id']))
         {
-            //echo('<br>yes_id<br>');
             $req_val = $request['id'];
         }
-        //echo '<br>';
-        if(is_numeric($req_val) && intval($req_val) - $req_val == 0)
-            echo ' par_is_int';
-        else
-            echo ' par_is_NOT_int';
-
 
         $criteria = lmbSQLCriteria :: equal($req_filed, $req_val);
         $current = lmbCollection::toFlatArray(lmbActiveRecord :: find('Tree', $criteria));
-        //echo('<br>par_val:');
-        //lmb_var_debug($req_val);
-
-            //echo('<br>size_result_by_identifier:');
-            //lmb_var_debug(sizeof($current));
 
         if(sizeof($current) == 0) {
             echo('<br>size_result_by_identifier=0 ..');
@@ -276,51 +233,17 @@ class UitreeController extends lmbController
                 echo '<br>par_is_int';
                 $criteria = lmbSQLCriteria :: equal('id', $req_val);
                 $current = lmbCollection::toFlatArray(lmbActiveRecord :: find('Tree', $criteria));
-                //echo('size_result_by_id:');
-                //lmb_var_debug(sizeof($current));
 
                 if(sizeof($current) != 0 ) {
-                    //echo '<br>';
-                    //lmb_var_debug($current);
-                    //echo '<br>';
-                    //lmb_var_debug($current[0]['id']);
                     $this->id = $current[0]['id'];
                 }
             }
         } else {
-            //lmb_var_debug($current);
-            //lmb_var_debug($current[0]['id']);
             $this->id = $current[0]['id'];
-
         }
-        }
-        //$this->id = $this->request->getInteger('id');
         $id = $this->id;
-        echo ' this_id:'.$this->id;// .' id:'.$id. '<br>';
-
         try
         {
-            //$node = Objoftree :: findById($id);//
-            //$node = lmbActiveRecord :: findById('Tree', $id);
-            //$node = Tree :: findById($id);
-
-            //$criteria = lmbSQLCriteria :: equal($this->field_name, $value);
-            //if(!$this->object->isNew())
-            //    $criteria->addAnd(new lmbSQLFieldCriteria('id', $this->object->getId(), lmbSQLFieldCriteria :: NOT_EQUAL));
-            //$records = lmbActiveRecord :: find($this->class, $criteria);
-            //
-            //$criteria = new lmbSQLFieldCriteria($this->field_name, $value);
-            //if(!$this->user->isNew())
-            //    $criteria->addAnd('id <> '. $this->user->getId());
-            //
-            //$criteria = lmbSQLCriteria :: equal($this->field_name, $value)->addAnd('parent_id = ' . ($this->parent_id ? $this->parent_id : $this->node->getParent()->getId()));
-            //if(!$this->node->isNew())
-            //    $criteria->addAnd('id <> '. $this->node->getId());
-
-            //$this->items = lmbActiveRecord :: find($this->_object_class_name, array('criteria' => $criteria, 'sort'=>array('priority'=>'ASC')));
-
-
-
             $criteria = lmbSQLCriteria :: like ('path', '%/'.$id.'/');
             $cur_node = (lmbActiveRecord :: find('Tree', $criteria));
             $cur_node_path = '';
@@ -351,17 +274,10 @@ class UitreeController extends lmbController
             $arr_prIds_child = array_column($this->child_specs, 'id_pr');
             //array_column($records, 'first_name');
             $arr_diff = array_diff( $arr_prIds_legacy, $arr_prIds_child );
-            //lmb_var_debug($arr_diff);
             $this->arr_notAdded = $arr_diff;
 
-            //lmb_var_debug($ids_from_path);
-            //$criteria = lmbSQLCriteria :: greaterOrEqual('id', 0);
-            //$criteria->addAnd('id > '. $this->user->getId());
-
             $criteria = null;
-            //$criteria = lmbSQLCriteria :: notEqual('importance', 0); // @todo Activation for production
             $records = lmbCollection::toFlatArray(lmbActiveRecord :: find('Preference', $criteria));
-            //lmb_var_debug($records);
             $this->specs = $records;
 
             $preference = array();
@@ -370,21 +286,11 @@ class UitreeController extends lmbController
             }
             $this->pref = $preference;
             //lmb_var_debug($this->pref);
-
-            //$product = Product :: findById($product_id);
-            //$cart = $this->_getCart();
-            //$cart->addProduct($product);
-            //$this->flashMessage('Product "' . $product->getTitle() . '" added to your cart!');
         }
         catch(lmbARException $e)
         {
             $this->flashError('Wrong ...!');
         }
-//        if(isset($_SERVER['HTTP_REFERER']))
-//            $this->redirect($_SERVER['HTTP_REFERER']);
-//        else
-//            $this->redirect();
-//        echo $this->getName().':'.$this->getCurrentAction();
     }
 
     function doInfo()
@@ -421,9 +327,6 @@ class UitreeController extends lmbController
             $cart = new Cart();
             $session->set('cart', $cart);
         }
-
         return $cart;
     }
-
-
 }
