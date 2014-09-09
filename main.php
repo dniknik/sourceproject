@@ -8,6 +8,7 @@ set_include_path(implode(PATH_SEPARATOR,
   )
 ));
 
+#1
 require_once('limb/core/common.inc.php');
 
 require_once('limb/cms/common.inc.php');
