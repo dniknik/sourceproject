@@ -31,4 +31,4 @@ lmb_require('src/model/*.class.php');
 lmb_require('src/toolkit/ShopTools.class.php');
 lmbToolkit :: merge(new ShopTools());
 
-// echo('&nbsp;<b>|</b>&nbsp;LIMB_APP_MODE<b>:</b> '.lmb_env_get('LIMB_APP_MODE').'&nbsp;<b>|</b>&nbsp;');
+
