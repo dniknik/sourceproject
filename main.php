@@ -7,7 +7,7 @@ set_include_path(implode(PATH_SEPARATOR,
     get_include_path()
   )
 ));
-// #0 01 02 03 04 05#
+// #0 01 02 03 04 05# !
 require_once('limb/core/common.inc.php');
 
 require_once('limb/cms/common.inc.php');
